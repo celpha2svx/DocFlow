@@ -570,8 +570,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          Share.share(
-                            '${widget.calculator.name}: $_resultValue $_resultUnit - $_resultLabel',
+                          SharePlus.instance.share(
+                            ShareParams(
+                              text: '${widget.calculator.name}: $_resultValue $_resultUnit - $_resultLabel',
+                            ),
                           );
                         },
                         icon: const Icon(Icons.share_outlined),

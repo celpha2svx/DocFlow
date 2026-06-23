@@ -30,7 +30,7 @@ class CloudSyncService {
 
   Future<bool> isConnected() async {
     final connectivity = await Connectivity().checkConnectivity();
-    return connectivity != ConnectivityResult.none;
+    return connectivity.isNotEmpty && !connectivity.contains(ConnectivityResult.none);
   }
 
   Future<void> syncToCloud(String doctorPhone) async {
