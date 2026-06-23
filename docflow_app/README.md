@@ -1,17 +1,25 @@
-# docflow_app
+# DocFlow
 
-A new Flutter project.
+Offline-first clinical calculator app for doctors.
 
-## Getting Started
+## Local setup
 
-This project is a starting point for a Flutter application.
+1. Install Flutter and make sure `flutter --version` works.
+2. From this folder run:
+```powershell
+flutter pub get
+flutter test
+```
 
-A few resources to get you started if this is your first Flutter project:
+## Firebase setup
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+Firebase is optional until the project credentials are added.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Create a Firebase project in the Firebase console.
+2. Add Android and iOS apps to that project.
+3. Download `google-services.json` and `GoogleService-Info.plist`.
+4. Place them in the platform folders inside `docflow_app`.
+5. Run `flutterfire configure` if you want generated `firebase_options.dart`.
+6. Commit the generated config files once you are ready for cloud sync.
+
+Until the Firebase project is configured, DocFlow stays offline-first and skips cloud calls safely.

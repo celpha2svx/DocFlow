@@ -123,7 +123,7 @@ class DatabaseService {
       'diagnosis': patient.diagnosis,
       'created_at': patient.createdAt.toIso8601String(),
       'updated_at': patient.updatedAt.toIso8601String(),
-    });
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<List<Patient>> searchPatients(String query, String doctorPhone) async {
@@ -143,6 +143,17 @@ class DatabaseService {
             orderBy: 'updated_at DESC',
           );
 
+    return rows.map(_patientFromMap).toList();
+  }
+
+  Future<List<Patient>> getPatientsForDoctor(String doctorPhone) async {
+    final db = await database;
+    final rows = await db.query(
+      'patients',
+      where: 'doctor_phone = ?',
+      whereArgs: [doctorPhone],
+      orderBy: 'updated_at DESC',
+    );
     return rows.map(_patientFromMap).toList();
   }
 
@@ -199,7 +210,7 @@ class DatabaseService {
       'result_label': calc.resultLabel,
       'transparency': calc.transparency,
       'created_at': calc.createdAt.toIso8601String(),
-    });
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<void> savePendingSubmission({
@@ -267,6 +278,17 @@ class DatabaseService {
       whereArgs: [doctorPhone],
       orderBy: 'created_at DESC',
       limit: limit,
+    );
+    return rows.map(_calculationFromMap).toList();
+  }
+
+  Future<List<Calculation>> getCalculationsForDoctor(String doctorPhone) async {
+    final db = await database;
+    final rows = await db.query(
+      'calculations',
+      where: 'doctor_phone = ?',
+      whereArgs: [doctorPhone],
+      orderBy: 'created_at DESC',
     );
     return rows.map(_calculationFromMap).toList();
   }

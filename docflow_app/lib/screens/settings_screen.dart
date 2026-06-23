@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:docflow_app/app_state.dart';
 import 'package:docflow_app/screens/feature_request_screen.dart';
+import 'package:docflow_app/services/cloud_sync_service.dart';
 import 'package:docflow_app/utils/constants.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -60,7 +61,17 @@ class SettingsScreen extends StatelessWidget {
                     leading: const Icon(Icons.cloud_upload_outlined),
                     title: const Text('Backup to Cloud'),
                     subtitle: const Text('Sync patient records to Firestore'),
-                    trailing: Switch(value: false, onChanged: (_) {}),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () async {
+                      final doctor = appState?.currentDoctor;
+                      if (doctor == null || appState == null) return;
+                      final sync = CloudSyncService(databaseService: appState.databaseService);
+                      await sync.syncToCloud(doctor.phoneNumber);
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Backup attempted. Firebase will work once configured.')),
+                      );
+                    },
                   ),
                   const Divider(height: 0),
                   ListTile(
@@ -68,9 +79,14 @@ class SettingsScreen extends StatelessWidget {
                     title: const Text('Restore from Cloud'),
                     subtitle: const Text('Recover records on a new phone'),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
+                    onTap: () async {
+                      final doctor = appState?.currentDoctor;
+                      if (doctor == null || appState == null) return;
+                      final sync = CloudSyncService(databaseService: appState.databaseService);
+                      await sync.restoreFromCloud(doctor.phoneNumber);
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Cloud restore is not wired yet.')),
+                        const SnackBar(content: Text('Restore attempted. Firebase will work once configured.')),
                       );
                     },
                   ),

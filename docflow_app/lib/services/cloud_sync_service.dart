@@ -1,13 +1,16 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:docflow_app/models/doctor.dart';
 import 'package:docflow_app/models/patient.dart';
 import 'package:docflow_app/models/calculation.dart';
+import 'package:docflow_app/services/database_service.dart';
 
 /// Service for syncing clinical data with Firebase Firestore.
 /// All data is synced to the user's doctor phone number for identification.
 class CloudSyncService {
-  final FirebaseFirestore _firestore;
+  final FirebaseFirestore? _firestore;
+  final DatabaseService? _databaseService;
 
   /// Collection names
   static const String _collectionsPrefix = 'sync';
@@ -15,8 +18,15 @@ class CloudSyncService {
   static const String _patientsCollection = 'patients';
   static const String _calculationsCollection = 'calculations';
 
-  CloudSyncService({FirebaseFirestore? firestore})
-        : _firestore = firestore ?? FirebaseFirestore.instance;
+  CloudSyncService({FirebaseFirestore? firestore, DatabaseService? databaseService})
+      : _firestore = firestore,
+        _databaseService = databaseService;
+
+  FirebaseFirestore? get _client {
+    if (_firestore != null) return _firestore;
+    if (Firebase.apps.isEmpty) return null;
+    return FirebaseFirestore.instance;
+  }
 
   Future<bool> isConnected() async {
     final connectivity = await Connectivity().checkConnectivity();
@@ -24,16 +34,67 @@ class CloudSyncService {
   }
 
   Future<void> syncToCloud(String doctorPhone) async {
-    if (!await isConnected()) return;
-    await _firestore.collection(_collectionsPrefix).doc(doctorPhone).set({
+    if (!await isConnected() || _client == null || _databaseService == null) return;
+
+    final firestore = _client!;
+    final doctor = await _databaseService!.getDoctor(doctorPhone);
+    if (doctor != null) {
+      await syncDoctor(doctor);
+    }
+
+    final patients = await _databaseService!.getPatientsForDoctor(doctorPhone);
+    for (final patient in patients) {
+      await firestore
+          .collection(_collectionsPrefix)
+          .doc(doctorPhone)
+          .collection(_patientsCollection)
+          .doc(patient.id)
+          .set(patient.toJson(), SetOptions(merge: true));
+
+      final calculations = await _databaseService!.getPatientHistory(patient.id);
+      for (final calculation in calculations) {
+        await firestore
+            .collection(_collectionsPrefix)
+            .doc(doctorPhone)
+            .collection(_patientsCollection)
+            .doc(patient.id)
+            .collection(_calculationsCollection)
+            .doc(calculation.id)
+            .set(calculation.toJson(), SetOptions(merge: true));
+      }
+    }
+
+    await firestore.collection(_collectionsPrefix).doc(doctorPhone).set({
       'doctorPhone': doctorPhone,
       'syncedAt': DateTime.now().toIso8601String(),
     }, SetOptions(merge: true));
   }
 
   Future<void> restoreFromCloud(String doctorPhone) async {
-    if (!await isConnected()) return;
-    await _firestore.collection(_collectionsPrefix).doc(doctorPhone).get();
+    if (!await isConnected() || _client == null || _databaseService == null) return;
+    final firestore = _client!;
+    final patientSnapshot = await firestore
+        .collection(_collectionsPrefix)
+        .doc(doctorPhone)
+        .collection(_patientsCollection)
+        .get();
+
+    for (final doc in patientSnapshot.docs) {
+      final patient = _patientFromFirestore(doc.data());
+      await _databaseService!.insertPatient(patient);
+
+      final calculationSnapshot = await firestore
+          .collection(_collectionsPrefix)
+          .doc(doctorPhone)
+          .collection(_patientsCollection)
+          .doc(patient.id)
+          .collection(_calculationsCollection)
+          .get();
+      for (final calcDoc in calculationSnapshot.docs) {
+        final calculation = _calculationFromFirestore(calcDoc.data());
+        await _databaseService!.saveCalculation(calculation);
+      }
+    }
   }
 
   Future<void> submitFeatureRequest({
@@ -41,8 +102,8 @@ class CloudSyncService {
     required String doctorPhone,
     String? specialty,
   }) async {
-    if (!await isConnected()) return;
-    await _firestore.collection('feature_requests').add({
+    if (!await isConnected() || _client == null) return;
+    await _client!.collection('feature_requests').add({
       'description': description,
       'doctorPhone': doctorPhone,
       'specialty': specialty,
@@ -54,7 +115,9 @@ class CloudSyncService {
   /// Uses doctor phone number as the document ID for easy retrieval.
   Future<void> syncDoctor(Doctor doctor) async {
     try {
-      await _firestore
+      final firestore = _client;
+      if (firestore == null) return;
+      await firestore
           .collection(_collectionsPrefix)
           .doc(doctor.phoneNumber)
           .collection(_doctorsCollection)
@@ -77,7 +140,9 @@ class CloudSyncService {
   /// Stored under doctor's phone number > patients collection.
   Future<void> syncPatient(Patient patient) async {
     try {
-      await _firestore
+      final firestore = _client;
+      if (firestore == null) return;
+      await firestore
           .collection(_collectionsPrefix)
           .doc(patient.doctorPhone)
           .collection(_patientsCollection)
@@ -104,7 +169,9 @@ class CloudSyncService {
   /// Stored under doctor's phone number > patients > calculations.
   Future<void> syncCalculation(Calculation calculation) async {
     try {
-      await _firestore
+      final firestore = _client;
+      if (firestore == null) return;
+      await firestore
           .collection(_collectionsPrefix)
           .doc(calculation.doctorPhone)
           .collection(_patientsCollection)
@@ -135,7 +202,9 @@ class CloudSyncService {
   Future<Map<String, Patient>> restorePatientsFromCloud(
       String doctorPhone) async {
     try {
-      final snapshot = await _firestore
+      final firestore = _client;
+      if (firestore == null) return {};
+      final snapshot = await firestore
           .collection(_collectionsPrefix)
           .doc(doctorPhone)
           .collection(_patientsCollection)
@@ -157,7 +226,9 @@ class CloudSyncService {
   Future<List<Calculation>> restoreCalculationsFromCloud(
       String doctorPhone, String patientId) async {
     try {
-      final snapshot = await _firestore
+      final firestore = _client;
+      if (firestore == null) return [];
+      final snapshot = await firestore
           .collection(_collectionsPrefix)
           .doc(doctorPhone)
           .collection(_patientsCollection)
@@ -181,7 +252,9 @@ class CloudSyncService {
   /// Useful for verifying sync status or restoring on reinstall.
   Future<Doctor?> getDoctorFromCloud(String doctorPhone) async {
     try {
-      final snapshot = await _firestore
+      final firestore = _client;
+      if (firestore == null) return null;
+      final snapshot = await firestore
           .collection(_collectionsPrefix)
           .doc(doctorPhone)
           .collection(_doctorsCollection)
@@ -200,10 +273,12 @@ class CloudSyncService {
   Future<void> deletePatientFromCloud(
       String doctorPhone, String patientId) async {
     try {
-      final batch = _firestore.batch();
+      final firestore = _client;
+      if (firestore == null) return;
+      final batch = firestore.batch();
 
       // Delete all calculations first
-      final calcsSnapshot = await _firestore
+      final calcsSnapshot = await firestore
           .collection(_collectionsPrefix)
           .doc(doctorPhone)
           .collection(_patientsCollection)
@@ -216,7 +291,7 @@ class CloudSyncService {
       }
 
       // Delete patient record
-      final patientRef = _firestore
+      final patientRef = firestore
           .collection(_collectionsPrefix)
           .doc(doctorPhone)
           .collection(_patientsCollection)
@@ -229,7 +304,6 @@ class CloudSyncService {
     }
   }
 
-  /// Helper: Convert Firestore patient data to Patient model.
   Patient _patientFromFirestore(Map<String, dynamic> data) {
     return Patient(
       id: data['id'] ?? '',
@@ -238,7 +312,7 @@ class CloudSyncService {
       hospitalNumber: data['hospitalNumber'],
       age: data['age'],
       sex: data['sex'],
-      weightKg: data['weightKg'],
+      weightKg: (data['weightKg'] as num?)?.toDouble(),
       diagnosis: data['diagnosis'],
       createdAt: DateTime.parse(data['createdAt'] ?? DateTime.now().toIso8601String()),
       updatedAt: DateTime.parse(data['updatedAt'] ?? DateTime.now().toIso8601String()),

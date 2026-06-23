@@ -1,16 +1,23 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Service for collecting anonymous analytics about calculation usage.
 /// IMPORTANT: Never captures patient data, doctor personal information, or input values.
 /// Only tracks metadata: calculator type, category, timestamp for quality insights.
 class AnalyticsService {
-  final FirebaseFirestore _firestore;
+  final FirebaseFirestore? _firestore;
 
   static const String _analyticsCollection = 'analytics';
   static const String _usageCollection = 'usage';
 
   AnalyticsService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+      : _firestore = firestore;
+
+  FirebaseFirestore? get _client {
+    if (_firestore != null) return _firestore;
+    if (Firebase.apps.isEmpty) return null;
+    return FirebaseFirestore.instance;
+  }
 
   /// Record a calculation usage event (anonymous, no sensitive data).
   /// Captured: calculator type, category, timestamp only.
@@ -20,7 +27,9 @@ class AnalyticsService {
     String category,
   ) async {
     try {
-      await _firestore
+      final firestore = _client;
+      if (firestore == null) return;
+      await firestore
           .collection(_analyticsCollection)
           .doc('daily_usage')
           .collection(_usageCollection)
@@ -45,7 +54,9 @@ class AnalyticsService {
     String calculatorType,
   ) async {
     try {
-      await _firestore
+      final firestore = _client;
+      if (firestore == null) return;
+      await firestore
           .collection(_analyticsCollection)
           .doc('errors')
           .collection('log')
@@ -64,7 +75,9 @@ class AnalyticsService {
   /// Helps identify missing calculators that doctors need.
   Future<void> logFeatureRequest(String searchTerm) async {
     try {
-      await _firestore
+      final firestore = _client;
+      if (firestore == null) return;
+      await firestore
           .collection(_analyticsCollection)
           .doc('feature_requests')
           .collection('requests')
@@ -82,10 +95,12 @@ class AnalyticsService {
   /// Returns count of calculations per type for the past N days.
   Future<Map<String, int>> getUsageStats(int daysBack) async {
     try {
+      final firestore = _client;
+      if (firestore == null) return {};
       final cutoffDate =
           DateTime.now().subtract(Duration(days: daysBack)).toIso8601String();
 
-      final snapshot = await _firestore
+      final snapshot = await firestore
           .collection(_analyticsCollection)
           .doc('daily_usage')
           .collection(_usageCollection)
@@ -107,7 +122,9 @@ class AnalyticsService {
   /// Returns list of search terms with their frequencies.
   Future<List<Map<String, dynamic>>> getTopFeatureRequests(int limit) async {
     try {
-      final snapshot = await _firestore
+      final firestore = _client;
+      if (firestore == null) return [];
+      final snapshot = await firestore
           .collection(_analyticsCollection)
           .doc('feature_requests')
           .collection('requests')
@@ -139,7 +156,9 @@ class AnalyticsService {
   /// Returns list of error types with timestamps.
   Future<List<Map<String, dynamic>>> getRecentErrors(int limit) async {
     try {
-      final snapshot = await _firestore
+      final firestore = _client;
+      if (firestore == null) return [];
+      final snapshot = await firestore
           .collection(_analyticsCollection)
           .doc('errors')
           .collection('log')
@@ -162,14 +181,16 @@ class AnalyticsService {
   /// Clear old analytics data (data retention policy - keep 90 days).
   Future<void> clearOldData(int daysToKeep) async {
     try {
+      final firestore = _client;
+      if (firestore == null) return;
       final cutoffDate = DateTime.now()
           .subtract(Duration(days: daysToKeep))
           .toIso8601String();
 
-      final batch = _firestore.batch();
+      final batch = firestore.batch();
 
       // Clear old usage data
-      final usageSnapshot = await _firestore
+      final usageSnapshot = await firestore
           .collection(_analyticsCollection)
           .doc('daily_usage')
           .collection(_usageCollection)
@@ -181,7 +202,7 @@ class AnalyticsService {
       }
 
       // Clear old error logs
-      final errorSnapshot = await _firestore
+      final errorSnapshot = await firestore
           .collection(_analyticsCollection)
           .doc('errors')
           .collection('log')
