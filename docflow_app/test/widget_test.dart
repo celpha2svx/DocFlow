@@ -14,9 +14,10 @@ void main() {
   testWidgets('App launches smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const DocFlowApp());
+    await tester.pumpAndSettle();
 
     // Verify onboarding screen is shown.
-    expect(find.text('Welcome to DocFlow'), findsOneWidget);
-    expect(find.text('Create PIN & Continue'), findsOneWidget);
+    expect(find.text('Set up your DocFlow profile'), findsOneWidget);
+    expect(find.text('Get Started'), findsOneWidget);
   });
 }
