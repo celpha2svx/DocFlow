@@ -88,7 +88,7 @@ class AppState extends ChangeNotifier {
         fullName: fullName,
         phoneNumber: phoneNumber,
         specialty: specialty,
-        pinHash: _authService.hashPin(pin),
+        pinHash: AuthService.hashPin(pin),
         createdAt: DateTime.now(),
       );
 
