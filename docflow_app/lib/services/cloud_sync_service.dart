@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:docflow_app/models/doctor.dart';
 import 'package:docflow_app/models/patient.dart';
@@ -16,6 +17,38 @@ class CloudSyncService {
 
   CloudSyncService({FirebaseFirestore? firestore})
         : _firestore = firestore ?? FirebaseFirestore.instance;
+
+  Future<bool> isConnected() async {
+    final connectivity = await Connectivity().checkConnectivity();
+    return connectivity != ConnectivityResult.none;
+  }
+
+  Future<void> syncToCloud(String doctorPhone) async {
+    if (!await isConnected()) return;
+    await _firestore.collection(_collectionsPrefix).doc(doctorPhone).set({
+      'doctorPhone': doctorPhone,
+      'syncedAt': DateTime.now().toIso8601String(),
+    }, SetOptions(merge: true));
+  }
+
+  Future<void> restoreFromCloud(String doctorPhone) async {
+    if (!await isConnected()) return;
+    await _firestore.collection(_collectionsPrefix).doc(doctorPhone).get();
+  }
+
+  Future<void> submitFeatureRequest({
+    required String description,
+    required String doctorPhone,
+    String? specialty,
+  }) async {
+    if (!await isConnected()) return;
+    await _firestore.collection('feature_requests').add({
+      'description': description,
+      'doctorPhone': doctorPhone,
+      'specialty': specialty,
+      'createdAt': DateTime.now().toIso8601String(),
+    });
+  }
 
   /// Sync doctor profile to the cloud.
   /// Uses doctor phone number as the document ID for easy retrieval.

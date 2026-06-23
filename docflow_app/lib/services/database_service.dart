@@ -9,7 +9,7 @@ import '../models/patient.dart';
 
 class DatabaseService {
   static const _databaseName = 'docflow.db';
-  static const _databaseVersion = 1;
+  static const _databaseVersion = 2;
 
   static Database? _database;
 
@@ -24,8 +24,27 @@ class DatabaseService {
     return await openDatabase(
       path,
       version: _databaseVersion,
+      onConfigure: (db) async {
+        await db.execute('PRAGMA foreign_keys = ON');
+      },
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS pending_submissions (
+          id TEXT PRIMARY KEY,
+          type TEXT NOT NULL,
+          payload TEXT NOT NULL,
+          created_at TEXT NOT NULL,
+          synced INTEGER DEFAULT 0
+        )
+      ''');
+      await db.execute('CREATE INDEX IF NOT EXISTS idx_pending_synced ON pending_submissions(synced)');
+    }
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -72,11 +91,22 @@ class DatabaseService {
       )
     ''');
 
+    await db.execute('''
+      CREATE TABLE pending_submissions (
+        id TEXT PRIMARY KEY,
+        type TEXT NOT NULL,
+        payload TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        synced INTEGER DEFAULT 0
+      )
+    ''');
+
     await db.execute('CREATE INDEX idx_patient_name ON patients(full_name)');
     await db.execute('CREATE INDEX idx_patient_hospital ON patients(hospital_number)');
     await db.execute('CREATE INDEX idx_calc_patient ON calculations(patient_id)');
     await db.execute('CREATE INDEX idx_calc_type ON calculations(calculator_type)');
     await db.execute('CREATE INDEX idx_calc_date ON calculations(created_at)');
+    await db.execute('CREATE INDEX idx_pending_synced ON pending_submissions(synced)');
   }
 
   // Patients
@@ -98,14 +128,20 @@ class DatabaseService {
 
   Future<List<Patient>> searchPatients(String query, String doctorPhone) async {
     final db = await database;
-    final String likeQuery = '%${query.trim()}%';
-
-    final rows = await db.query(
-      'patients',
-      where: 'doctor_phone = ? AND (full_name LIKE ? OR hospital_number LIKE ?)',
-      whereArgs: [doctorPhone, likeQuery, likeQuery],
-      orderBy: 'updated_at DESC',
-    );
+    final trimmed = query.trim();
+    final rows = trimmed.isEmpty
+        ? await db.query(
+            'patients',
+            where: 'doctor_phone = ?',
+            whereArgs: [doctorPhone],
+            orderBy: 'updated_at DESC',
+          )
+        : await db.query(
+            'patients',
+            where: 'doctor_phone = ? AND (full_name LIKE ? OR hospital_number LIKE ?)',
+            whereArgs: [doctorPhone, '%$trimmed%', '%$trimmed%'],
+            orderBy: 'updated_at DESC',
+          );
 
     return rows.map(_patientFromMap).toList();
   }
@@ -142,7 +178,10 @@ class DatabaseService {
 
   Future<void> deletePatient(String id) async {
     final db = await database;
-    await db.delete('patients', where: 'id = ?', whereArgs: [id]);
+    await db.transaction((txn) async {
+      await txn.delete('calculations', where: 'patient_id = ?', whereArgs: [id]);
+      await txn.delete('patients', where: 'id = ?', whereArgs: [id]);
+    });
   }
 
   // Calculations
@@ -161,6 +200,52 @@ class DatabaseService {
       'transparency': calc.transparency,
       'created_at': calc.createdAt.toIso8601String(),
     });
+  }
+
+  Future<void> savePendingSubmission({
+    required String id,
+    required String type,
+    required Map<String, dynamic> payload,
+    DateTime? createdAt,
+  }) async {
+    final db = await database;
+    await db.insert('pending_submissions', {
+      'id': id,
+      'type': type,
+      'payload': jsonEncode(payload),
+      'created_at': (createdAt ?? DateTime.now()).toIso8601String(),
+      'synced': 0,
+    });
+  }
+
+  Future<List<Map<String, dynamic>>> getPendingSubmissions({bool onlyUnsynced = true}) async {
+    final db = await database;
+    final rows = await db.query(
+      'pending_submissions',
+      where: onlyUnsynced ? 'synced = 0' : null,
+      orderBy: 'created_at ASC',
+    );
+    return rows
+        .map(
+          (row) => {
+            'id': row['id'] as String,
+            'type': row['type'] as String,
+            'payload': jsonDecode(row['payload'] as String) as Map<String, dynamic>,
+            'created_at': row['created_at'] as String,
+            'synced': row['synced'] as int? ?? 0,
+          },
+        )
+        .toList();
+  }
+
+  Future<void> markPendingSubmissionSynced(String id) async {
+    final db = await database;
+    await db.update(
+      'pending_submissions',
+      {'synced': 1},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<List<Calculation>> getPatientHistory(String patientId) async {
@@ -196,7 +281,7 @@ class DatabaseService {
       'specialty': doctor.specialty,
       'pin_hash': doctor.pinHash,
       'created_at': doctor.createdAt.toIso8601String(),
-    });
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<Doctor?> getDoctor(String phoneNumber) async {
@@ -209,6 +294,68 @@ class DatabaseService {
     return rows.isNotEmpty ? _doctorFromMap(rows.first) : null;
   }
 
+  Future<void> updateDoctor(Doctor doctor) async {
+    final db = await database;
+    await db.update(
+      'doctors',
+      {
+        'full_name': doctor.fullName,
+        'specialty': doctor.specialty,
+        'pin_hash': doctor.pinHash,
+      },
+      where: 'id = ?',
+      whereArgs: [doctor.id],
+    );
+  }
+
+  Future<void> deleteDoctor(String id) async {
+    final db = await database;
+    await db.delete('doctors', where: 'id = ?', whereArgs: [id]);
+  }
+
+  // Bulk operations
+  Future<int> deleteCalculationsByPatient(String patientId) async {
+    final db = await database;
+    return await db.delete(
+      'calculations',
+      where: 'patient_id = ?',
+      whereArgs: [patientId],
+    );
+  }
+
+  Future<int> getPatientCount(String doctorPhone) async {
+    final db = await database;
+    final result = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM patients WHERE doctor_phone = ?',
+      [doctorPhone],
+    );
+    return result.first['count'] as int? ?? 0;
+  }
+
+  Future<int> getCalculationCount(String patientId) async {
+    final db = await database;
+    final result = await db.rawQuery(
+      'SELECT COUNT(*) as count FROM calculations WHERE patient_id = ?',
+      [patientId],
+    );
+    return result.first['count'] as int? ?? 0;
+  }
+
+  /// Clear all data (use with caution - useful for testing/reset)
+  Future<void> clearAllData() async {
+    final db = await database;
+    await db.delete('calculations');
+    await db.delete('patients');
+    await db.delete('doctors');
+  }
+
+  /// Close database connection
+  Future<void> closeDatabase() async {
+    final db = await database;
+    await db.close();
+    _database = null;
+  }
+
   Patient _patientFromMap(Map<String, dynamic> map) {
     return Patient(
       id: map['id'] as String,
@@ -217,7 +364,7 @@ class DatabaseService {
       hospitalNumber: map['hospital_number'] as String?,
       age: map['age'] as int?,
       sex: map['sex'] as String?,
-      weightKg: map['weight_kg'] as double?,
+      weightKg: (map['weight_kg'] as num?)?.toDouble(),
       diagnosis: map['diagnosis'] as String?,
       createdAt: DateTime.parse(map['created_at'] as String),
       updatedAt: DateTime.parse(map['updated_at'] as String),
@@ -232,7 +379,7 @@ class DatabaseService {
       calculatorType: map['calculator_type'] as String,
       category: map['category'] as String,
       inputValues: jsonDecode(map['input_values'] as String) as Map<String, dynamic>,
-      resultValue: map['result_value'] as double,
+      resultValue: (map['result_value'] as num).toDouble(),
       resultUnit: map['result_unit'] as String,
       resultLabel: map['result_label'] as String,
       transparency: map['transparency'] as String,

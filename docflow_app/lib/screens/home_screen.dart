@@ -1,44 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:docflow_app/models/patient.dart';
+
+import 'package:docflow_app/app_state.dart';
 import 'package:docflow_app/utils/constants.dart';
 import 'package:docflow_app/widgets/category_card.dart';
-import 'package:docflow_app/widgets/patient_card.dart';
-import 'package:docflow_app/screens/calculator_category_screen.dart';
+import 'package:docflow_app/screens/category_screen.dart';
+import 'package:docflow_app/screens/feature_request_screen.dart';
+import 'package:docflow_app/screens/patient_list_screen.dart';
 import 'package:docflow_app/screens/search_screen.dart';
 import 'package:docflow_app/screens/settings_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  static final _featuredPatient = Patient(
-    id: 'patient-001',
-    doctorPhone: '+1234567890',
-    fullName: 'Aisha Mbaye',
-    hospitalNumber: 'HPL-5592',
-    age: 7,
-    sex: 'Female',
-    weightKg: 24.5,
-    diagnosis: 'Acute asthma exacerbation',
-    createdAt: DateTime.now().subtract(const Duration(days: 2)),
-    updatedAt: DateTime.now(),
-  );
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  String _greetingFor(DateTime now) {
+    final hour = now.hour;
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final appState = AppStateProvider.maybeOf(context);
+    final doctor = appState?.currentDoctor;
+    final doctorName = doctor == null ? 'Doctor' : doctor.fullName.trim();
+    final doctorFirstName = doctorName.split(RegExp(r'\s+')).firstOrNull ?? 'Doctor';
+    final totalCalculators = categories.fold<int>(0, (sum, category) => sum + category.calculators.length);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('DocFlow'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.notifications_none),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const SearchScreen()),
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Notifications are not configured yet.')),
               );
             },
           ),
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.settings_outlined),
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const SettingsScreen()),
@@ -49,12 +58,31 @@ class HomeScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+          padding: const EdgeInsets.fromLTRB(18, 16, 18, 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              TextField(
+                readOnly: true,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const SearchScreen()),
+                  );
+                },
+                decoration: InputDecoration(
+                  hintText: 'Search calculations...',
+                  prefixIcon: const Icon(Icons.search),
+                  filled: true,
+                  fillColor: AppConstants.surfaceColor,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppConstants.primaryColor.withOpacity(0.12)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 18),
               Text(
-                'Clinical calculators with trusted transparency',
+                '${_greetingFor(DateTime.now())}, Dr. $doctorFirstName',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppConstants.textColor,
@@ -69,22 +97,42 @@ class HomeScreen extends StatelessWidget {
                     ),
               ),
               const SizedBox(height: 20),
-              Text(
-                'Recent patient',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: AppConstants.textColor,
+              Row(
+                children: [
+                  Expanded(
+                    child: _QuickActionCard(
+                      icon: Icons.flash_on_outlined,
+                      title: 'Quick Calculate',
+                      value: '$totalCalculators calculators',
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => const SearchScreen()),
+                        );
+                      },
                     ),
-              ),
-              const SizedBox(height: 12),
-              PatientCard(
-                patient: _featuredPatient,
-                recentCalculation: 'QTc and MAP for treatment decisions',
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Patient detail view coming soon.')),
-                  );
-                },
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: FutureBuilder<int>(
+                      future: doctor == null
+                          ? Future.value(0)
+                          : appState!.databaseService.getPatientCount(doctor.phoneNumber),
+                      builder: (context, snapshot) {
+                        final count = snapshot.data ?? 0;
+                        return _QuickActionCard(
+                          icon: Icons.person_outline,
+                          title: 'Patient Records',
+                          value: '$count saved',
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => const PatientListScreen()),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
               Text(
@@ -95,16 +143,11 @@ class HomeScreen extends StatelessWidget {
                     ),
               ),
               const SizedBox(height: 12),
-              GridView.builder(
+              ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  childAspectRatio: 4,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                ),
                 itemCount: categories.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
                   final category = categories[index];
                   return CategoryCard(
@@ -113,12 +156,97 @@ class HomeScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => CalculatorCategoryScreen(category: category),
+                          builder: (_) => CategoryScreen(category: category),
                         ),
                       );
                     },
                   );
                 },
+              ),
+              const SizedBox(height: 18),
+              Card(
+                elevation: 1,
+                child: ListTile(
+                  leading: const Icon(Icons.lightbulb_outline),
+                  title: const Text('Request a Feature'),
+                  subtitle: const Text('Suggest a calculator or workflow improvement'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const FeatureRequestScreen()),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (index) {
+          setState(() => _selectedIndex = index);
+          switch (index) {
+            case 1:
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const PatientListScreen()),
+              );
+              break;
+            case 2:
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+              break;
+          }
+        },
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.folder_outlined), selectedIcon: Icon(Icons.folder), label: 'Saved'),
+          NavigationDestination(icon: Icon(Icons.settings_outlined), selectedIcon: Icon(Icons.settings), label: 'Settings'),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickActionCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String value;
+  final VoidCallback onTap;
+
+  const _QuickActionCard({
+    required this.icon,
+    required this.title,
+    required this.value,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: AppConstants.primaryColor),
+              const SizedBox(height: 14),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: AppConstants.textColor,
+                    ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                value,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppConstants.subtextColor,
+                    ),
               ),
             ],
           ),
@@ -126,4 +254,8 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+extension _FirstOrNull<E> on List<E> {
+  E? get firstOrNull => isEmpty ? null : first;
 }

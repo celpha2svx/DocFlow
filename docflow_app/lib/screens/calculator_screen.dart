@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:docflow_app/calculators/body_metrics.dart';
 import 'package:docflow_app/calculators/cardiac.dart';
 import 'package:docflow_app/calculators/fluids_drips.dart';
 import 'package:docflow_app/calculators/paediatrics.dart';
 import 'package:docflow_app/calculators/renal.dart';
 import 'package:docflow_app/models/category.dart';
+import 'package:docflow_app/screens/save_to_patient_screen.dart';
 import 'package:docflow_app/widgets/calculator_input.dart';
 import 'package:docflow_app/widgets/result_display.dart';
 import 'package:docflow_app/widgets/formula_display.dart';
@@ -545,6 +547,38 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 FormulaDisplay(
                   formula: _transparency,
                   formulaName: 'Transparency',
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => SaveToPatientScreen(
+                                calculationSummary: '${widget.calculator.name} • $_resultValue $_resultUnit ($_resultLabel)',
+                              ),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.person_add_alt_1_outlined),
+                        label: const Text('Save to Patient'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Share.share(
+                            '${widget.calculator.name}: $_resultValue $_resultUnit - $_resultLabel',
+                          );
+                        },
+                        icon: const Icon(Icons.share_outlined),
+                        label: const Text('Share Result'),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ],

@@ -24,6 +24,9 @@ class AuthService {
   /// Automatically clears lockout if duration has expired.
   bool get isLockedOut => _isLockedOut;
 
+  /// Alias for the plan/spec terminology.
+  bool get isLocked => isLockedOut;
+
   /// Get the number of failed attempts since the last successful login.
   int get failedAttempts => _prefs.getInt(_attemptsKey) ?? 0;
 
@@ -42,6 +45,10 @@ class AuthService {
   /// Should be called once during app startup.
   Future<void> initialize() async {
     await _checkAndClearExpiredLockout();
+  }
+
+  Future<bool> isOnboardingComplete() async {
+    return _prefs.getBool('onboarding_complete') ?? isRegistered;
   }
 
   /// Check if a lockout has expired and clear it.
@@ -148,6 +155,24 @@ class AuthService {
     await _clearLockout();
     _lockoutTimer?.cancel();
     _isLockedOut = false;
+  }
+
+  Future<void> resetAttempts() async {
+    await _clearLockout();
+    _isLockedOut = false;
+  }
+
+  Future<void> recordFailedAttempt() async {
+    int attempts = failedAttempts + 1;
+    await _prefs.setInt(_attemptsKey, attempts);
+    if (attempts >= _maxAttempts) {
+      final lockoutTime =
+          DateTime.now().millisecondsSinceEpoch +
+          (_lockoutDurationSeconds * 1000);
+      await _prefs.setInt(_lockoutKey, lockoutTime);
+      _isLockedOut = true;
+      _scheduleLockoutExpiry(_lockoutDurationSeconds * 1000);
+    }
   }
 
   /// Check if a doctor is registered.

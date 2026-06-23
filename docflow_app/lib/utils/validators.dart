@@ -8,7 +8,7 @@ bool isValidPhoneNumber(String value) {
 }
 
 bool isValidPin(String value) {
-  return RegExp(r'^\d{4}\u0000?\u0000?\u0000?\u0000?$').hasMatch(value);
+  return RegExp(r'^\d{4}$').hasMatch(value.trim());
 }
 
 bool isPositiveNumber(num value) {
