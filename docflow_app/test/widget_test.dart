@@ -18,6 +18,7 @@ void main() {
 
     // Verify onboarding screen is shown.
     expect(find.text('Set up your DocFlow profile'), findsOneWidget);
-    expect(find.text('Get Started'), findsOneWidget);
+    expect(find.text('Create 4-digit PIN'), findsOneWidget);
+    expect(find.byType(TextFormField), findsNWidgets(4));
   });
 }
