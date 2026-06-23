@@ -28,8 +28,14 @@ class DocFlowHome extends StatelessWidget {
     // Get app state
     final appState = AppStateProvider.maybeOf(context);
 
+    // In tests or edge cases where the provider is not wired yet, fall back
+    // to the public onboarding surface instead of hanging on a loader.
+    if (appState == null) {
+      return const OnboardingScreen();
+    }
+
     // Still initializing
-    if (appState == null || !appState.isInitialized) {
+    if (!appState.isInitialized) {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
