@@ -42,14 +42,13 @@ jobs:
             -storepass docflow-release \
             -keypass docflow-release \
             -dname "CN=DocFlow, OU=CI, O=DocFlow, L=Lagos, ST=Lagos, C=NG"
-          cat > key.properties <<EOF
-          storePassword=docflow-release
-          keyPassword=docflow-release
-          keyAlias=docflow
-          storeFile=docflow-release.jks
-          EOF
         working-directory: docflow_app/android
       - run: flutter build apk --release
+        env:
+          STORE_FILE: docflow-release.jks
+          STORE_PASSWORD: docflow-release
+          KEY_ALIAS: docflow
+          KEY_PASSWORD: docflow-release
         working-directory: docflow_app
       - uses: actions/upload-artifact@v4
         with:
