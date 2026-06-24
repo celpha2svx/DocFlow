@@ -3,24 +3,105 @@ import 'package:flutter/material.dart';
 import 'package:docflow_app/app_state.dart';
 import 'package:docflow_app/models/calculation.dart';
 import 'package:docflow_app/models/patient.dart';
+import 'package:docflow_app/screens/save_to_patient_screen.dart';
 import 'package:docflow_app/screens/search_screen.dart';
 import 'package:docflow_app/utils/constants.dart';
 
-class PatientDetailScreen extends StatelessWidget {
+class PatientDetailScreen extends StatefulWidget {
   final Patient patient;
 
   const PatientDetailScreen({super.key, required this.patient});
 
-  Future<List<Calculation>> _loadHistory(BuildContext context) async {
+  @override
+  State<PatientDetailScreen> createState() => _PatientDetailScreenState();
+}
+
+class _PatientDetailScreenState extends State<PatientDetailScreen> {
+  late Patient _patient;
+
+  @override
+  void initState() {
+    super.initState();
+    _patient = widget.patient;
+  }
+
+  Future<List<Calculation>> _loadHistory() async {
     final appState = AppStateProvider.maybeOf(context);
     if (appState == null) return <Calculation>[];
-    return appState.databaseService.getPatientHistory(patient.id);
+    return appState.databaseService.getPatientHistory(_patient.id);
+  }
+
+  Future<void> _deletePatient() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Patient'),
+        content: Text('Delete ${_patient.fullName} and all their saved calculations?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: TextButton.styleFrom(foregroundColor: AppConstants.errorColor),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    final appState = AppStateProvider.maybeOf(context);
+    if (appState == null) return;
+
+    try {
+      await appState.databaseService.deletePatient(_patient.id);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${_patient.fullName} deleted')),
+      );
+      Navigator.of(context).pop();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not delete: $e')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Patient Details')),
+      appBar: AppBar(
+        title: const Text('Patient Details'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            tooltip: 'Edit patient',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => SaveToPatientScreen(existingPatient: _patient),
+                ),
+              ).then((_) {
+                // Refresh patient data on return
+                final appState = AppStateProvider.maybeOf(context);
+                if (appState != null) {
+                  appState.databaseService.getPatient(_patient.id).then((updated) {
+                    if (updated != null && mounted) {
+                      setState(() => _patient = updated);
+                    }
+                  });
+                }
+              });
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete_outline),
+            tooltip: 'Delete patient',
+            onPressed: _deletePatient,
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(18),
@@ -34,7 +115,7 @@ class PatientDetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        patient.fullName,
+                        _patient.fullName,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.w700,
                               color: AppConstants.textColor,
@@ -43,19 +124,19 @@ class PatientDetailScreen extends StatelessWidget {
                       const SizedBox(height: 6),
                       Text(
                         [
-                          if (patient.sex != null) patient.sex!,
-                          if (patient.age != null) '${patient.age} yrs',
-                          if (patient.hospitalNumber != null && patient.hospitalNumber!.isNotEmpty)
-                            'HN ${patient.hospitalNumber!}',
+                          if (_patient.sex != null) _patient.sex!,
+                          if (_patient.age != null) '${_patient.age} yrs',
+                          if (_patient.hospitalNumber != null && _patient.hospitalNumber!.isNotEmpty)
+                            'HN ${_patient.hospitalNumber!}',
                         ].join(' • '),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: AppConstants.subtextColor,
                             ),
                       ),
-                      if (patient.diagnosis != null && patient.diagnosis!.isNotEmpty) ...[
+                      if (_patient.diagnosis != null && _patient.diagnosis!.isNotEmpty) ...[
                         const SizedBox(height: 8),
                         Text(
-                          patient.diagnosis!,
+                          _patient.diagnosis!,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -74,7 +155,7 @@ class PatientDetailScreen extends StatelessWidget {
               const SizedBox(height: 12),
               Expanded(
                 child: FutureBuilder<List<Calculation>>(
-                  future: _loadHistory(context),
+                  future: _loadHistory(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -94,20 +175,27 @@ class PatientDetailScreen extends StatelessWidget {
 
                     return ListView.separated(
                       itemCount: history.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      separatorBuilder: (_, __) => const SizedBox(height: 8),
                       itemBuilder: (context, index) {
                         final calc = history[index];
                         return Card(
                           child: ListTile(
-                            title: Text(calc.resultLabel),
+                            title: Text(
+                              '${calc.resultValue.toStringAsFixed(2)} ${calc.resultUnit}',
+                              style: const TextStyle(fontWeight: FontWeight.w600),
+                            ),
                             subtitle: Text(
-                              '${calc.resultValue.toStringAsFixed(2)} ${calc.resultUnit}\n${calc.calculatorType} • ${calc.createdAt}',
+                              '${calc.resultLabel}\n${calc.calculatorType} • ${calc.createdAt}',
                             ),
                             isThreeLine: true,
                             trailing: const Icon(Icons.chevron_right),
                             onTap: () {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Recalculate flow can be connected from here.')),
+                                SnackBar(
+                                  content: Text(
+                                    '${calc.calculatorType}: ${calc.resultValue.toStringAsFixed(2)} ${calc.resultUnit}',
+                                  ),
+                                ),
                               );
                             },
                           ),

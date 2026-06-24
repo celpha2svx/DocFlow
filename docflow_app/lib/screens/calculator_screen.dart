@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:docflow_app/calculators/body_metrics.dart';
 import 'package:docflow_app/calculators/cardiac.dart';
 import 'package:docflow_app/calculators/fluids_drips.dart';
 import 'package:docflow_app/calculators/paediatrics.dart';
 import 'package:docflow_app/calculators/renal.dart';
 import 'package:docflow_app/models/category.dart';
-import 'package:docflow_app/screens/save_to_patient_screen.dart';
+import 'package:docflow_app/screens/result_screen.dart';
 import 'package:docflow_app/widgets/calculator_input.dart';
-import 'package:docflow_app/widgets/result_display.dart';
-import 'package:docflow_app/widgets/formula_display.dart';
 import 'package:docflow_app/utils/constants.dart';
 
 class CalculatorScreen extends StatefulWidget {
@@ -45,12 +42,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   final TextEditingController _dropFactorController = TextEditingController();
   bool _isMale = true;
   int _selectedFrequency = 1;
-  String _resultValue = '';
-  String _resultUnit = '';
-  String _resultLabel = '';
-  String _interpretation = '';
-  String _transparency = '';
-  bool _showResult = false;
+  String _heightUnit = 'cm';
 
   @override
   void dispose() {
@@ -100,20 +92,15 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     required String unit,
     required TextEditingController controller,
     String? hintText,
+    Widget? suffixWidget,
   }) {
     return NumberField(
       label: label,
       unit: unit,
+      suffixWidget: suffixWidget,
       controller: controller,
       hintText: hintText,
       validator: (value) => _validateNumeric(value, label.toLowerCase()),
-      onChanged: (_) {
-        if (_showResult) {
-          setState(() {
-            _showResult = false;
-          });
-        }
-      },
     );
   }
 
@@ -147,23 +134,85 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
+  Widget _buildHeightField() {
+    return _buildNumberField(
+      label: 'Height',
+      unit: _heightUnit,
+      controller: _heightController,
+      suffixWidget: GestureDetector(
+        onTap: () {
+          setState(() {
+            _heightUnit = _heightUnit == 'cm' ? 'm' : 'cm';
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: AppConstants.secondaryColor.withOpacity(0.15),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Text(
+            _heightUnit,
+            style: const TextStyle(
+              color: AppConstants.secondaryColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  double _getHeightInCm() {
+    final h = _parseDouble(_heightController.text)!;
+    return _heightUnit == 'm' ? h * 100 : h;
+  }
+
+  Map<String, dynamic> _buildInputValues() {
+    return {
+      'weight': _weightController.text,
+      'height': _heightController.text,
+      'systolic': _systolicController.text,
+      'diastolic': _diastolicController.text,
+      'qt': _qtController.text,
+      'heartRate': _heartRateController.text,
+      'strokeVolume': _strokeVolumeController.text,
+      'age': _ageController.text,
+      'serumCreatinine': _serumCreatinineController.text,
+      'sodium': _sodiumController.text,
+      'chloride': _chlorideController.text,
+      'bicarbonate': _bicarbonateController.text,
+      'urineNa': _urineNaController.text,
+      'urineCreatinine': _urineCreatinineController.text,
+      'doseMgPerKg': _doseMgPerKgController.text,
+      'frequency': _frequencyController.text,
+      'tbsa': _tbsaController.text,
+      'volume': _volumeController.text,
+      'time': _timeController.text,
+      'dropFactor': _dropFactorController.text,
+      'isMale': _isMale.toString(),
+      'heightUnit': _heightUnit,
+    };
+  }
+
   List<Widget> _buildCalculatorInputs() {
     switch (widget.calculator.id) {
       case 'bmi':
         return [
           _buildNumberField(label: 'Weight', unit: 'kg', controller: _weightController),
           const SizedBox(height: 16),
-          _buildNumberField(label: 'Height', unit: 'cm', controller: _heightController),
+          _buildHeightField(),
         ];
       case 'bsa':
         return [
           _buildNumberField(label: 'Weight', unit: 'kg', controller: _weightController),
           const SizedBox(height: 16),
-          _buildNumberField(label: 'Height', unit: 'cm', controller: _heightController),
+          _buildHeightField(),
         ];
       case 'ibw':
         return [
-          _buildNumberField(label: 'Height', unit: 'cm', controller: _heightController),
+          _buildHeightField(),
           const SizedBox(height: 16),
           _buildSexToggle(),
         ];
@@ -239,7 +288,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         ];
       case 'schwartz':
         return [
-          _buildNumberField(label: 'Height', unit: 'cm', controller: _heightController),
+          _buildHeightField(),
           const SizedBox(height: 16),
           _buildNumberField(label: 'Serum creatinine', unit: 'mg/dL', controller: _serumCreatinineController),
         ];
@@ -264,202 +313,222 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
   void _calculate() {
-    if (!_formKey.currentState!.validate()) {
-      return;
+    if (!_formKey.currentState!.validate()) return;
+
+    String resultValue = '';
+    String resultUnit = '';
+    String resultLabel = '';
+    String interpretation = '';
+    String transparency = '';
+
+    switch (widget.calculator.id) {
+      case 'bmi':
+        final weight = _parseDouble(_weightController.text)!;
+        final height = _getHeightInCm();
+        final result = BodyMetrics.calculateBMI(weightKg: weight, heightCm: height);
+        resultValue = result.value.toStringAsFixed(1);
+        resultUnit = 'kg/m\u{00B2}';
+        resultLabel = result.category;
+        interpretation = 'BMI calculated from weight and height.';
+        transparency = result.transparency;
+        break;
+      case 'bsa':
+        final weight = _parseDouble(_weightController.text)!;
+        final height = _getHeightInCm();
+        final result = BodyMetrics.calculateBSA(weightKg: weight, heightCm: height);
+        resultValue = '${result.mosteller} / ${result.dubois}';
+        resultUnit = 'm\u{00B2}';
+        resultLabel = 'Mosteller / DuBois';
+        interpretation = 'Body surface area estimate.';
+        transparency = result.transparency;
+        break;
+      case 'ibw':
+        final height = _getHeightInCm();
+        final result = BodyMetrics.calculateIBW(heightCm: height, isMale: _isMale);
+        resultValue = result.value.toStringAsFixed(1);
+        resultUnit = 'kg';
+        resultLabel = 'Ideal body weight';
+        interpretation = 'Using ${_isMale ? 'male' : 'female'} Devine formula.';
+        transparency = result.transparency;
+        break;
+      case 'iv_drip_rate':
+        final volume = _parseDouble(_volumeController.text)!;
+        final time = _parseDouble(_timeController.text)!;
+        final factor = _parseDouble(_dropFactorController.text)!.round();
+        final result = FluidsAndDrips.calculateIVDrip(
+          volumeMl: volume,
+          timeHours: time,
+          dropFactor: factor,
+        );
+        resultValue = result.rounded.toString();
+        resultUnit = 'gtt/min';
+        resultLabel = 'Drip rate';
+        interpretation = 'IV infusion rate for the selected volume and drop factor.';
+        transparency = result.transparency;
+        break;
+      case 'maintenance_fluid':
+        final weight = _parseDouble(_weightController.text)!;
+        final result = FluidsAndDrips.calculateMaintenanceFluid(weightKg: weight);
+        resultValue = result.hourlyRate.toStringAsFixed(1);
+        resultUnit = 'mL/hr';
+        resultLabel = 'Hourly maintenance fluid';
+        interpretation = 'Daily rate = ${result.dailyRate.toStringAsFixed(1)} mL/day.';
+        transparency = result.transparency;
+        break;
+      case 'parkland':
+        final weight = _parseDouble(_weightController.text)!;
+        final tbsa = _parseDouble(_tbsaController.text)!;
+        final result = FluidsAndDrips.calculateParkland(weightKg: weight, tbsaPercent: tbsa);
+        resultValue = result.total24hr.toStringAsFixed(1);
+        resultUnit = 'mL';
+        resultLabel = '24hr total fluid';
+        interpretation = 'First 8hr: ${result.first8hrRate.toStringAsFixed(1)} mL/hr, next 16hr: ${result.next16hrRate.toStringAsFixed(1)} mL/hr.';
+        transparency = result.transparency;
+        break;
+      case 'egfr':
+        final age = _parseInt(_ageController.text)!;
+        final weight = _parseDouble(_weightController.text)!;
+        final creatinine = _parseDouble(_serumCreatinineController.text)!;
+        final result = Renal.calculateEGFR(
+          age: age,
+          weightKg: weight,
+          serumCreatinine: creatinine,
+          isFemale: !_isMale,
+        );
+        resultValue = result.egfr.toStringAsFixed(1);
+        resultUnit = 'mL/min';
+        resultLabel = result.stage;
+        interpretation = 'Estimated glomerular filtration rate.';
+        transparency = result.transparency;
+        break;
+      case 'anion_gap':
+        final sodium = _parseDouble(_sodiumController.text)!;
+        final chloride = _parseDouble(_chlorideController.text)!;
+        final bicarbonate = _parseDouble(_bicarbonateController.text)!;
+        final result = Renal.calculateAnionGap(
+          sodium: sodium,
+          chloride: chloride,
+          bicarbonate: bicarbonate,
+        );
+        resultValue = result.value.toStringAsFixed(1);
+        resultUnit = 'mEq/L';
+        resultLabel = result.elevated ? 'Elevated' : 'Normal';
+        interpretation = result.elevated ? 'Raised anion gap suggests metabolic acidosis.' : 'Anion gap is within the normal range.';
+        transparency = result.transparency;
+        break;
+      case 'fena':
+        final urineNa = _parseDouble(_urineNaController.text)!;
+        final serumCreatinine = _parseDouble(_serumCreatinineController.text)!;
+        final serumNa = _parseDouble(_sodiumController.text)!;
+        final urineCreatinine = _parseDouble(_urineCreatinineController.text)!;
+        final result = Renal.calculateFeNa(
+          urineNa: urineNa,
+          serumCreatinine: serumCreatinine,
+          serumNa: serumNa,
+          urineCreatinine: urineCreatinine,
+        );
+        resultValue = result.value.toStringAsFixed(2);
+        resultUnit = '%';
+        resultLabel = result.interpretation;
+        interpretation = 'Fractional excretion of sodium.';
+        transparency = result.transparency;
+        break;
+      case 'map':
+        final systolic = _parseDouble(_systolicController.text)!;
+        final diastolic = _parseDouble(_diastolicController.text)!;
+        final result = Cardiac.calculateMAP(systolic: systolic, diastolic: diastolic);
+        resultValue = result.value.toStringAsFixed(1);
+        resultUnit = 'mmHg';
+        resultLabel = result.interpretation;
+        interpretation = 'Mean arterial pressure estimation.';
+        transparency = result.transparency;
+        break;
+      case 'qtc':
+        final qtMs = _parseDouble(_qtController.text)!;
+        final heartRate = _parseDouble(_heartRateController.text)!;
+        final result = Cardiac.calculateQTc(qtMs: qtMs, heartRate: heartRate);
+        resultValue = '${result.bazett} / ${result.fridericia}';
+        resultUnit = 'ms';
+        resultLabel = result.interpretation;
+        interpretation = 'QTc using Bazett and Fridericia corrections.';
+        transparency = result.transparency;
+        break;
+      case 'cardiac_output':
+        final heartRate = _parseDouble(_heartRateController.text)!;
+        final strokeVolume = _parseDouble(_strokeVolumeController.text)!;
+        final bsa = _parseDouble(_heightController.text);
+        final result = Cardiac.calculateCardiacOutput(
+          heartRate: heartRate,
+          strokeVolume: strokeVolume,
+          bsa: bsa,
+        );
+        resultValue = result.cardiacOutput.toStringAsFixed(2);
+        resultUnit = 'L/min';
+        resultLabel = result.interpretation;
+        interpretation = bsa != null
+            ? 'Cardiac index: ${result.cardiacIndex?.toStringAsFixed(2) ?? "n/a"} L/min/m\u{00B2}'
+            : 'Cardiac output without BSA.';
+        transparency = result.transparency;
+        break;
+      case 'paed_weight':
+        final age = _parseInt(_ageController.text)!;
+        final result = Paediatrics.estimateWeight(age: age);
+        resultValue = result.recommended.toStringAsFixed(1);
+        resultUnit = 'kg';
+        resultLabel = 'Estimated paediatric weight';
+        interpretation = 'Recommended weight using APLS and Nelson formulas.';
+        transparency = result.transparency;
+        break;
+      case 'schwartz':
+        final height = _getHeightInCm();
+        final serumCreatinine = _parseDouble(_serumCreatinineController.text)!;
+        final result = Paediatrics.calculateSchwartz(heightCm: height, serumCreatinine: serumCreatinine);
+        resultValue = result.egfr.toStringAsFixed(1);
+        resultUnit = 'mL/min/1.73m\u{00B2}';
+        resultLabel = result.stage;
+        interpretation = 'Schwartz paediatric eGFR estimate.';
+        transparency = result.transparency;
+        break;
+      case 'paed_dose':
+        final doseMg = _parseDouble(_doseMgPerKgController.text)!;
+        final weight = _parseDouble(_weightController.text)!;
+        final result = Paediatrics.calculateDose(
+          doseMgPerKg: doseMg,
+          weightKg: weight,
+          frequencyPerDay: _selectedFrequency,
+        );
+        resultValue = result.singleDoseMg.toStringAsFixed(1);
+        resultUnit = 'mg';
+        resultLabel = 'Single dose';
+        interpretation = 'Daily total = ${result.dailyTotalMg.toStringAsFixed(1)} mg.';
+        transparency = result.transparency;
+        break;
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('This calculator is not implemented yet.')),
+        );
+        return;
     }
 
-    setState(() {
-      _showResult = true;
-      _interpretation = '';
-      _transparency = '';
+    if (!mounted) return;
 
-      switch (widget.calculator.id) {
-        case 'bmi':
-          final weight = _parseDouble(_weightController.text)!;
-          final height = _parseDouble(_heightController.text)!;
-          final result = BodyMetrics.calculateBMI(weightKg: weight, heightCm: height);
-          _resultValue = result.value.toStringAsFixed(1);
-          _resultUnit = 'kg/m²';
-          _resultLabel = result.category;
-          _interpretation = 'BMI calculated from weight and height.';
-          _transparency = result.transparency;
-          break;
-        case 'bsa':
-          final weight = _parseDouble(_weightController.text)!;
-          final height = _parseDouble(_heightController.text)!;
-          final result = BodyMetrics.calculateBSA(weightKg: weight, heightCm: height);
-          _resultValue = '${result.mosteller} / ${result.dubois}';
-          _resultUnit = 'm²';
-          _resultLabel = 'Mosteller / DuBois';
-          _interpretation = 'Body surface area estimate.';
-          _transparency = result.transparency;
-          break;
-        case 'ibw':
-          final height = _parseDouble(_heightController.text)!;
-          final result = BodyMetrics.calculateIBW(heightCm: height, isMale: _isMale);
-          _resultValue = result.value.toStringAsFixed(1);
-          _resultUnit = 'kg';
-          _resultLabel = 'Ideal body weight';
-          _interpretation = 'Using ${_isMale ? 'male' : 'female'} Devine formula.';
-          _transparency = result.transparency;
-          break;
-        case 'iv_drip_rate':
-          final volume = _parseDouble(_volumeController.text)!;
-          final time = _parseDouble(_timeController.text)!;
-          final factor = _parseDouble(_dropFactorController.text)!.round();
-          final result = FluidsAndDrips.calculateIVDrip(
-            volumeMl: volume,
-            timeHours: time,
-            dropFactor: factor,
-          );
-          _resultValue = result.rounded.toString();
-          _resultUnit = 'gtt/min';
-          _resultLabel = 'Drip rate';
-          _interpretation = 'IV infusion rate for the selected volume and drop factor.';
-          _transparency = result.transparency;
-          break;
-        case 'maintenance_fluid':
-          final weight = _parseDouble(_weightController.text)!;
-          final result = FluidsAndDrips.calculateMaintenanceFluid(weightKg: weight);
-          _resultValue = result.hourlyRate.toStringAsFixed(1);
-          _resultUnit = 'mL/hr';
-          _resultLabel = 'Hourly maintenance fluid';
-          _interpretation = 'Daily rate = ${result.dailyRate.toStringAsFixed(1)} mL/day.';
-          _transparency = result.transparency;
-          break;
-        case 'parkland':
-          final weight = _parseDouble(_weightController.text)!;
-          final tbsa = _parseDouble(_tbsaController.text)!;
-          final result = FluidsAndDrips.calculateParkland(weightKg: weight, tbsaPercent: tbsa);
-          _resultValue = result.total24hr.toStringAsFixed(1);
-          _resultUnit = 'mL';
-          _resultLabel = '24hr total fluid';
-          _interpretation = 'First 8hr: ${result.first8hrRate.toStringAsFixed(1)} mL/hr, next 16hr: ${result.next16hrRate.toStringAsFixed(1)} mL/hr.';
-          _transparency = result.transparency;
-          break;
-        case 'egfr':
-          final age = _parseInt(_ageController.text)!;
-          final weight = _parseDouble(_weightController.text)!;
-          final creatinine = _parseDouble(_serumCreatinineController.text)!;
-          final result = Renal.calculateEGFR(
-            age: age,
-            weightKg: weight,
-            serumCreatinine: creatinine,
-            isFemale: !_isMale,
-          );
-          _resultValue = result.egfr.toStringAsFixed(1);
-          _resultUnit = 'mL/min';
-          _resultLabel = result.stage;
-          _interpretation = 'Estimated glomerular filtration rate.';
-          _transparency = result.transparency;
-          break;
-        case 'anion_gap':
-          final sodium = _parseDouble(_sodiumController.text)!;
-          final chloride = _parseDouble(_chlorideController.text)!;
-          final bicarbonate = _parseDouble(_bicarbonateController.text)!;
-          final result = Renal.calculateAnionGap(
-            sodium: sodium,
-            chloride: chloride,
-            bicarbonate: bicarbonate,
-          );
-          _resultValue = result.value.toStringAsFixed(1);
-          _resultUnit = 'mEq/L';
-          _resultLabel = result.elevated ? 'Elevated' : 'Normal';
-          _interpretation = result.elevated ? 'Raised anion gap suggests metabolic acidosis.' : 'Anion gap is within the normal range.';
-          _transparency = result.transparency;
-          break;
-        case 'fena':
-          final urineNa = _parseDouble(_urineNaController.text)!;
-          final serumCreatinine = _parseDouble(_serumCreatinineController.text)!;
-          final serumNa = _parseDouble(_sodiumController.text)!;
-          final urineCreatinine = _parseDouble(_urineCreatinineController.text)!;
-          final result = Renal.calculateFeNa(
-            urineNa: urineNa,
-            serumCreatinine: serumCreatinine,
-            serumNa: serumNa,
-            urineCreatinine: urineCreatinine,
-          );
-          _resultValue = result.value.toStringAsFixed(2);
-          _resultUnit = '%';
-          _resultLabel = result.interpretation;
-          _interpretation = 'Fractional excretion of sodium.';
-          _transparency = result.transparency;
-          break;
-        case 'map':
-          final systolic = _parseDouble(_systolicController.text)!;
-          final diastolic = _parseDouble(_diastolicController.text)!;
-          final result = Cardiac.calculateMAP(systolic: systolic, diastolic: diastolic);
-          _resultValue = result.value.toStringAsFixed(1);
-          _resultUnit = 'mmHg';
-          _resultLabel = result.interpretation;
-          _interpretation = 'Mean arterial pressure estimation.';
-          _transparency = result.transparency;
-          break;
-        case 'qtc':
-          final qtMs = _parseDouble(_qtController.text)!;
-          final heartRate = _parseDouble(_heartRateController.text)!;
-          final result = Cardiac.calculateQTc(qtMs: qtMs, heartRate: heartRate);
-          _resultValue = '${result.bazett} / ${result.fridericia}';
-          _resultUnit = 'ms';
-          _resultLabel = result.interpretation;
-          _interpretation = 'QTc using Bazett and Fridericia corrections.';
-          _transparency = result.transparency;
-          break;
-        case 'cardiac_output':
-          final heartRate = _parseDouble(_heartRateController.text)!;
-          final strokeVolume = _parseDouble(_strokeVolumeController.text)!;
-          final bsa = _parseDouble(_heightController.text);
-          final result = Cardiac.calculateCardiacOutput(
-            heartRate: heartRate,
-            strokeVolume: strokeVolume,
-            bsa: bsa,
-          );
-          _resultValue = result.cardiacOutput.toStringAsFixed(2);
-          _resultUnit = 'L/min';
-          _resultLabel = result.interpretation;
-          _interpretation = bsa != null
-              ? 'Cardiac index: ${result.cardiacIndex?.toStringAsFixed(2) ?? 'n/a'} L/min/m²'
-              : 'Cardiac output without BSA.';
-          _transparency = result.transparency;
-          break;
-        case 'paed_weight':
-          final age = _parseInt(_ageController.text)!;
-          final result = Paediatrics.estimateWeight(age: age);
-          _resultValue = result.recommended.toStringAsFixed(1);
-          _resultUnit = 'kg';
-          _resultLabel = 'Estimated paediatric weight';
-          _interpretation = 'Recommended weight using APLS and Nelson formulas.';
-          _transparency = result.transparency;
-          break;
-        case 'schwartz':
-          final height = _parseDouble(_heightController.text)!;
-          final serumCreatinine = _parseDouble(_serumCreatinineController.text)!;
-          final result = Paediatrics.calculateSchwartz(heightCm: height, serumCreatinine: serumCreatinine);
-          _resultValue = result.egfr.toStringAsFixed(1);
-          _resultUnit = 'mL/min/1.73m²';
-          _resultLabel = result.stage;
-          _interpretation = 'Schwartz paediatric eGFR estimate.';
-          _transparency = result.transparency;
-          break;
-        case 'paed_dose':
-          final doseMg = _parseDouble(_doseMgPerKgController.text)!;
-          final weight = _parseDouble(_weightController.text)!;
-          final result = Paediatrics.calculateDose(
-            doseMgPerKg: doseMg,
-            weightKg: weight,
-            frequencyPerDay: _selectedFrequency,
-          );
-          _resultValue = result.singleDoseMg.toStringAsFixed(1);
-          _resultUnit = 'mg';
-          _resultLabel = 'Single dose';
-          _interpretation = 'Daily total = ${result.dailyTotalMg.toStringAsFixed(1)} mg.';
-          _transparency = result.transparency;
-          break;
-        default:
-          _showResult = false;
-          break;
-      }
-    });
+    final inputValues = _buildInputValues();
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ResultScreen(
+          calculatorName: widget.calculator.name,
+          calculatorId: widget.calculator.id,
+          category: widget.calculator.category,
+          inputValues: inputValues,
+          resultValue: resultValue,
+          resultUnit: resultUnit,
+          resultLabel: resultLabel,
+          interpretation: interpretation,
+          transparency: transparency,
+          calculationSummary: '${widget.calculator.name}: $resultValue $resultUnit ($resultLabel)',
+        ),
+      ),
+    );
   }
 
   String _buildSubtitle() {
@@ -535,54 +604,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   ],
                 ),
               ),
-              if (_showResult) ...[
-                const SizedBox(height: 24),
-                ResultDisplay(
-                  resultValue: _resultValue,
-                  resultUnit: _resultUnit,
-                  resultLabel: _resultLabel,
-                  interpretation: _interpretation,
-                ),
-                const SizedBox(height: 16),
-                FormulaDisplay(
-                  formula: _transparency,
-                  formulaName: 'Transparency',
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => SaveToPatientScreen(
-                                calculationSummary: '${widget.calculator.name} • $_resultValue $_resultUnit ($_resultLabel)',
-                              ),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.person_add_alt_1_outlined),
-                        label: const Text('Save to Patient'),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          SharePlus.instance.share(
-                            ShareParams(
-                              text: '${widget.calculator.name}: $_resultValue $_resultUnit - $_resultLabel',
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.share_outlined),
-                        label: const Text('Share Result'),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+
             ],
           ),
         ),

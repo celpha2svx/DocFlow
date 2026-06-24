@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocFlow — Clinical Calculator for Nigerian Doctors</title>
+  <meta name="description" content="Evidence-based medical calculators for Nigerian clinicians. BMI, eGFR, drug dosing, and more — with full formula transparency.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ====== NAVBAR ====== -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <img src="assets/logo.svg" alt="DocFlow" width="32" height="32">
+        DocFlow
+      </a>
+      <button class="mobile-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#calculators">Calculators</a></li>
+        <li><a href="#transparency">Transparency</a></li>
+        <li><a href="#download" class="nav-cta">Download</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ====== HERO ====== -->
+  <header class="hero" id="home">
+    <div class="floating-elements">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge">v1.0.0 — Open Source</div>
+        <h1>Clinical calculations,<br><span>built for Nigerian doctors</span></h1>
+        <p>
+          Evidence-based medical calculators with full formula transparency.
+          BMI, eGFR, drug dosing, cardiac output, and more — designed for
+          the way you practice.
+        </p>
+        <div class="hero-buttons">
+          <a href="#download" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download APK
+          </a>
+          <a href="https://github.com/anomalyco/DocFlow" target="_blank" rel="noopener" class="btn btn-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="assets/phone-mockup.svg" alt="DocFlow app home screen" width="320" height="auto">
+      </div>
+    </div>
+  </header>
+
+  <!-- ====== FEATURES ====== -->
+  <section class="section" id="features">
+    <div class="section-header">
+      <h2>Built for the bedside</h2>
+      <p>Every feature designed to help you make faster, more confident clinical decisions.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🧮</div>
+        <h3>15+ Medical Calculators</h3>
+        <p>From BMI and eGFR to paediatric drug dosing and burn resuscitation — everything you need in one place.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Full Formula Transparency</h3>
+        <p>Every calculation shows the formula and substituted values. Verify the math before applying it clinically.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👤</div>
+        <h3>Patient Records</h3>
+        <p>Save results to patient profiles, track calculation history, and never lose a clinical decision trail.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Offline-First &amp; Private</h3>
+        <p>All data stored locally on your device. PIN-protected access. Optional encrypted cloud backup.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3>Search &amp; Quick Access</h3>
+        <p>Find any calculator in seconds — search by name, category, or keyword. No scrolling through menus.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📤</div>
+        <h3>Share Results Instantly</h3>
+        <p>Share calculation results with colleagues via any messaging app. Perfect for consultations and handoffs.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CALCULATORS ====== -->
+  <section class="section" id="calculators">
+    <div class="section-header">
+      <h2>Every calculator you need</h2>
+      <p>Fifteen evidence-based tools, organized by specialty. Each one shows its formula and clinical interpretation.</p>
+    </div>
+
+    <div class="calculators-grid">
+      <!-- Body Metrics -->
+      <div class="calc-category">
+        <h3>🧍 Body Metrics</h3>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">📏</div>
+            <div><h4>Body Mass Index (BMI)</h4><p>Weight and height-based obesity assessment</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">📐</div>
+            <div><h4>Body Surface Area (BSA)</h4><p>Mosteller &amp; DuBois formulas for chemotherapy dosing</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">⚖️</div>
+            <div><h4>Ideal Body Weight (IBW)</h4><p>Devine formula for ventilator and drug dosing</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+      </div>
+
+      <!-- Fluids & Drips -->
+      <div class="calc-category">
+        <h3>💧 Fluids &amp; Drips</h3>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">💉</div>
+            <div><h4>IV Drip Rate</h4><p>Convert volume and time to drops per minute</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">🫗</div>
+            <div><h4>Maintenance Fluids (4-2-1)</h4><p>Holliday-Segar hourly fluid calculation</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">🔥</div>
+            <div><h4>Parkland Formula (Burns)</h4><p>Burn resuscitation fluid estimation</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+      </div>
+
+      <!-- Renal -->
+      <div class="calc-category">
+        <h3>🫘 Renal</h3>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">🩺</div>
+            <div><h4>eGFR (Cockcroft-Gault)</h4><p>Renal function estimation for drug dosing</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">🧪</div>
+            <div><h4>Anion Gap</h4><p>Metabolic acidosis differential diagnosis</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">🧬</div>
+            <div><h4>FeNa</h4><p>Fractional excretion of sodium for AKI evaluation</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+      </div>
+
+      <!-- Cardiac -->
+      <div class="calc-category">
+        <h3>❤️ Cardiac</h3>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">🫀</div>
+            <div><h4>Mean Arterial Pressure (MAP)</h4><p>Perfusion pressure calculation for ICU</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">📈</div>
+            <div><h4>Corrected QT Interval (QTc)</h4><p>Bazett &amp; Fridericia corrections for ECG</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">💓</div>
+            <div><h4>Cardiac Output</h4><p>Heart rate × stroke volume with cardiac index</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+      </div>
+
+      <!-- Paediatrics -->
+      <div class="calc-category">
+        <h3>👶 Paediatrics</h3>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">📊</div>
+            <div><h4>Weight Estimation by Age</h4><p>APLS &amp; Nelson formulas for emergency dosing</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">🧒</div>
+            <div><h4>Paediatric eGFR (Schwartz)</h4><p>Bedside renal function in children</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+        <div class="calc-card">
+          <div class="calc-card-left">
+            <div class="calc-icon">💊</div>
+            <div><h4>Paediatric Drug Dosing</h4><p>Weight-based dosing with common drug presets</p></div>
+          </div>
+          <span class="calc-arrow">→</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== TRANSPARENCY ====== -->
+  <section class="section-dark" id="transparency">
+    <div class="section-header">
+      <h2>See the math behind the result</h2>
+      <p>Every calculation shows its formula with your values already substituted. No black boxes — verify before you apply.</p>
+    </div>
+    <div class="transparency-content" style="max-width:1200px;margin:0 auto;">
+      <div class="transparency-text">
+        <h3>Full formula transparency</h3>
+        <p>When you calculate a result, DocFlow shows you the exact formula and how your patient's values were substituted into it. This isn't just a number — it's a verifiable clinical decision.</p>
+        <ul>
+          <li>See every formula step-by-step</li>
+          <li>Verify substituted values at a glance</li>
+          <li>Share the transparent calculation with your team</li>
+          <li>Audit trail for medico-legal confidence</li>
+        </ul>
+      </div>
+      <div class="transparency-visual">
+        <img src="assets/result-screen.svg" alt="DocFlow result screen with formula transparency" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== DOWNLOAD ====== -->
+  <section class="section" id="download">
+    <div class="section-header">
+      <h2>Get DocFlow</h2>
+      <p>Free and open source. Download the latest APK or explore the source code.</p>
+    </div>
+    <div class="download-cards">
+      <div class="download-card featured">
+        <div class="download-icon">📱</div>
+        <h3>Android APK</h3>
+        <p>Install directly on your Android phone. Sideloading enabled.</p>
+        <div class="version">v1.0.0 • 6 MB</div>
+        <a href="https://github.com/anomalyco/DocFlow/releases/latest" target="_blank" rel="noopener" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download APK
+        </a>
+      </div>
+      <div class="download-card">
+        <div class="download-icon">📦</div>
+        <h3>Source Code</h3>
+        <p>Clone the repository, build from source, or contribute.</p>
+        <div class="version">MIT License</div>
+        <a href="https://github.com/anomalyco/DocFlow" target="_blank" rel="noopener" class="btn btn-outline">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          View on GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="assets/logo.svg" alt="DocFlow" width="36" height="36">
+        <h4>DocFlow</h4>
+        <p>Evidence-based medical calculators for Nigerian clinicians. Open source and built with care.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="#features">Features</a>
+        <a href="#calculators">Calculators</a>
+        <a href="#transparency">Transparency</a>
+        <a href="#download">Download</a>
+      </div>
+      <div class="footer-col">
+        <h5>Community</h5>
+        <a href="https://github.com/anomalyco/DocFlow/issues" target="_blank" rel="noopener">Report Issue</a>
+        <a href="https://github.com/anomalyco/DocFlow/discussions" target="_blank" rel="noopener">Discussions</a>
+        <a href="https://github.com/anomalyco/DocFlow" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <a href="https://github.com/anomalyco/DocFlow/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 DocFlow. Open source (MIT).</span>
+      <span>Built for Nigerian doctors, everywhere.</span>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

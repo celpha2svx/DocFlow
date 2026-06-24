@@ -1,12 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:docflow_app/app_state.dart';
 import 'package:docflow_app/screens/feature_request_screen.dart';
-import 'package:docflow_app/services/cloud_sync_service.dart';
 import 'package:docflow_app/utils/constants.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  bool _syncing = false;
+  String? _lastSyncTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLastSyncTime();
+  }
+
+  Future<void> _loadLastSyncTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastSync = prefs.getString('last_sync_time');
+    if (mounted) {
+      setState(() => _lastSyncTime = lastSync);
+    }
+  }
+
+  Future<void> _saveLastSyncTime() async {
+    final now = DateTime.now().toIso8601String();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('last_sync_time', now);
+    if (mounted) {
+      setState(() => _lastSyncTime = now);
+    }
+  }
+
+  Future<void> _syncToCloud() async {
+    final appState = AppStateProvider.maybeOf(context);
+    final doctor = appState?.currentDoctor;
+    if (appState == null || doctor == null) return;
+
+    setState(() => _syncing = true);
+    try {
+      await appState.cloudSyncService.syncToCloud(doctor.phoneNumber);
+      await _saveLastSyncTime();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cloud sync completed')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sync failed: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _syncing = false);
+    }
+  }
+
+  Future<void> _restoreFromCloud() async {
+    final appState = AppStateProvider.maybeOf(context);
+    final doctor = appState?.currentDoctor;
+    if (appState == null || doctor == null) return;
+
+    setState(() => _syncing = true);
+    try {
+      await appState.cloudSyncService.restoreFromCloud(doctor.phoneNumber);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cloud restore completed')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Restore failed: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _syncing = false);
+    }
+  }
+
+  String _formatSyncTime(String? iso) {
+    if (iso == null) return 'Never';
+    final dt = DateTime.tryParse(iso);
+    if (dt == null) return 'Never';
+    final diff = DateTime.now().difference(dt);
+    if (diff.inMinutes < 1) return 'Just now';
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
+    if (diff.inHours < 24) return '${diff.inHours}h ago';
+    return '${diff.inDays}d ago';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,20 +145,17 @@ class SettingsScreen extends StatelessWidget {
               child: Column(
                 children: [
                   ListTile(
-                    leading: const Icon(Icons.cloud_upload_outlined),
+                    leading: _syncing
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.cloud_upload_outlined),
                     title: const Text('Backup to Cloud'),
-                    subtitle: const Text('Sync patient records to Firestore'),
+                    subtitle: Text('Last sync: ${_formatSyncTime(_lastSyncTime)}'),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () async {
-                      final doctor = appState?.currentDoctor;
-                      if (doctor == null || appState == null) return;
-                      final sync = CloudSyncService(databaseService: appState.databaseService);
-                      await sync.syncToCloud(doctor.phoneNumber);
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Backup attempted. Firebase will work once configured.')),
-                      );
-                    },
+                    onTap: _syncing ? null : _syncToCloud,
                   ),
                   const Divider(height: 0),
                   ListTile(
@@ -79,16 +163,7 @@ class SettingsScreen extends StatelessWidget {
                     title: const Text('Restore from Cloud'),
                     subtitle: const Text('Recover records on a new phone'),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () async {
-                      final doctor = appState?.currentDoctor;
-                      if (doctor == null || appState == null) return;
-                      final sync = CloudSyncService(databaseService: appState.databaseService);
-                      await sync.restoreFromCloud(doctor.phoneNumber);
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Restore attempted. Firebase will work once configured.')),
-                      );
-                    },
+                    onTap: _syncing ? null : _restoreFromCloud,
                   ),
                 ],
               ),

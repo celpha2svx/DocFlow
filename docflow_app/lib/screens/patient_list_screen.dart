@@ -98,12 +98,13 @@ class _PatientListScreenState extends State<PatientListScreen> {
                               },
                             ),
                             trailing: const Icon(Icons.chevron_right),
-                            onTap: () {
-                              Navigator.of(context).push(
+                            onTap: () async {
+                              await Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (_) => PatientDetailScreen(patient: patient),
                                 ),
                               );
+                              setState(() {});
                             },
                           ),
                         );
@@ -117,10 +118,11 @@ class _PatientListScreenState extends State<PatientListScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          await Navigator.of(context).push(
             MaterialPageRoute(builder: (_) => const SaveToPatientScreen()),
           );
+          setState(() {});
         },
         icon: const Icon(Icons.add),
         label: const Text('Add Patient'),

@@ -2,14 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:docflow_app/app_state.dart';
+import 'package:docflow_app/models/calculation.dart';
 import 'package:docflow_app/models/patient.dart';
+import 'package:docflow_app/screens/patient_detail_screen.dart';
+import 'package:docflow_app/services/cloud_sync_service.dart';
 import 'package:docflow_app/utils/constants.dart';
 import 'package:docflow_app/utils/validators.dart';
 
 class SaveToPatientScreen extends StatefulWidget {
   final String? calculationSummary;
+  final String? calculatorId;
+  final String? category;
+  final Map<String, dynamic>? inputValues;
+  final String? resultValue;
+  final String? resultUnit;
+  final String? resultLabel;
+  final String? transparency;
 
-  const SaveToPatientScreen({super.key, this.calculationSummary});
+  /// If non-null, this screen edits an existing patient instead of creating one
+  final Patient? existingPatient;
+
+  const SaveToPatientScreen({
+    super.key,
+    this.calculationSummary,
+    this.calculatorId,
+    this.category,
+    this.inputValues,
+    this.resultValue,
+    this.resultUnit,
+    this.resultLabel,
+    this.transparency,
+    this.existingPatient,
+  });
 
   @override
   State<SaveToPatientScreen> createState() => _SaveToPatientScreenState();
@@ -26,6 +50,20 @@ class _SaveToPatientScreenState extends State<SaveToPatientScreen> {
   bool _saving = false;
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.existingPatient != null) {
+      final p = widget.existingPatient!;
+      _fullNameController.text = p.fullName;
+      _hospitalNumberController.text = p.hospitalNumber ?? '';
+      _ageController.text = p.age?.toString() ?? '';
+      _sex = p.sex ?? 'Male';
+      _weightController.text = p.weightKg?.toString() ?? '';
+      _diagnosisController.text = p.diagnosis ?? '';
+    }
+  }
+
+  @override
   void dispose() {
     _fullNameController.dispose();
     _hospitalNumberController.dispose();
@@ -33,6 +71,11 @@ class _SaveToPatientScreenState extends State<SaveToPatientScreen> {
     _weightController.dispose();
     _diagnosisController.dispose();
     super.dispose();
+  }
+
+  double _parseResultValue(String value) {
+    final first = value.split('/').first.trim();
+    return double.tryParse(first) ?? 0.0;
   }
 
   Future<void> _save() async {
@@ -49,30 +92,78 @@ class _SaveToPatientScreenState extends State<SaveToPatientScreen> {
 
     setState(() => _saving = true);
     final now = DateTime.now();
-    final patient = Patient(
-      id: const Uuid().v4(),
-      doctorPhone: doctor.phoneNumber,
-      fullName: _fullNameController.text.trim(),
-      hospitalNumber: _hospitalNumberController.text.trim().isEmpty ? null : _hospitalNumberController.text.trim(),
-      age: int.tryParse(_ageController.text.trim()),
-      sex: _sex,
-      weightKg: double.tryParse(_weightController.text.trim()),
-      diagnosis: _diagnosisController.text.trim().isEmpty ? null : _diagnosisController.text.trim(),
-      createdAt: now,
-      updatedAt: now,
-    );
+    final isEdit = widget.existingPatient != null;
+
+    Patient patient;
+    if (isEdit) {
+      patient = widget.existingPatient!.copyWith(
+        fullName: _fullNameController.text.trim(),
+        hospitalNumber: _hospitalNumberController.text.trim().isEmpty ? null : _hospitalNumberController.text.trim(),
+        age: int.tryParse(_ageController.text.trim()),
+        sex: _sex,
+        weightKg: double.tryParse(_weightController.text.trim()),
+        diagnosis: _diagnosisController.text.trim().isEmpty ? null : _diagnosisController.text.trim(),
+        updatedAt: now,
+      );
+    } else {
+      patient = Patient(
+        id: const Uuid().v4(),
+        doctorPhone: doctor.phoneNumber,
+        fullName: _fullNameController.text.trim(),
+        hospitalNumber: _hospitalNumberController.text.trim().isEmpty ? null : _hospitalNumberController.text.trim(),
+        age: int.tryParse(_ageController.text.trim()),
+        sex: _sex,
+        weightKg: double.tryParse(_weightController.text.trim()),
+        diagnosis: _diagnosisController.text.trim().isEmpty ? null : _diagnosisController.text.trim(),
+        createdAt: now,
+        updatedAt: now,
+      );
+    }
 
     try {
-      await appState.databaseService.insertPatient(patient);
+      if (isEdit) {
+        await appState.databaseService.updatePatient(patient);
+      } else {
+        await appState.databaseService.insertPatient(patient);
+      }
+
+      // Save calculation if provided
+      if (widget.calculatorId != null && widget.resultValue != null && widget.resultUnit != null) {
+        final calc = Calculation(
+          id: const Uuid().v4(),
+          patientId: patient.id,
+          doctorPhone: doctor.phoneNumber,
+          calculatorType: widget.calculatorId!,
+          category: widget.category ?? '',
+          inputValues: widget.inputValues ?? {},
+          resultValue: _parseResultValue(widget.resultValue!),
+          resultUnit: widget.resultUnit!,
+          resultLabel: widget.resultLabel ?? '',
+          transparency: widget.transparency ?? '',
+          createdAt: now,
+        );
+        await appState.databaseService.saveCalculation(calc);
+      }
+
+      // Best-effort cloud sync
+      CloudSyncService(databaseService: appState.databaseService)
+          .syncIfOnline(doctor.phoneNumber);
+
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Patient saved successfully')),
+        SnackBar(content: Text(isEdit ? 'Patient updated successfully' : 'Patient saved successfully')),
       );
-      Navigator.of(context).pop();
+
+      // Navigate to patient detail screen
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => PatientDetailScreen(patient: patient),
+        ),
+      );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not save patient: $e')),
+        SnackBar(content: Text('Could not save: $e')),
       );
     } finally {
       if (mounted) {
@@ -83,8 +174,10 @@ class _SaveToPatientScreenState extends State<SaveToPatientScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isEdit = widget.existingPatient != null;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Save Patient')),
+      appBar: AppBar(title: Text(isEdit ? 'Edit Patient' : 'Save Patient')),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(18),
@@ -94,7 +187,9 @@ class _SaveToPatientScreenState extends State<SaveToPatientScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Create a patient record to attach future calculations and notes.',
+                  isEdit
+                      ? 'Update patient record details.'
+                      : 'Create a patient record to attach future calculations and notes.',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AppConstants.subtextColor,
                         height: 1.5,
@@ -183,7 +278,7 @@ class _SaveToPatientScreenState extends State<SaveToPatientScreen> {
                           child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
                       : const Icon(Icons.save_outlined),
-                  label: Text(_saving ? 'Saving...' : 'Save'),
+                  label: Text(_saving ? 'Saving...' : (isEdit ? 'Update' : 'Save')),
                 ),
               ],
             ),

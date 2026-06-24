@@ -5,6 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:docflow_app/app_state.dart';
+import 'package:docflow_app/services/cloud_sync_service.dart';
 import 'package:docflow_app/utils/constants.dart';
 
 class FeatureRequestScreen extends StatefulWidget {
@@ -66,14 +67,16 @@ class _FeatureRequestScreenState extends State<FeatureRequestScreen> with Single
     if (appState == null || doctor == null) return;
 
     setState(() => _submitting = true);
+    final name = _calculatorNameController.text.trim();
+    final useCase = _useCaseController.text.trim();
     try {
       await appState.databaseService.savePendingSubmission(
         id: const Uuid().v4(),
         type: 'feature_request',
         payload: {
           'type': 'calculator_request',
-          'name': _calculatorNameController.text.trim(),
-          'use_case': _useCaseController.text.trim(),
+          'name': name,
+          'use_case': useCase,
           'specialty': _selectedSpecialty,
           'priority': _priority,
           'doctor_phone': sha256.convert(utf8.encode(doctor.phoneNumber)).toString(),
@@ -81,6 +84,15 @@ class _FeatureRequestScreenState extends State<FeatureRequestScreen> with Single
           'votes': 1,
           'created_at': DateTime.now().toIso8601String(),
         },
+      );
+
+      // Best-effort cloud submission
+      appState.cloudSyncService.submitCalculatorRequest(
+        name: name,
+        useCase: useCase,
+        specialty: _selectedSpecialty,
+        priority: _priority,
+        doctorPhone: doctor.phoneNumber,
       );
 
       if (!mounted) return;
@@ -103,24 +115,34 @@ class _FeatureRequestScreenState extends State<FeatureRequestScreen> with Single
     if (appState == null || doctor == null) return;
 
     setState(() => _submitting = true);
+    final message = _feedbackMessageController.text.trim();
+    final relatedCalc = _relatedCalculatorController.text.trim();
+    final contactPhone = _contactMe ? _feedbackContactController.text.trim() : null;
     try {
       await appState.databaseService.savePendingSubmission(
         id: const Uuid().v4(),
         type: 'feedback',
         payload: {
           'type': _feedbackType,
-          'calculator_id': _relatedCalculatorController.text.trim().isEmpty
-              ? null
-              : _relatedCalculatorController.text.trim(),
-          'message': _feedbackMessageController.text.trim(),
+          'calculator_id': relatedCalc.isEmpty ? null : relatedCalc,
+          'message': message,
           'contact': _contactMe,
           'doctor_phone': _contactMe
-              ? sha256.convert(utf8.encode(_feedbackContactController.text.trim())).toString()
+              ? sha256.convert(utf8.encode(contactPhone!)).toString()
               : null,
           'specialty': doctor.specialty ?? 'General Practice',
           'app_version': '1.0.0',
           'created_at': DateTime.now().toIso8601String(),
         },
+      );
+
+      // Best-effort cloud submission
+      appState.cloudSyncService.submitFeedback(
+        feedbackType: _feedbackType,
+        message: message,
+        relatedCalculator: relatedCalc.isEmpty ? null : relatedCalc,
+        contactPhone: contactPhone,
+        doctorPhone: doctor.phoneNumber,
       );
 
       if (!mounted) return;

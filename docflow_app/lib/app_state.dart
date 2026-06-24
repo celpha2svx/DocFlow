@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 
 import 'models/doctor.dart';
 import 'services/auth_service.dart';
+import 'services/cloud_sync_service.dart';
 import 'services/database_service.dart';
 
 /// Global application state manager for authentication and data
@@ -14,6 +15,9 @@ class AppState extends ChangeNotifier {
 
   /// Current authenticated doctor (null if not logged in)
   Doctor? _currentDoctor;
+
+  /// Cloud sync service
+  late final CloudSyncService _cloudSyncService;
 
   /// Current authentication status
   bool _isAuthenticated = false;
@@ -28,12 +32,15 @@ class AppState extends ChangeNotifier {
     required SharedPreferences prefs,
   })  : _authService = authService,
         _databaseService = databaseService,
-        _prefs = prefs;
+        _prefs = prefs {
+    _cloudSyncService = CloudSyncService(databaseService: _databaseService);
+  }
 
   // Getters
   Doctor? get currentDoctor => _currentDoctor;
   DatabaseService get databaseService => _databaseService;
   AuthService get authService => _authService;
+  CloudSyncService get cloudSyncService => _cloudSyncService;
   bool get isAuthenticated => _isAuthenticated;
   bool get isInitialized => _isInitialized;
   String? get authError => _authError;

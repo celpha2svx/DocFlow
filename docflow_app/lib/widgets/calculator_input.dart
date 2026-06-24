@@ -5,6 +5,7 @@ class NumberField extends StatelessWidget {
   final String label;
   final String? hintText;
   final String unit;
+  final Widget? suffixWidget;
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final ValueChanged<String>? onChanged;
@@ -15,6 +16,7 @@ class NumberField extends StatelessWidget {
     required this.label,
     this.hintText,
     required this.unit,
+    this.suffixWidget,
     required this.controller,
     this.validator,
     this.onChanged,
@@ -40,7 +42,8 @@ class NumberField extends StatelessWidget {
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           decoration: InputDecoration(
             hintText: hintText,
-            suffixText: unit,
+            suffixText: suffixWidget == null ? unit : null,
+            suffix: suffixWidget,
             filled: true,
             fillColor: AppConstants.surfaceColor,
             border: OutlineInputBorder(

@@ -111,6 +111,64 @@ class CloudSyncService {
     });
   }
 
+  /// Submit a detailed calculator request to Firestore.
+  /// Best-effort — called after local save.
+  Future<void> submitCalculatorRequest({
+    required String name,
+    required String useCase,
+    required String specialty,
+    required String priority,
+    required String doctorPhone,
+  }) async {
+    if (!await isConnected() || _client == null) return;
+    try {
+      await _client!.collection('feature_requests').add({
+        'type': 'calculator_request',
+        'name': name,
+        'useCase': useCase,
+        'specialty': specialty,
+        'priority': priority,
+        'doctorPhone': doctorPhone,
+        'status': 'pending',
+        'votes': 1,
+        'createdAt': DateTime.now().toIso8601String(),
+      });
+    } catch (_) {}
+  }
+
+  /// Submit general feedback to Firestore.
+  /// Best-effort — called after local save.
+  Future<void> submitFeedback({
+    required String feedbackType,
+    required String message,
+    String? relatedCalculator,
+    String? contactPhone,
+    required String doctorPhone,
+  }) async {
+    if (!await isConnected() || _client == null) return;
+    try {
+      await _client!.collection('feedback').add({
+        'type': feedbackType,
+        'message': message,
+        'relatedCalculator': relatedCalculator,
+        'contactPhone': contactPhone,
+        'doctorPhone': doctorPhone,
+        'createdAt': DateTime.now().toIso8601String(),
+      });
+    } catch (_) {}
+  }
+
+  /// Attempt to sync all data if connected and Firebase is available.
+  /// Call this after saving patients or calculations to keep cloud up to date.
+  Future<void> syncIfOnline(String doctorPhone) async {
+    if (!await isConnected() || _client == null) return;
+    try {
+      await syncToCloud(doctorPhone);
+    } catch (_) {
+      // Silent — cloud sync is best-effort
+    }
+  }
+
   /// Sync doctor profile to the cloud.
   /// Uses doctor phone number as the document ID for easy retrieval.
   Future<void> syncDoctor(Doctor doctor) async {

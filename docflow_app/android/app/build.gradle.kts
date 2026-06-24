@@ -6,6 +6,13 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Apply Firebase Google Services plugin only if google-services.json exists.
+// Without it, Firebase features are disabled but the app still works offline.
+val googleServicesFile = rootProject.file("app/google-services.json")
+if (googleServicesFile.exists()) {
+    apply(plugin = "com.google.gms.google-services")
+}
+
 android {
     namespace = "com.example.docflow_app"
     compileSdk = flutter.compileSdkVersion
