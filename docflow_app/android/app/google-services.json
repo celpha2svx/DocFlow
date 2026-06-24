@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "614906308378",
+    "project_id": "civic-athlete-476917-t6",
+    "storage_bucket": "civic-athlete-476917-t6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:614906308378:android:817fba2be953975d55eea3",
+        "android_client_info": {
+          "package_name": "com.example.docflow_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDX6ZzcrMqqzA0Ca9axd9wSZ3-_60sF3ks"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
