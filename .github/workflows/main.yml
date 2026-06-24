@@ -29,6 +29,28 @@ jobs:
         with:
           flutter-version: '3.44.3'
           channel: 'stable'
+      - name: Set up JDK for signing
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - name: Generate release keystore (CI)
+        run: |
+          keytool -genkey -v \
+            -keystore docflow_app/android/docflow-release.jks \
+            -alias docflow \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass docflow-release \
+            -keypass docflow-release \
+            -dname "CN=DocFlow, OU=CI, O=DocFlow, L=Lagos, ST=Lagos, C=NG"
+          cat > docflow_app/android/key.properties <<EOF
+          storePassword=docflow-release
+          keyPassword=docflow-release
+          keyAlias=docflow
+          storeFile=docflow-release.jks
+          EOF
       - run: flutter pub get
         working-directory: docflow_app
       - run: flutter build apk --release
