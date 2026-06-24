@@ -17,8 +17,6 @@ pluginManagement {
     }
 
     plugins {
-        id("org.jetbrains.kotlin.android") version "2.3.20"
-        id("com.android.application") version "9.0.1"
         id("com.google.gms.google-services") version "4.4.2"
     }
 }
