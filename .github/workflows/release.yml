@@ -1,0 +1,46 @@
+name: Auto Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.3'
+          channel: 'stable'
+      - run: flutter pub get
+        working-directory: docflow_app
+      - name: Generate release keystore
+        run: |
+          keytool -genkey -v \
+            -keystore docflow-release.jks \
+            -alias docflow \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass docflow-release \
+            -keypass docflow-release \
+            -dname "CN=DocFlow, OU=CI, O=DocFlow, L=Lagos, ST=Lagos, C=NG"
+        working-directory: docflow_app/android
+      - run: flutter build apk --release
+        env:
+          STORE_FILE: docflow-release.jks
+          STORE_PASSWORD: docflow-release
+          KEY_ALIAS: docflow
+          KEY_PASSWORD: docflow-release
+        working-directory: docflow_app
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: DocFlow ${{ github.ref_name }}
+          body: |
+            Download the APK below to install on your Android device.
+          files: docflow_app/build/app/outputs/flutter-apk/app-release.apk
