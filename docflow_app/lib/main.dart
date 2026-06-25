@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 import 'app_state.dart';
 import 'services/auth_service.dart';
+import 'services/calculator_loader.dart';
 import 'services/database_service.dart';
 
 Future<void> main() async {
@@ -27,6 +28,9 @@ Future<void> main() async {
     databaseService: databaseService,
     prefs: prefs,
   );
+
+  // Initialize calculator definitions
+  await CalculatorLoader.instance.load();
 
   // Initialize app state (check for existing auth)
   await appState.initialize();

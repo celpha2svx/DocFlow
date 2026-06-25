@@ -42,10 +42,10 @@ class CategoryScreen extends StatelessWidget {
                     ),
               ),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () {
+                  onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => CalculatorScreen(calculator: calculator),
+                    builder: (_) => CalculatorScreen(calculatorId: calculator.id),
                   ),
                 );
               },

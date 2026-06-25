@@ -97,7 +97,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     onTap: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (_) => CalculatorScreen(calculator: calculator),
+                                          builder: (_) => CalculatorScreen(calculatorId: calculator.id),
                                         ),
                                       );
                                     },
