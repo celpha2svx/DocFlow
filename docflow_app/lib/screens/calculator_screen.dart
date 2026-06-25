@@ -98,6 +98,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             val *= alt.toBase;
           }
           vars[input.id] = val;
+        } else {
+          vars[input.id] = 0;
         }
       } else if (input.type == 'toggle') {
         vars[input.id] = _toggleValues[input.id];
@@ -127,18 +129,28 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   void _calculate() {
     if (!_formKey.currentState!.validate()) return;
     final inputVars = _collectInputs();
-    final resultValues = CalculatorEngine.evaluate(_calc!, inputVars);
+    try {
+      final resultValues = CalculatorEngine.evaluate(_calc!, inputVars);
 
-    if (!mounted) return;
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ResultScreen(
-          calculator: _calc!,
-          inputValues: _buildInputValues(),
-          resultValues: resultValues,
+      if (!mounted) return;
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => ResultScreen(
+            calculator: _calc!,
+            inputValues: _buildInputValues(),
+            resultValues: resultValues,
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Calculation error: ${e.toString().replaceAll('FormatException: ', '')}'),
+          backgroundColor: AppConstants.errorColor,
+        ),
+      );
+    }
   }
 
   Widget _buildNumberInput(InputDefinition input) {
