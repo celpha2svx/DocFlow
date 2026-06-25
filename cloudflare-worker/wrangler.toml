@@ -1,0 +1,7 @@
+name = "docflow-issues"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+REPO_OWNER = "celpha2svx"
+REPO_NAME = "DocFlow"

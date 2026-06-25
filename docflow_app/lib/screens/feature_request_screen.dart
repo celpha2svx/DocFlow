@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:docflow_app/app_state.dart';
-import 'package:docflow_app/services/github_issue_service.dart';
+import 'package:docflow_app/services/issue_reporter.dart';
 import 'package:docflow_app/utils/constants.dart';
 
 class FeatureRequestScreen extends StatefulWidget {
@@ -68,7 +68,7 @@ class _FeatureRequestScreenState extends State<FeatureRequestScreen> with Single
           '**Specialty:** $_selectedSpecialty\n\n'
           '**Priority:** $_priority';
 
-      final submitted = await GitHubIssueService.submitFeatureRequest(
+      final submitted = await IssueReporter.submit(
         title: title,
         body: body,
         label: 'calculator-request',
@@ -77,11 +77,11 @@ class _FeatureRequestScreenState extends State<FeatureRequestScreen> with Single
       if (!mounted) return;
       if (submitted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Request submitted as GitHub Issue. Thank you!')),
+          const SnackBar(content: Text('Request submitted. Thank you!')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Request saved locally. Will sync when GitHub is configured.')),
+          const SnackBar(content: Text('Could not send. Please try again later.')),
         );
       }
       _calculatorNameController.clear();
@@ -106,7 +106,7 @@ class _FeatureRequestScreenState extends State<FeatureRequestScreen> with Single
           '${relatedCalc.isNotEmpty ? '**Related calculator:** $relatedCalc\n\n' : ''}'
           '**Contact:** $contactInfo';
 
-      final submitted = await GitHubIssueService.submitFeatureRequest(
+      final submitted = await IssueReporter.submit(
         title: title,
         body: body,
         label: _feedbackType == 'Bug / Wrong result' ? 'bug' : 'feedback',
@@ -115,11 +115,11 @@ class _FeatureRequestScreenState extends State<FeatureRequestScreen> with Single
       if (!mounted) return;
       if (submitted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Feedback submitted as GitHub Issue. Thank you!')),
+          const SnackBar(content: Text('Feedback submitted. Thank you!')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Feedback saved locally. Will sync when GitHub is configured.')),
+          const SnackBar(content: Text('Could not send. Please try again later.')),
         );
       }
       _feedbackMessageController.clear();

@@ -41,7 +41,8 @@ Clinical calculation tool for Nigerian doctors. Built with Flutter.
 
 - Flutter 3.44+ (Dart 3.12+)
 - SQLite (sqflite) — local patient data
-- Firebase Firestore — optional cloud backup + feature requests
+- Firebase Firestore — optional cloud backup
+- Cloudflare Workers — issue reporting (feature requests & feedback)
 - SharedPreferences — auth state + lockout tracking
 - GitHub Actions — CI/CD (release build triggered on `v*` tags)
 
@@ -62,28 +63,28 @@ flutter pub get
 flutter run
 ```
 
-### GitHub Issues integration (feature requests & feedback)
+### Issue reporting (feature requests & feedback)
 
-Feature requests and feedback are submitted as GitHub Issues. To enable this:
+Feature requests and feedback are sent through a Cloudflare Worker that creates GitHub Issues. No user GitHub account needed.
 
-1. Go to https://github.com/settings/tokens?type=beta
-2. Click "Generate new token" → **Fine-grained token**
-3. Set **Repository access** to "Only select repositories" → select your fork
-4. Set **Permissions** → **Issues** → **Read and write**
-5. Copy the generated token
+**Setup:**
 
-Create `lib/services/github_config.dart`:
+1. Go to https://github.com/settings/tokens?type=beta — create a fine-grained PAT with **Issues → Read and write** on this repo
+2. Deploy the worker (requires a free Cloudflare account + Node.js):
 
-```dart
-class GitHubConfig {
-  GitHubConfig._();
-  static const String token = 'github_pat_...';  // paste your token
-  static const String repoOwner = 'celpha2svx';
-  static const String repoName = 'DocFlow';
-}
+```bash
+cd cloudflare-worker
+npm install -g wrangler
+wrangler login
+wrangler secret put GITHUB_TOKEN    # paste your PAT
+wrangler deploy
 ```
 
-For CI, add a repository secret called `DOCFLOW_TOKEN_ISSUES` with the same token.
+3. Copy the deploy URL (e.g. `https://docflow-issues.your-subdomain.workers.dev`) and paste it into `docflow_app/lib/services/issue_reporter.dart`:
+
+```dart
+static const String _workerUrl = 'https://docflow-issues.your-subdomain.workers.dev/submit';
+```
 
 ### Release signing
 
