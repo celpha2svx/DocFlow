@@ -20,6 +20,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final _confirmPinController = TextEditingController();
 
   final List<String> _specialties = const [
+    'Medical Student',
+    'Nurse / Midwife',
     'General Practice',
     'Internal Medicine',
     'Paediatrics',
@@ -31,7 +33,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     'Other',
   ];
 
-  String _selectedSpecialty = 'General Practice';
+  String _selectedSpecialty = 'Medical Student';
   bool _submitting = false;
   String? _error;
 
@@ -118,13 +120,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                TextFormField(
-                  controller: _fullNameController,
-                  textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
-                    labelText: 'Full name',
-                    prefixText: 'Dr. ',
-                  ),
+                  TextFormField(
+                    controller: _fullNameController,
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      labelText: 'Full name',
+                      hintText: 'e.g. Dr. Okafor, Nurse Amadi, etc.',
+                    ),
                   validator: (value) {
                     if (!isValidName(value ?? '')) {
                       return 'Enter your full name';
@@ -227,9 +229,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  'DocFlow is a calculation aid. Clinical interpretation remains the responsibility of the attending clinician.',
-                  style: theme.textTheme.bodySmall?.copyWith(
+                  Text(
+                    'DocFlow is a calculation aid. Clinical interpretation remains the responsibility of the attending clinician or supervising practitioner.',
+                    style: theme.textTheme.bodySmall?.copyWith(
                     color: AppConstants.subtextColor,
                     height: 1.5,
                   ),

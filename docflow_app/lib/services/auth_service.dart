@@ -149,6 +149,16 @@ class AuthService {
     return 'invalid_pin';
   }
 
+  /// Change the PIN after verifying the old PIN.
+  /// Returns true if change succeeds, false if old PIN is wrong.
+  Future<bool> changePin(String oldPin, String newPin) async {
+    final storedHash = _prefs.getString(_pinHashKey);
+    if (storedHash == null) return false;
+    if (hashPin(oldPin) != storedHash) return false;
+    await _prefs.setString(_pinHashKey, hashPin(newPin));
+    return true;
+  }
+
   /// Reset authentication state (used for logout or admin reset).
   Future<void> reset() async {
     await _prefs.remove(_pinHashKey);

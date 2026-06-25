@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'package:docflow_app/app_state.dart';
+import 'package:docflow_app/services/notification_service.dart';
+import 'package:docflow_app/services/update_service.dart';
 import 'package:docflow_app/utils/constants.dart';
 import 'package:docflow_app/widgets/category_card.dart';
+import 'package:docflow_app/widgets/notification_banner.dart';
 import 'package:docflow_app/screens/category_screen.dart';
 import 'package:docflow_app/screens/feature_request_screen.dart';
 import 'package:docflow_app/screens/patient_list_screen.dart';
@@ -18,6 +20,89 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  List<AppNotification> _unseenNotifs = [];
+  bool _notifsLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkForUpdates();
+    _loadNotifications();
+  }
+
+  Future<void> _checkForUpdates() async {
+    try {
+      final available = await UpdateService.isUpdateAvailable();
+      if (!mounted || !available) return;
+      final ignored = await UpdateService.getIgnoredVersion();
+      final release = await UpdateService.fetchLatestRelease();
+      final latestTag = (release?['tag_name'] as String? ?? '').replaceAll(RegExp(r'^v'), '');
+      if (ignored == latestTag) return;
+
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Update Available'),
+          content: Text('DocFlow $latestTag is now available. Would you like to download and install?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                UpdateService.ignoreVersion(latestTag);
+                Navigator.of(ctx).pop();
+              },
+              child: const Text('Skip This Version'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Later'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.of(ctx).pop();
+                await _downloadAndInstall();
+              },
+              child: const Text('Update Now'),
+            ),
+          ],
+        ),
+      );
+    } catch (_) {}
+  }
+
+  Future<void> _downloadAndInstall() async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Downloading update...')),
+    );
+    final filePath = await UpdateService.downloadApk();
+    if (filePath == null || !mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Download failed. Try again later.')),
+      );
+      return;
+    }
+    final installed = await UpdateService.installApk(filePath);
+    if (!mounted) return;
+    if (installed) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Installing update...')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not install automatically. Open the file manually.')),
+      );
+    }
+  }
+
+  Future<void> _loadNotifications() async {
+    final notifs = await NotificationService.getUnseenNotifications();
+    if (mounted) {
+      setState(() {
+        _unseenNotifs = notifs;
+        _notifsLoaded = true;
+      });
+    }
+  }
 
   String _greetingFor(DateTime now) {
     final hour = now.hour;
@@ -30,8 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final appState = AppStateProvider.maybeOf(context);
     final doctor = appState?.currentDoctor;
-    final doctorName = doctor == null ? 'Doctor' : doctor.fullName.trim();
-    final doctorFirstName = doctorName.split(RegExp(r'\s+')).firstOrNull ?? 'Doctor';
+    final doctorName = doctor == null ? 'Clinician' : doctor.fullName.trim();
+    final doctorFirstName = doctorName.split(RegExp(r'\s+')).firstOrNull ?? 'Clinician';
     final totalCalculators = categories.fold<int>(0, (sum, category) => sum + category.calculators.length);
 
     return Scaffold(
@@ -39,12 +124,8 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('DocFlow'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_none),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Notifications are not configured yet.')),
-              );
-            },
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed: _loadNotifications,
           ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
@@ -82,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 18),
               Text(
-                '${_greetingFor(DateTime.now())}, Dr. $doctorFirstName',
+                '${_greetingFor(DateTime.now())}, $doctorFirstName',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppConstants.textColor,
@@ -90,12 +171,19 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                'Use patient-specific calculations and review the formula steps before applying clinical decisions.',
+                'Access 50+ evidence-based medical calculators across 12 specialties.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppConstants.subtextColor,
                       height: 1.4,
                     ),
               ),
+              if (_unseenNotifs.isNotEmpty) ...[
+                const SizedBox(height: 14),
+                NotificationBanner(
+                  notifications: _unseenNotifs,
+                  onDismiss: () => setState(() => _unseenNotifs = []),
+                ),
+              ],
               const SizedBox(height: 20),
               Row(
                 children: [

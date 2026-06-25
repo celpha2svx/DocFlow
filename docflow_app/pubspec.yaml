@@ -1,7 +1,7 @@
 name: docflow_app
-description: DocFlow - Clinical calculation tool for Nigerian doctors.
+description: DocFlow - Clinical calculations for Nigerian clinicians, medical students & nurses.
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.1.1+1
 
 environment:
   sdk: '>=3.12.2 <4.0.0'
@@ -19,6 +19,8 @@ dependencies:
   crypto: ^3.0.3
   firebase_core: ^2.24.2
   cloud_firestore: ^4.15.1
+  package_info_plus: ^8.0.0
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:

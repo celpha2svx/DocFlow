@@ -163,6 +163,18 @@ class AppState extends ChangeNotifier {
     }
   }
 
+  /// Change PIN after verifying old PIN
+  Future<bool> changePin(String oldPin, String newPin) async {
+    return await _authService.changePin(oldPin, newPin);
+  }
+
+  /// Update doctor profile and persist to DB
+  Future<void> updateDoctorProfile(Doctor updated) async {
+    await _databaseService.updateDoctor(updated);
+    _currentDoctor = updated;
+    notifyListeners();
+  }
+
   /// Logout
   Future<void> logout() async {
     try {

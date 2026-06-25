@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:docflow_app/app_state.dart';
+import 'package:docflow_app/screens/change_pin_screen.dart';
+import 'package:docflow_app/screens/edit_profile_screen.dart';
 import 'package:docflow_app/screens/feature_request_screen.dart';
+import 'package:docflow_app/screens/onboarding_screen.dart';
+import 'package:docflow_app/services/update_service.dart';
 import 'package:docflow_app/utils/constants.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -114,10 +118,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             _SectionTitle(title: 'Profile'),
               Card(
-                child: ListTile(
-                  leading: const Icon(Icons.badge_outlined),
-                  title: Text(doctor?.fullName ?? 'Doctor profile'),
-                  subtitle: Text(profileDetails.join(' • ')),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.badge_outlined),
+                      title: Text(doctor?.fullName ?? 'Your profile'),
+                      subtitle: Text(profileDetails.join(' • ')),
+                      trailing: const Icon(Icons.edit_outlined),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => const EditProfileScreen()),
+                        );
+                      },
+                    ),
+                    const Divider(height: 0),
+                    ListTile(
+                      leading: const Icon(Icons.logout, color: AppConstants.errorColor),
+                      title: const Text('Logout', style: TextStyle(color: AppConstants.errorColor)),
+                      onTap: () async {
+                        final confirmed = await showDialog<bool>(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: const Text('Logout'),
+                            content: const Text('You will need to enter your PIN again to access the app.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(ctx).pop(false),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.of(ctx).pop(true),
+                                child: const Text('Logout', style: TextStyle(color: AppConstants.errorColor)),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed == true) {
+                          await appState?.logout();
+                          if (!context.mounted) return;
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+                            (_) => false,
+                          );
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ),
             const SizedBox(height: 18),
@@ -131,8 +177,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     subtitle: const Text('Update the 4-digit unlock PIN'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('PIN change flow can be added here.')),
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const ChangePinScreen()),
                       );
                     },
                   ),
@@ -171,10 +217,80 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 18),
             _SectionTitle(title: 'About'),
             Card(
-              child: ListTile(
-                leading: const Icon(Icons.info_outline),
-                title: const Text('DocFlow'),
-                subtitle: const Text('Version 1.0.0'),
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.info_outline),
+                    title: const Text('DocFlow'),
+                    subtitle: const Text('Version 1.1.1'),
+                  ),
+                  const Divider(height: 0),
+                  const ListTile(
+                    leading: Icon(Icons.favorite_outline),
+                    title: Text('Built for Nigerian clinicians'),
+                    subtitle: Text('Open source (MIT) — for doctors, nurses & medical students'),
+                  ),
+                  const Divider(height: 0),
+                  ListTile(
+                    leading: const Icon(Icons.system_update_outlined),
+                    title: const Text('Check for Updates'),
+                    subtitle: const Text('Download and install the latest version'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () async {
+                      final release = await UpdateService.fetchLatestRelease();
+                      final current = await UpdateService.getCurrentVersion();
+                      final latestTag = (release?['tag_name'] as String? ?? '').replaceAll(RegExp(r'^v'), '');
+                      if (!context.mounted) return;
+                      if (latestTag.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Could not check for updates. Check your connection.')),
+                        );
+                        return;
+                      }
+                      if (latestTag == current) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('You are on the latest version')),
+                        );
+                        return;
+                      }
+                      showDialog(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: const Text('Update Available'),
+                          content: Text('DocFlow $latestTag is available. You have $current. Download and install now?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(ctx).pop(),
+                              child: const Text('Later'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                Navigator.of(ctx).pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Downloading update...')),
+                                );
+                                final filePath = await UpdateService.downloadApk();
+                                if (filePath == null || !context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Download failed. Try again later.')),
+                                  );
+                                  return;
+                                }
+                                await UpdateService.installApk(filePath);
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Installing update...')),
+                                  );
+                                }
+                              },
+                              child: Text('Update to $latestTag'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 18),
