@@ -2,22 +2,48 @@
 
 Clinical calculation tool for Nigerian doctors. Built with Flutter.
 
+<p align="center">
+  <a href="https://github.com/celpha2svx/DocFlow/releases/latest"><img src="https://img.shields.io/github/v/release/celpha2svx/DocFlow?label=version&logo=github" alt="Latest release"></a>
+  <a href="https://github.com/celpha2svx/DocFlow/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/celpha2svx/DocFlow/release.yml?logo=github" alt="Release build"></a>
+  <img src="https://img.shields.io/badge/flutter-3.44+-blue?logo=flutter" alt="Flutter 3.44+">
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License">
+  <a href="https://celpha2svx.github.io/DocFlow/"><img src="https://img.shields.io/badge/website-docs-1F4E79?logo=githubpages" alt="Website"></a>
+</p>
+
 ## Features
 
-- **15 medical calculators** across 5 categories: Body Metrics, Fluids & Drips, Renal, Cardiac, Paediatrics
-- **Full formula transparency** — every calculation shows step-by-step working
+- **50+ medical calculators** across 12 specialties — Body Metrics, Cardiac, Renal, Fluids & Drips, Paediatrics, Neurology, Respiratory, Sepsis & ICU, Obstetrics & Gynaecology, Gastroenterology, Haematology & Oncology, Endocrinology & Metabolic
+- **Full formula transparency** — every calculation shows step-by-step working with substituted values
+- **JSON-driven calculator engine** — new calculators added via `assets/calculators.json`, no app store update required
 - **Patient records** — save calculations to patient profiles (local SQLite)
 - **PIN-protected access** — SHA-256 hashed, with lockout after 3 failed attempts
 - **Cloud sync** — optional Firebase Firestore backup and restore
-- **Offline-first** — all features work without internet; submissions queue when offline
+- **Offline-first** — all features work without internet
+
+## Calculators
+
+| Category | Calculators |
+|---|---|
+| Body Metrics | BMI, BSA (Mosteller/DuBois), Ideal Body Weight (Devine) |
+| Cardiac | MAP, QTc (Bazett/Fridericia), Cardiac Output & Index |
+| Renal | eGFR (Cockcroft-Gault), Anion Gap, FeNa |
+| Fluids & Drips | IV Drip Rate (Nigerian giving sets), Maintenance Fluids (4-2-1), Parkland Formula |
+| Paediatrics | Weight by Age (Nelson/APLS), Paediatric eGFR (Schwartz), Drug Dosing |
+| Neurology | GCS, NIHSS, ABCD², Revised Trauma Score, Ramsay Sedation Scale |
+| Respiratory | CURB-65, Wells PE, PERC Rule, A-a Gradient, P/F Ratio (ARDS) |
+| Sepsis & ICU | qSOFA, SOFA, SIRS, Shock Index, APACHE II |
+| Obstetrics & Gynaecology | Naegele's EDD, Bishop Score, Preeclampsia Risk, APGAR, PPH Estimator |
+| Gastroenterology | Child-Pugh, MELD, Ranson's, Glasgow-Blatchford, Rockall |
+| Haematology & Oncology | ANC, CHA₂DS₂-VASc, HAS-BLED, Corrected Calcium, Transfusion Volume |
+| Endocrinology & Metabolic | HbA1c ↔ eAG, Osmolality, Corrected Sodium, Bicarbonate Deficit, Burch-Wartofsky |
 
 ## Tech Stack
 
 - Flutter 3.44+ (Dart 3.12+)
 - SQLite (sqflite) — local patient data
-- Firebase Firestore — cloud backup + feature requests + analytics
+- Firebase Firestore — optional cloud backup + feature requests
 - SharedPreferences — auth state + lockout tracking
-- GitHub Actions — CI/CD (test + build)
+- GitHub Actions — CI/CD (release build triggered on `v*` tags)
 
 ## Setup
 
@@ -30,24 +56,40 @@ Clinical calculation tool for Nigerian doctors. Built with Flutter.
 ### Getting started
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/celpha2svx/DocFlow.git
 cd DocFlow/docflow_app
 flutter pub get
 flutter run
 ```
 
-### Release signing
+### GitHub Issues integration (feature requests & feedback)
 
-Before building a release APK, generate a keystore:
+Feature requests and feedback are submitted as GitHub Issues. To enable this:
+
+1. Go to https://github.com/settings/tokens?type=beta
+2. Click "Generate new token" → **Fine-grained token**
+3. Set **Repository access** to "Only select repositories" → select your fork
+4. Set **Permissions** → **Issues** → **Read and write**
+5. Copy the generated token
+
+Create `lib/services/github_config.dart`:
+
+```dart
+class GitHubConfig {
+  GitHubConfig._();
+  static const String token = 'github_pat_...';  // paste your token
+  static const String repoOwner = 'celpha2svx';
+  static const String repoName = 'DocFlow';
+}
+```
+
+For CI, add a repository secret called `GITHUB_TOKEN_ISSUES` with the same token.
+
+### Release signing
 
 ```bash
 chmod +x generate-keystore.sh
 ./generate-keystore.sh
-```
-
-Then build:
-
-```bash
 flutter build apk --release
 ```
 
@@ -55,19 +97,28 @@ flutter build apk --release
 
 ```
 docflow_app/
+├── assets/
+│   └── calculators.json      # 50+ JSON-driven calculator definitions
 ├── lib/
-│   ├── calculators/     # Pure Dart calculation logic
-│   ├── models/          # Doctor, Patient, Calculation, Category
-│   ├── services/        # Database, Auth, Cloud Sync, Analytics
-│   ├── screens/         # UI screens (onboarding, calculator, patient, etc.)
-│   ├── widgets/         # Reusable UI components
-│   └── utils/           # Constants, validators, formatters
-├── test/
-│   ├── calculators/     # Unit tests for each calculator
-│   └── services/        # Service tests
-└── android/             # Android platform config
+│   ├── models/                # Doctor, Patient, Calculation, Category
+│   ├── services/              # Database, FormulaEvaluator, CalculatorLoader, Cloud Sync
+│   ├── screens/               # UI screens (onboarding, calculator, patient, etc.)
+│   ├── widgets/               # Reusable UI components
+│   └── utils/                 # Constants, validators, formatters
+└── android/                   # Android platform config
 ```
+
+## Architecture
+
+DocFlow uses a JSON-driven calculator engine. Each calculator is defined in `assets/calculators.json` with:
+- **Inputs** — typed fields (number, toggle, dropdown) with validation
+- **Formulas** — evaluated by `FormulaEvaluator` (recursive descent parser) supporting arithmetic, comparisons, ternary, and 12 built-in functions
+- **Results** — primary and intermediate values with units and precision
+- **Interpretations** — severity-graded clinical guidance based on result thresholds
+- **Transparency templates** — human-readable formula breakdown with substituted values
+
+No app store update is needed to add new calculators — just edit the JSON file.
 
 ## License
 
-Clinical interpretation remains the responsibility of the attending clinician.
+MIT. Clinical interpretation remains the responsibility of the attending clinician.

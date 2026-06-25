@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:crypto/crypto.dart';
-import 'package:uuid/uuid.dart';
 
 import 'package:docflow_app/app_state.dart';
-import 'package:docflow_app/services/cloud_sync_service.dart';
+import 'package:docflow_app/services/github_issue_service.dart';
 import 'package:docflow_app/utils/constants.dart';
 
 class FeatureRequestScreen extends StatefulWidget {
@@ -62,43 +58,32 @@ class _FeatureRequestScreenState extends State<FeatureRequestScreen> with Single
   Future<void> _submitCalculatorRequest() async {
     if (!_requestFormKey.currentState!.validate()) return;
 
-    final appState = AppStateProvider.maybeOf(context);
-    final doctor = appState?.currentDoctor;
-    if (appState == null || doctor == null) return;
-
     setState(() => _submitting = true);
     final name = _calculatorNameController.text.trim();
     final useCase = _useCaseController.text.trim();
     try {
-      await appState.databaseService.savePendingSubmission(
-        id: const Uuid().v4(),
-        type: 'feature_request',
-        payload: {
-          'type': 'calculator_request',
-          'name': name,
-          'use_case': useCase,
-          'specialty': _selectedSpecialty,
-          'priority': _priority,
-          'doctor_phone': sha256.convert(utf8.encode(doctor.phoneNumber)).toString(),
-          'status': 'pending',
-          'votes': 1,
-          'created_at': DateTime.now().toIso8601String(),
-        },
-      );
+      final title = 'Calculator Request: $name';
+      final body = '**Calculator:** $name\n\n'
+          '**Use case:** $useCase\n\n'
+          '**Specialty:** $_selectedSpecialty\n\n'
+          '**Priority:** $_priority';
 
-      // Best-effort cloud submission
-      appState.cloudSyncService.submitCalculatorRequest(
-        name: name,
-        useCase: useCase,
-        specialty: _selectedSpecialty,
-        priority: _priority,
-        doctorPhone: doctor.phoneNumber,
+      final submitted = await GitHubIssueService.submitFeatureRequest(
+        title: title,
+        body: body,
+        label: 'calculator-request',
       );
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Request submitted. Thank you.')),
-      );
+      if (submitted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Request submitted as GitHub Issue. Thank you!')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Request saved locally. Will sync when GitHub is configured.')),
+        );
+      }
       _calculatorNameController.clear();
       _useCaseController.clear();
       setState(() => _priority = 'normal');
@@ -110,45 +95,33 @@ class _FeatureRequestScreenState extends State<FeatureRequestScreen> with Single
   Future<void> _submitFeedback() async {
     if (!_feedbackFormKey.currentState!.validate()) return;
 
-    final appState = AppStateProvider.maybeOf(context);
-    final doctor = appState?.currentDoctor;
-    if (appState == null || doctor == null) return;
-
     setState(() => _submitting = true);
     final message = _feedbackMessageController.text.trim();
     final relatedCalc = _relatedCalculatorController.text.trim();
-    final contactPhone = _contactMe ? _feedbackContactController.text.trim() : null;
+    final contactInfo = _contactMe ? _feedbackContactController.text.trim() : 'Not provided';
     try {
-      await appState.databaseService.savePendingSubmission(
-        id: const Uuid().v4(),
-        type: 'feedback',
-        payload: {
-          'type': _feedbackType,
-          'calculator_id': relatedCalc.isEmpty ? null : relatedCalc,
-          'message': message,
-          'contact': _contactMe,
-          'doctor_phone': _contactMe
-              ? sha256.convert(utf8.encode(contactPhone!)).toString()
-              : null,
-          'specialty': doctor.specialty ?? 'General Practice',
-          'app_version': '1.0.0',
-          'created_at': DateTime.now().toIso8601String(),
-        },
-      );
+      final title = 'Feedback: $_feedbackType';
+      final body = '**Type:** $_feedbackType\n\n'
+          '**Message:** $message\n\n'
+          '${relatedCalc.isNotEmpty ? '**Related calculator:** $relatedCalc\n\n' : ''}'
+          '**Contact:** $contactInfo';
 
-      // Best-effort cloud submission
-      appState.cloudSyncService.submitFeedback(
-        feedbackType: _feedbackType,
-        message: message,
-        relatedCalculator: relatedCalc.isEmpty ? null : relatedCalc,
-        contactPhone: contactPhone,
-        doctorPhone: doctor.phoneNumber,
+      final submitted = await GitHubIssueService.submitFeatureRequest(
+        title: title,
+        body: body,
+        label: _feedbackType == 'Bug / Wrong result' ? 'bug' : 'feedback',
       );
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Feedback received. Thank you.')),
-      );
+      if (submitted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Feedback submitted as GitHub Issue. Thank you!')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Feedback saved locally. Will sync when GitHub is configured.')),
+        );
+      }
       _feedbackMessageController.clear();
       _relatedCalculatorController.clear();
       _feedbackContactController.clear();

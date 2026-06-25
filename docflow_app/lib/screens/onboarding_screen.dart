@@ -111,7 +111,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'DocFlow is a calculation aid. Clinical interpretation remains the responsibility of the attending clinician.',
+                  'Access 50+ evidence-based medical calculators across 12 specialties. Each result shows its formula — so you can verify before you apply.',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: AppConstants.subtextColor,
                     height: 1.5,

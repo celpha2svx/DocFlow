@@ -18,6 +18,16 @@ jobs:
           channel: 'stable'
       - run: flutter pub get
         working-directory: docflow_app
+      - name: Create GitHub config
+        run: |
+          cat > docflow_app/lib/services/github_config.dart << 'EOF'
+          class GitHubConfig {
+            GitHubConfig._();
+            static const String token = '${{ secrets.GITHUB_TOKEN_ISSUES }}';
+            static const String repoOwner = 'celpha2svx';
+            static const String repoName = 'DocFlow';
+          }
+          EOF
       - name: Generate release keystore
         run: |
           keytool -genkey -v \

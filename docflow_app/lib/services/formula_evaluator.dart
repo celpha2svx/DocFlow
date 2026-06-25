@@ -276,6 +276,12 @@ class FormulaEvaluator {
       case 'max':
         if (args.length != 2) throw FormatException('max takes 2 arguments');
         return max(args[0] as num, args[1] as num);
+      case 'log':
+        if (args.length != 1) throw FormatException('log takes 1 argument');
+        return log((args[0] as num).toDouble());
+      case 'ln':
+        if (args.length != 1) throw FormatException('ln takes 1 argument');
+        return log((args[0] as num).toDouble());
       default:
         throw FormatException('Unknown function "$name"');
     }

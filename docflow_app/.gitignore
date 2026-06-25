@@ -46,3 +46,6 @@ app.*.map.json
 
 # Firebase configuration - each developer needs their own
 /android/app/google-services.json
+
+# GitHub token - each developer needs their own
+/lib/services/github_config.dart
