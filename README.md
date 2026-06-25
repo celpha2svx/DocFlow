@@ -83,7 +83,7 @@ class GitHubConfig {
 }
 ```
 
-For CI, add a repository secret called `GITHUB_TOKEN_ISSUES` with the same token.
+For CI, add a repository secret called `DOCFLOW_TOKEN_ISSUES` with the same token.
 
 ### Release signing
 
