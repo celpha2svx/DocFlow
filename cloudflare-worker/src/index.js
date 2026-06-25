@@ -12,7 +12,9 @@
 const API = 'https://api.github.com';
 
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
+    const { GITHUB_TOKEN, REPO_OWNER, REPO_NAME } = env;
+
     if (request.method !== 'POST') {
       return json({ error: 'Method not allowed' }, 405);
     }
@@ -22,8 +24,7 @@ export default {
       return json({ error: 'Not found' }, 404);
     }
 
-    const token = env?.GITHUB_TOKEN;
-    if (!token) {
+    if (!GITHUB_TOKEN) {
       return json({ error: 'Server misconfigured' }, 500);
     }
 
@@ -34,10 +35,10 @@ export default {
         return json({ error: 'title and body are required' }, 400);
       }
 
-      const res = await fetch(`${API}/repos/${env.REPO_OWNER}/${env.REPO_NAME}/issues`, {
+      const res = await fetch(`${API}/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
           Accept: 'application/vnd.github+json',
           'Content-Type': 'application/json',
           'User-Agent': 'docflow-worker',
