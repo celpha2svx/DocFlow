@@ -536,6 +536,13 @@ body {
   border-radius: 100px;
 }
 
+.calculators-collapsed {
+  display: none;
+}
+.calculators-collapsed.visible {
+  display: contents;
+}
+
 /* ============ TRANSPARENCY ============ */
 
 .transparency-content {

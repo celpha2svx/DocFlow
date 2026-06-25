@@ -53,6 +53,17 @@ document.querySelectorAll('.calc-category').forEach((el, i) => {
   observer.observe(el);
 });
 
+// === Toggle collapsed calculators ===
+const toggleBtn = document.getElementById('toggleCalculators');
+const collapsed = document.querySelector('.calculators-collapsed');
+if (toggleBtn && collapsed) {
+  toggleBtn.addEventListener('click', () => {
+    const isHidden = !collapsed.classList.contains('visible');
+    collapsed.classList.toggle('visible');
+    toggleBtn.innerHTML = isHidden ? 'Show fewer calculators ↑' : 'View all 50 calculators ↓';
+  });
+}
+
 // === Copy APK download link ===
 document.querySelectorAll('[data-copy]').forEach(btn => {
   btn.addEventListener('click', async () => {
