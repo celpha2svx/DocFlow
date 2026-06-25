@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 class IssueReporter {
   IssueReporter._();
 
-  static const String _workerUrl = 'https://docflow-issues.YOUR-WORKER.workers.dev/submit';
+  static const String _workerUrl = 'https://docflow-issues.celpha2svx.workers.dev/submit';
 
   static Future<bool> submit({
     required String title,
