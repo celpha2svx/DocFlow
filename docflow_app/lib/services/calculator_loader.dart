@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' as math;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
@@ -149,7 +150,7 @@ class CalculatorEngine {
   static num _round(dynamic val, int decimals) {
     if (val is! num) return 0;
     if (decimals <= 0) return val.round();
-    final factor = pow(10, decimals).toDouble();
+    final factor = math.pow(10, decimals).toDouble();
     return (val * factor).round() / factor;
   }
 }
