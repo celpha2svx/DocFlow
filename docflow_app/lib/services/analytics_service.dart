@@ -38,7 +38,7 @@ class AnalyticsService {
             'category': category,
             'timestamp': DateTime.now().toIso8601String(),
             'platform': 'mobile',
-            'version': '1.0.0',
+            'version': '1.1.2',
           });
     } catch (e) {
       // Silent fail for analytics - never disrupt app functionality
