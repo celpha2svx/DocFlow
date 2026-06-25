@@ -27,7 +27,7 @@ export default {
 
     const res = await fetch(`${API}/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${GITHUB_TOKEN}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github+json' },
+      headers: { Authorization: `Bearer ${GITHUB_TOKEN}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github+json', 'User-Agent': 'docflow-worker' },
       body: JSON.stringify({ title, body: bodyText, labels: label ? [label] : [] }),
     });
     const resBody = await res.text();
