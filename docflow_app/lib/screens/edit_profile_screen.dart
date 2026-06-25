@@ -14,13 +14,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late final TextEditingController _nameController;
   late final TextEditingController _phoneController;
   late final TextEditingController _specialtyController;
+
+  final List<String> _titles = const [
+    'Dr.',
+    'Nurse',
+    'Prof.',
+    'Mr.',
+    'Mrs.',
+    'Ms.',
+  ];
+
+  late String _selectedTitle;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     final doctor = AppStateProvider.maybeOf(context)?.currentDoctor;
-    _nameController = TextEditingController(text: doctor?.fullName ?? '');
+    final fullName = doctor?.fullName ?? '';
+    final titleMatch = RegExp(r'^(Dr\.|Nurse|Prof\.|Mr\.|Mrs\.|Ms\.)\s+(.*)').firstMatch(fullName);
+    if (titleMatch != null) {
+      _selectedTitle = titleMatch.group(1)!;
+      _nameController = TextEditingController(text: titleMatch.group(2)!);
+    } else {
+      _selectedTitle = _titles[0];
+      _nameController = TextEditingController(text: fullName);
+    }
     _phoneController = TextEditingController(text: doctor?.phoneNumber ?? '');
     _specialtyController = TextEditingController(text: doctor?.specialty ?? '');
   }
@@ -40,7 +59,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final appState = AppStateProvider.of(context);
       final current = appState.currentDoctor!;
       final updated = current.copyWith(
-        fullName: _nameController.text.trim(),
+        fullName: '$_selectedTitle ${_nameController.text.trim()}',
         phoneNumber: _phoneController.text.trim(),
         specialty: _specialtyController.text.trim().isNotEmpty
             ? _specialtyController.text.trim()
@@ -77,6 +96,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                DropdownButtonFormField<String>(
+                  value: _selectedTitle,
+                  items: _titles
+                      .map((t) => DropdownMenuItem(value: t, child: Text(t)))
+                      .toList(),
+                  decoration: const InputDecoration(
+                    labelText: 'Title',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (v) {
+                    if (v != null) setState(() => _selectedTitle = v);
+                  },
+                ),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(

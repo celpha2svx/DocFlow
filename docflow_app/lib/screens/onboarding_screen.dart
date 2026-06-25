@@ -19,6 +19,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final _pinController = TextEditingController();
   final _confirmPinController = TextEditingController();
 
+  final List<String> _titles = const [
+    'Dr.',
+    'Nurse',
+    'Prof.',
+    'Mr.',
+    'Mrs.',
+    'Ms.',
+  ];
+
   final List<String> _specialties = const [
     'Medical Student',
     'Nurse / Midwife',
@@ -33,6 +42,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     'Other',
   ];
 
+  String _selectedTitle = 'Dr.';
   String _selectedSpecialty = 'Medical Student';
   bool _submitting = false;
   String? _error;
@@ -65,7 +75,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     });
 
     final success = await appState.registerDoctor(
-      fullName: _fullNameController.text.trim(),
+      fullName: '$_selectedTitle ${_fullNameController.text.trim()}',
       phoneNumber: _phoneController.text.trim(),
       specialty: _selectedSpecialty,
       pin: _pinController.text.trim(),
@@ -120,12 +130,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                  TextFormField(
+                DropdownButtonFormField<String>(
+                  value: _selectedTitle,
+                  items: _titles
+                      .map((t) => DropdownMenuItem(value: t, child: Text(t)))
+                      .toList(),
+                  decoration: const InputDecoration(
+                    labelText: 'Title',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (v) {
+                    if (v != null) setState(() => _selectedTitle = v);
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
                     controller: _fullNameController,
                     textInputAction: TextInputAction.next,
                     decoration: const InputDecoration(
                       labelText: 'Full name',
-                      hintText: 'e.g. Dr. Okafor, Nurse Amadi, etc.',
+                      hintText: 'e.g. Okafor, Amadi, Adebayo',
                     ),
                   validator: (value) {
                     if (!isValidName(value ?? '')) {
