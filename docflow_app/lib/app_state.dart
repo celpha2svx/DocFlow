@@ -168,6 +168,35 @@ class AppState extends ChangeNotifier {
     return await _authService.changePin(oldPin, newPin);
   }
 
+  /// Login as an existing user with phone + PIN.
+  /// Returns true if PIN matches the stored hash for that doctor.
+  Future<bool> loginExistingUser(String phone, String pin) async {
+    try {
+      _authError = null;
+      final doctor = await _databaseService.getDoctor(phone);
+      if (doctor == null) {
+        _authError = 'No account found with this phone number';
+        notifyListeners();
+        return false;
+      }
+      if (doctor.pinHash != AuthService.hashPin(pin)) {
+        _authError = 'Incorrect PIN';
+        notifyListeners();
+        return false;
+      }
+      _currentDoctor = doctor;
+      _isAuthenticated = true;
+      await _prefs.setString('current_doctor_phone', phone);
+      await _prefs.setBool('onboarding_complete', true);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _authError = 'Login failed: $e';
+      notifyListeners();
+      return false;
+    }
+  }
+
   /// Update doctor profile and persist to DB
   Future<void> updateDoctorProfile(Doctor updated) async {
     await _databaseService.updateDoctor(updated);
