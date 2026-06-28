@@ -1,5 +1,5 @@
 {
-  "version": 7,
+  "version": 9,
   "last_updated": "2026-06-28",
   "calculators": [
     {
@@ -15702,6 +15702,5857 @@
           "label": "Low VTE risk — no pharmacological prophylaxis",
           "severity": "normal",
           "detail": "Padua <4. Early mobilisation. Reassess if clinical status changes."
+        }
+      ]
+    },
+    {
+      "id": "four_score",
+      "name": "FOUR Score (Full Outline of UnResponsiveness)",
+      "category": "Neurology",
+      "description": "Alternative to GCS. 4 components each 0-4. Total 0-16. Better than GCS for intubated patients and brainstem assessment.",
+      "inputs": [
+        {
+          "id": "fourEye",
+          "label": "Eye response",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - Not open",
+              "value": 0
+            },
+            {
+              "label": "1 - Opens to pain",
+              "value": 1
+            },
+            {
+              "label": "2 - Opens to voice",
+              "value": 2
+            },
+            {
+              "label": "3 - Opens spontaneously",
+              "value": 3
+            },
+            {
+              "label": "4 - Opens spontaneously, tracks",
+              "value": 4
+            }
+          ],
+          "default": 4
+        },
+        {
+          "id": "fourMotor",
+          "label": "Motor response",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None / generalised myoclonus",
+              "value": 0
+            },
+            {
+              "label": "1 - Extensor posturing",
+              "value": 1
+            },
+            {
+              "label": "2 - Flexor posturing",
+              "value": 2
+            },
+            {
+              "label": "3 - Localises pain",
+              "value": 3
+            },
+            {
+              "label": "4 - Thumbs up, fist, peace sign",
+              "value": 4
+            }
+          ],
+          "default": 4
+        },
+        {
+          "id": "fourBrainstem",
+          "label": "Brainstem reflexes",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - Absent all (pupil, corneal, cough)",
+              "value": 0
+            },
+            {
+              "label": "1 - Pupil and corneal absent",
+              "value": 1
+            },
+            {
+              "label": "2 - One pupil fixed, other reactive",
+              "value": 2
+            },
+            {
+              "label": "3 - Both pupil and corneal present",
+              "value": 3
+            },
+            {
+              "label": "4 - Both present + cough",
+              "value": 4
+            }
+          ],
+          "default": 4
+        },
+        {
+          "id": "fourResp",
+          "label": "Respiration",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - Ventilator rate or apnoea",
+              "value": 0
+            },
+            {
+              "label": "1 - Breathes over vent / irregular",
+              "value": 1
+            },
+            {
+              "label": "2 - Cheyne-Stokes",
+              "value": 2
+            },
+            {
+              "label": "3 - Regular, not intubated",
+              "value": 3
+            },
+            {
+              "label": "4 - Regular + normal breathing pattern",
+              "value": 4
+            }
+          ],
+          "default": 4
+        }
+      ],
+      "results": [
+        {
+          "key": "fourTotal",
+          "label": "FOUR Score",
+          "formula": "fourEye + fourMotor + fourBrainstem + fourResp",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "FOUR Score:\nEyes: {fourEye}/4 | Motor: {fourMotor}/4\nBrainstem: {fourBrainstem}/4 | Resp: {fourResp}/4\nTotal: {fourTotal}/16",
+      "interpretations": [
+        {
+          "condition": "value >= 13",
+          "label": "Moderate to good function",
+          "severity": "normal"
+        },
+        {
+          "condition": "value >= 9 && value <= 12",
+          "label": "Severe impairment",
+          "severity": "warning",
+          "detail": "FOUR 9-12. May need airway protection assessment."
+        },
+        {
+          "condition": "value >= 5 && value <= 8",
+          "label": "Very severe",
+          "severity": "high"
+        },
+        {
+          "condition": "value <= 4",
+          "label": "Critical — brain death evaluation",
+          "severity": "high",
+          "detail": "FOUR ≤4. Consider brain death evaluation. Lowest scores correlate with poor outcome."
+        }
+      ]
+    },
+    {
+      "id": "mmse",
+      "name": "MMSE Scoring (Mini-Mental State Exam)",
+      "category": "Neurology",
+      "description": "Folstein MMSE: 30-point cognitive screening. Serial 7s or WORLD backwards.",
+      "inputs": [
+        {
+          "id": "mmseOrientation",
+          "label": "Orientation (time + place)",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "/10 (5 for time, 5 for place)"
+        },
+        {
+          "id": "mmseRegistration",
+          "label": "Registration (repeat 3 objects)",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "/3"
+        },
+        {
+          "id": "mmseAttention",
+          "label": "Attention (serial 7s or WORLD)",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "/5"
+        },
+        {
+          "id": "mmseRecall",
+          "label": "Recall (recall 3 objects)",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "/3"
+        },
+        {
+          "id": "mmseLanguage",
+          "label": "Language + praxis",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "/9 (name, repeat, read, write, copy)"
+        }
+      ],
+      "results": [
+        {
+          "key": "mmseTotal",
+          "label": "MMSE Score",
+          "formula": "mmseOrientation + mmseRegistration + mmseAttention + mmseRecall + mmseLanguage",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "MMSE = Orientation + Registration + Attention + Recall + Language\n= {mmseOrientation} + {mmseRegistration} + {mmseAttention} + {mmseRecall} + {mmseLanguage}\n= {mmseTotal}/30",
+      "interpretations": [
+        {
+          "condition": "mmseTotal >= 27",
+          "label": "Normal",
+          "severity": "normal"
+        },
+        {
+          "condition": "mmseTotal >= 21 && mmseTotal <= 26",
+          "label": "Mild impairment",
+          "severity": "warning"
+        },
+        {
+          "condition": "mmseTotal >= 11 && mmseTotal <= 20",
+          "label": "Moderate impairment",
+          "severity": "warning"
+        },
+        {
+          "condition": "mmseTotal <= 10",
+          "label": "Severe impairment",
+          "severity": "high",
+          "detail": "MMSE ≤10. Severe cognitive impairment. Refer to neurology/geriatrics."
+        }
+      ]
+    },
+    {
+      "id": "moca",
+      "name": "MoCA Scoring (Montreal Cognitive Assessment)",
+      "category": "Neurology",
+      "description": "30-point cognitive screen more sensitive than MMSE for mild cognitive impairment.",
+      "inputs": [
+        {
+          "id": "mocaTotal",
+          "label": "MoCA raw score",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "/30"
+        },
+        {
+          "id": "mocaEducation",
+          "label": "Education ≤12 years",
+          "type": "toggle",
+          "options": [
+            {
+              "label": ">12 years",
+              "value": 0
+            },
+            {
+              "label": "≤12 years (add 1 point)",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "mocaAdjusted",
+          "label": "MoCA Adjusted Score",
+          "formula": "mocaTotal + mocaEducation",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "MoCA: {mocaTotal}/30 + {mocaEducation} = {mocaAdjusted}/30\n\nNormal: ≥26\nMCI: 18-25\nDementia: <18",
+      "interpretations": [
+        {
+          "condition": "mocaAdjusted >= 26",
+          "label": "Normal",
+          "severity": "normal"
+        },
+        {
+          "condition": "mocaAdjusted >= 18 && mocaAdjusted < 26",
+          "label": "Mild cognitive impairment (MCI)",
+          "severity": "warning",
+          "detail": "MoCA 18-25. Suggestive of MCI. Consider neuropsychological referral."
+        },
+        {
+          "condition": "mocaAdjusted < 18",
+          "label": "Cognitive impairment — dementia likely",
+          "severity": "high",
+          "detail": "MoCA <18. Likely dementia. Refer for comprehensive workup."
+        }
+      ]
+    },
+    {
+      "id": "ciwa",
+      "name": "CIWA-Ar (Alcohol Withdrawal Scale)",
+      "category": "Neurology",
+      "description": "Clinical Institute Withdrawal Assessment of Alcohol Scale, Revised. 10 items, total 0-67. Guides benzodiazepine dosing.",
+      "inputs": [
+        {
+          "id": "ciwaNausea",
+          "label": "Nausea/vomiting",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1",
+              "value": 1
+            },
+            {
+              "label": "2",
+              "value": 2
+            },
+            {
+              "label": "3",
+              "value": 3
+            },
+            {
+              "label": "4 - Retching",
+              "value": 4
+            },
+            {
+              "label": "5",
+              "value": 5
+            },
+            {
+              "label": "6",
+              "value": 6
+            },
+            {
+              "label": "7 - Constant nausea, dry heaves",
+              "value": 7
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ciwaTremor",
+          "label": "Tremor (arms extended, fingers spread)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1 - Not visible, fingertip",
+              "value": 1
+            },
+            {
+              "label": "2",
+              "value": 2
+            },
+            {
+              "label": "3",
+              "value": 3
+            },
+            {
+              "label": "4 - Moderate, arms extended",
+              "value": 4
+            },
+            {
+              "label": "5",
+              "value": 5
+            },
+            {
+              "label": "6",
+              "value": 6
+            },
+            {
+              "label": "7 - Severe, even at rest",
+              "value": 7
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ciwaAnxiety",
+          "label": "Anxiety",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1 - Mildly anxious",
+              "value": 1
+            },
+            {
+              "label": "2",
+              "value": 2
+            },
+            {
+              "label": "3 - Moderate",
+              "value": 3
+            },
+            {
+              "label": "4",
+              "value": 4
+            },
+            {
+              "label": "5",
+              "value": 5
+            },
+            {
+              "label": "6",
+              "value": 6
+            },
+            {
+              "label": "7 - Acute panic",
+              "value": 7
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ciwaAgitation",
+          "label": "Agitation",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - Normal",
+              "value": 0
+            },
+            {
+              "label": "1",
+              "value": 1
+            },
+            {
+              "label": "2",
+              "value": 2
+            },
+            {
+              "label": "3 - Somewhat fidgety",
+              "value": 3
+            },
+            {
+              "label": "4 - Moderate pacing/trashing",
+              "value": 4
+            },
+            {
+              "label": "5",
+              "value": 5
+            },
+            {
+              "label": "6",
+              "value": 6
+            },
+            {
+              "label": "7 - Pacing constantly",
+              "value": 7
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ciwaTouch",
+          "label": "Tactile disturbance",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1 - Tingling",
+              "value": 1
+            },
+            {
+              "label": "2",
+              "value": 2
+            },
+            {
+              "label": "3",
+              "value": 3
+            },
+            {
+              "label": "4 - Moderate hallucinations",
+              "value": 4
+            },
+            {
+              "label": "5",
+              "value": 5
+            },
+            {
+              "label": "6",
+              "value": 6
+            },
+            {
+              "label": "7 - Continuous hallucinations",
+              "value": 7
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ciwaAuditory",
+          "label": "Auditory disturbance",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1",
+              "value": 1
+            },
+            {
+              "label": "2 - Mild sensitivity",
+              "value": 2
+            },
+            {
+              "label": "3",
+              "value": 3
+            },
+            {
+              "label": "4 - Moderate hallucinations",
+              "value": 4
+            },
+            {
+              "label": "5",
+              "value": 5
+            },
+            {
+              "label": "6 - Severe hallucinations",
+              "value": 6
+            },
+            {
+              "label": "7 - Continuous hallucinations",
+              "value": 7
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ciwaVisual",
+          "label": "Visual disturbance",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1",
+              "value": 1
+            },
+            {
+              "label": "2",
+              "value": 2
+            },
+            {
+              "label": "3",
+              "value": 3
+            },
+            {
+              "label": "4 - Moderate hallucinations",
+              "value": 4
+            },
+            {
+              "label": "5",
+              "value": 5
+            },
+            {
+              "label": "6",
+              "value": 6
+            },
+            {
+              "label": "7 - Continuous hallucinations",
+              "value": 7
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ciwaHeadache",
+          "label": "Headache/fullness in head",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1",
+              "value": 1
+            },
+            {
+              "label": "2",
+              "value": 2
+            },
+            {
+              "label": "3",
+              "value": 3
+            },
+            {
+              "label": "4",
+              "value": 4
+            },
+            {
+              "label": "5",
+              "value": 5
+            },
+            {
+              "label": "6",
+              "value": 6
+            },
+            {
+              "label": "7 - Extremely severe",
+              "value": 7
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ciwaOrientation",
+          "label": "Orientation/clouding of sensorium",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - Oriented",
+              "value": 0
+            },
+            {
+              "label": "1",
+              "value": 1
+            },
+            {
+              "label": "2",
+              "value": 2
+            },
+            {
+              "label": "3",
+              "value": 3
+            },
+            {
+              "label": "4 - Disoriented to place/person",
+              "value": 4
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "ciwaTotal",
+          "label": "CIWA-Ar Score",
+          "formula": "ciwaNausea + ciwaTremor + ciwaAnxiety + ciwaAgitation + ciwaTouch + ciwaAuditory + ciwaVisual + ciwaHeadache + ciwaOrientation",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "CIWA-Ar Score: {ciwaTotal}/67",
+      "interpretations": [
+        {
+          "condition": "ciwaTotal <= 8",
+          "label": "Mild withdrawal — supportive care",
+          "severity": "normal",
+          "detail": "CIWA <8. Reassess q4h. Supportive care + thiamine."
+        },
+        {
+          "condition": "ciwaTotal >= 9 && ciwaTotal <= 15",
+          "label": "Moderate withdrawal — symptom-triggered benzodiazepines",
+          "severity": "warning",
+          "detail": "CIWA 9-15. Give lorazepam 1-2 mg or chlordiazepoxide 25-50 mg q1h PRN. Reassess in 1h."
+        },
+        {
+          "condition": "ciwaTotal >= 16 && ciwaTotal <= 20",
+          "label": "Severe withdrawal",
+          "severity": "high",
+          "detail": "CIWA 16-20. Give lorazepam 2-4 mg IV. Monitor in HDU/ICU. Consider phenobarbital or propofol if refractory."
+        },
+        {
+          "condition": "ciwaTotal > 20",
+          "label": "Severe withdrawal — ICU admission",
+          "severity": "high",
+          "detail": "CIWA >20. Severe withdrawal risk. ICU admission recommended. High-dose benzodiazepines. Consider dexmedetomidine."
+        }
+      ]
+    },
+    {
+      "id": "cows",
+      "name": "COWS (Clinical Opiate Withdrawal Scale)",
+      "category": "Neurology",
+      "description": "11-item scale assessing opiate withdrawal severity. Total 0-48. Guides buprenorphine induction timing.",
+      "inputs": [
+        {
+          "id": "cowsResting",
+          "label": "Resting pulse rate",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - <80 bpm",
+              "value": 0
+            },
+            {
+              "label": "1 - 81-100",
+              "value": 1
+            },
+            {
+              "label": "2 - 101-120",
+              "value": 2
+            },
+            {
+              "label": "4 - >120",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cowsSweating",
+          "label": "Sweating (past 0.5h)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1 - Mild/moist",
+              "value": 1
+            },
+            {
+              "label": "2 - Beads on forehead",
+              "value": 2
+            },
+            {
+              "label": "3 - Drenching",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cowsRestless",
+          "label": "Restlessness",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - Can sit still",
+              "value": 0
+            },
+            {
+              "label": "1 - Fidgety",
+              "value": 1
+            },
+            {
+              "label": "3 - Frequent shifting",
+              "value": 3
+            },
+            {
+              "label": "5 - Unable to sit",
+              "value": 5
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cowsPupils",
+          "label": "Pupil size",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - Normal",
+              "value": 0
+            },
+            {
+              "label": "1 - >3mm",
+              "value": 1
+            },
+            {
+              "label": "2 - >5mm",
+              "value": 2
+            },
+            {
+              "label": "5 - >7mm",
+              "value": 5
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cowsBones",
+          "label": "Bone/joint aches",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1 - Mild diffuse",
+              "value": 1
+            },
+            {
+              "label": "2",
+              "value": 2
+            },
+            {
+              "label": "4 - Severe diffuse",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cowsRunny",
+          "label": "Runny nose/tearing",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1 - Stuffy/tearing",
+              "value": 1
+            },
+            {
+              "label": "2",
+              "value": 2
+            },
+            {
+              "label": "4 - Profuse",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cowsGi",
+          "label": "GI upset",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1 - Stomach cramps",
+              "value": 1
+            },
+            {
+              "label": "2 - Nausea/loose stool",
+              "value": 2
+            },
+            {
+              "label": "3 - Vomiting/diarrhoea",
+              "value": 3
+            },
+            {
+              "label": "5 - Multiple episodes",
+              "value": 5
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cowsTremor",
+          "label": "Tremor",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1 - Can be felt",
+              "value": 1
+            },
+            {
+              "label": "2 - Moderate/profound",
+              "value": 2
+            },
+            {
+              "label": "4 - Gross tremor",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cowsYawn",
+          "label": "Yawning",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1 - 1-2 times",
+              "value": 1
+            },
+            {
+              "label": "2 - ≥3 times",
+              "value": 2
+            },
+            {
+              "label": "4 - Per minute",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cowsAnxiety",
+          "label": "Anxiety/irritability",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1",
+              "value": 1
+            },
+            {
+              "label": "2",
+              "value": 2
+            },
+            {
+              "label": "3",
+              "value": 3
+            },
+            {
+              "label": "4 - Severe",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cowsGoose",
+          "label": "Gooseflesh (piloerection)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1 - Pilomotor",
+              "value": 1
+            },
+            {
+              "label": "2 - Prominent",
+              "value": 2
+            },
+            {
+              "label": "3 - Severe",
+              "value": 3
+            },
+            {
+              "label": "5 - Constant shivering",
+              "value": 5
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "cowsTotal",
+          "label": "COWS Score",
+          "formula": "cowsResting + cowsSweating + cowsRestless + cowsPupils + cowsBones + cowsRunny + cowsGi + cowsTremor + cowsYawn + cowsAnxiety + cowsGoose",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "COWS Score: {cowsTotal}/48",
+      "interpretations": [
+        {
+          "condition": "cowsTotal <= 4",
+          "label": "No withdrawal",
+          "severity": "normal"
+        },
+        {
+          "condition": "cowsTotal >= 5 && cowsTotal <= 12",
+          "label": "Mild withdrawal",
+          "severity": "normal",
+          "detail": "COWS 5-12. Continue monitoring. Buprenorphine induction: COWS usually ≥12-13 required."
+        },
+        {
+          "condition": "cowsTotal >= 13 && cowsTotal <= 24",
+          "label": "Moderate withdrawal",
+          "severity": "warning",
+          "detail": "COWS 13-24. Suitable for buprenorphine induction. Consider symptomatic meds (clonidine, NSAIDs)."
+        },
+        {
+          "condition": "cowsTotal >= 25 && cowsTotal <= 36",
+          "label": "Moderately severe withdrawal",
+          "severity": "high",
+          "detail": "COWS 25-36. Good candidate for induction. Higher initial buprenorphine dose may be needed."
+        },
+        {
+          "condition": "cowsTotal > 36",
+          "label": "Severe withdrawal",
+          "severity": "high",
+          "detail": "COWS >36. Very uncomfortable. Urgent buprenorphine/methadone induction. Monitor closely."
+        }
+      ]
+    },
+    {
+      "id": "has_bled_atria",
+      "name": "ATRIA Bleeding Score",
+      "category": "Cardiac",
+      "description": "Anticoagulation and Risk Factors in Atrial Fibrillation bleeding risk score. 0-10 points.",
+      "inputs": [
+        {
+          "id": "atriaAnemia",
+          "label": "Anaemia (Hct <30%)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "atriaCkd",
+          "label": "CKD (eGFR <30 or dialysis)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "atriaAge",
+          "label": "Age ≥75",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "<75",
+              "value": 0
+            },
+            {
+              "label": "≥75",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "atriaBleed",
+          "label": "Prior major bleeding",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "atriaHtn",
+          "label": "Hypertension",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "atriaTotal",
+          "label": "ATRIA Score",
+          "formula": "atriaAnemia + atriaCkd + atriaAge + atriaBleed + atriaHtn",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "ATRIA Bleeding Score:\nAnaemia: {atriaAnemia} | CKD: {atriaCkd} | Age≥75: {atriaAge}\nPrior bleed: {atriaBleed} | HTN: {atriaHtn}\nTotal: {atriaTotal}",
+      "interpretations": [
+        {
+          "condition": "atriaTotal <= 3",
+          "label": "Low bleeding risk (~0.8%/yr)",
+          "severity": "normal"
+        },
+        {
+          "condition": "atriaTotal >= 4 && atriaTotal <= 5",
+          "label": "Moderate risk (~2.5%/yr)",
+          "severity": "warning"
+        },
+        {
+          "condition": "atriaTotal >= 6",
+          "label": "High risk (~5.2%/yr)",
+          "severity": "high"
+        }
+      ]
+    },
+    {
+      "id": "framingham_cvd",
+      "name": "Framingham 10-Year CVD Risk",
+      "category": "Cardiac",
+      "description": "Simplified Framingham risk score for 10-year coronary heart disease risk.",
+      "inputs": [
+        {
+          "id": "framAge",
+          "label": "Age",
+          "type": "number",
+          "unit": "years",
+          "required": true,
+          "hint": "30-74"
+        },
+        {
+          "id": "framMale",
+          "label": "Sex",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "Female",
+              "value": 0
+            },
+            {
+              "label": "Male",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "framTc",
+          "label": "Total cholesterol",
+          "type": "number",
+          "unit": "mg/dL",
+          "required": true
+        },
+        {
+          "id": "framHdl",
+          "label": "HDL cholesterol",
+          "type": "number",
+          "unit": "mg/dL",
+          "required": true
+        },
+        {
+          "id": "framSbp",
+          "label": "Systolic BP",
+          "type": "number",
+          "unit": "mmHg",
+          "required": true
+        },
+        {
+          "id": "framTreated",
+          "label": "On BP treatment",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "framSmoker",
+          "label": "Current smoker",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "framDiabetes",
+          "label": "Diabetes",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "framScore",
+          "label": "Framingham 10-year risk",
+          "formula": "framAge + framTc + framHdl + framSbp + framSmoker + framDiabetes",
+          "unit": "%",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Framingham Risk (simplified):\nAge: {framAge} | TC: {framTc} | HDL: {framHdl} | SBP: {framSbp}\nRx: {framTreated} | Smoker: {framSmoker} | DM: {framDiabetes}\nEstimated 10-yr risk: ~{framScore}%\n\nSee full Framingham equation for precise calculation."
+    },
+    {
+      "id": "grace",
+      "name": "GRACE Score (ACS Mortality)",
+      "category": "Cardiac",
+      "description": "GRACE risk score predicts in-hospital and 6-month mortality after ACS. 8 variables.",
+      "inputs": [
+        {
+          "id": "graceAge",
+          "label": "Age",
+          "type": "number",
+          "unit": "years",
+          "required": true
+        },
+        {
+          "id": "graceHr",
+          "label": "Heart rate",
+          "type": "number",
+          "unit": "bpm",
+          "required": true
+        },
+        {
+          "id": "graceSbp",
+          "label": "Systolic BP",
+          "type": "number",
+          "unit": "mmHg",
+          "required": true
+        },
+        {
+          "id": "graceCr",
+          "label": "Creatinine",
+          "type": "number",
+          "unit": "mg/dL",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "umol/L",
+              "to_base": 0.01131
+            }
+          ]
+        },
+        {
+          "id": "graceKillip",
+          "label": "Killip class",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "I - No signs of HF",
+              "value": 0
+            },
+            {
+              "label": "II - Rales/crackles",
+              "value": 1
+            },
+            {
+              "label": "III - Pulmonary oedema",
+              "value": 2
+            },
+            {
+              "label": "IV - Cardiogenic shock",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "graceSt",
+          "label": "ST-segment deviation",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "graceArrest",
+          "label": "Cardiac arrest at admission",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "graceEnzyme",
+          "label": "Elevated cardiac enzymes",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "graceScore",
+          "label": "GRACE Score",
+          "formula": "graceAge + graceHr + graceSbp + graceCr + graceKillip + graceSt + graceArrest + graceEnzyme + 0",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "GRACE ACS Risk:\nAge: {graceAge} | HR: {graceHr} | SBP: {graceSbp} | Cr: {graceCr}\nKillip: {graceKillip} | ST dev: {graceSt} | Arrest: {graceArrest} | Enzymes: {graceEnzyme}\nScore: {graceScore}"
+    },
+    {
+      "id": "hadlock",
+      "name": "Fetal Weight Estimation (Hadlock)",
+      "category": "Obstetrics & Gynaecology",
+      "description": "Hadlock formula using BPD, HC, AC, FL to estimate fetal weight.",
+      "inputs": [
+        {
+          "id": "hadBpd",
+          "label": "Biparietal diameter (BPD)",
+          "type": "number",
+          "unit": "cm",
+          "required": true,
+          "hint": "e.g. 9.0"
+        },
+        {
+          "id": "hadHc",
+          "label": "Head circumference (HC)",
+          "type": "number",
+          "unit": "cm",
+          "required": true,
+          "hint": "e.g. 32"
+        },
+        {
+          "id": "hadAc",
+          "label": "Abdominal circumference (AC)",
+          "type": "number",
+          "unit": "cm",
+          "required": true,
+          "hint": "e.g. 33"
+        },
+        {
+          "id": "hadFl",
+          "label": "Femur length (FL)",
+          "type": "number",
+          "unit": "cm",
+          "required": true,
+          "hint": "e.g. 7.2"
+        }
+      ],
+      "results": [
+        {
+          "key": "hadlockEfw",
+          "label": "Estimated fetal weight",
+          "formula": "10 * pow(10, (1.326 - 0.00326 * hadBpd * hadAc + 0.0107 * hadHc + 0.0438 * hadAc + 0.158 * hadFl))",
+          "unit": "g",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Hadlock EFW (BPD-HC-AC-FL):\nBPD: {hadBpd} | HC: {hadHc} | AC: {hadAc} | FL: {hadFl}\nEFW: {hadlockEfw} g ({fs: {hadlockEfw / 1000}} kg)",
+      "interpretations": [
+        {
+          "condition": "hadlockEfw < 2500",
+          "label": "Low birth weight (<2500g)",
+          "severity": "warning"
+        },
+        {
+          "condition": "hadlockEfw >= 2500 && hadlockEfw <= 4000",
+          "label": "Normal birth weight",
+          "severity": "normal"
+        },
+        {
+          "condition": "hadlockEfw > 4000",
+          "label": "Macrosomia (>4000g)",
+          "severity": "warning",
+          "detail": "EFW >4000g. Increased risk of shoulder dystocia, birth trauma. Discuss delivery options."
+        }
+      ]
+    },
+    {
+      "id": "ohss_risk",
+      "name": "OHSS Risk (Ovarian Hyperstimulation)",
+      "category": "Obstetrics & Gynaecology",
+      "description": "Risk classification and management guidance for ovarian hyperstimulation syndrome after fertility treatment.",
+      "inputs": [
+        {
+          "id": "ohssAbdo",
+          "label": "Abdominal discomfort",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1 - Mild bloating",
+              "value": 1
+            },
+            {
+              "label": "2 - Moderate pain",
+              "value": 2
+            },
+            {
+              "label": "3 - Severe pain/distension",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ohssNausea",
+          "label": "Nausea/vomiting",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - None",
+              "value": 0
+            },
+            {
+              "label": "1 - Mild nausea",
+              "value": 1
+            },
+            {
+              "label": "2 - Moderate nausea",
+              "value": 2
+            },
+            {
+              "label": "3 - Vomiting/diarrhoea",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ohssAscites",
+          "label": "Ascites",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - Absent",
+              "value": 0
+            },
+            {
+              "label": "1 - Mild on US",
+              "value": 1
+            },
+            {
+              "label": "2",
+              "value": 2
+            },
+            {
+              "label": "3 - Tense ascites/pleural effusion",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ohssUrine",
+          "label": "Urine output",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - Normal",
+              "value": 0
+            },
+            {
+              "label": "1 - Slightly reduced",
+              "value": 1
+            },
+            {
+              "label": "2 - <600 mL/day",
+              "value": 2
+            },
+            {
+              "label": "3 - Oliguric",
+              "value": 3
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "ohssScore",
+          "label": "OHSS severity",
+          "formula": "ohssAbdo + ohssNausea + ohssAscites + ohssUrine",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "OHSS Severity:\nAbdo: {ohssAbdo} | Nausea: {ohssNausea} | Ascites: {ohssAscites} | UOP: {ohssUrine}\nTotal: {ohssScore}",
+      "interpretations": [
+        {
+          "condition": "ohssScore <= 2",
+          "label": "Mild OHSS — outpatient management",
+          "severity": "normal",
+          "detail": "Analgesia, antiemetics, oral fluids. Monitor daily weights, UOP. Avoid intercourse/pregnancy test."
+        },
+        {
+          "condition": "ohssScore >= 3 && ohssScore <= 6",
+          "label": "Moderate OHSS — consider admission",
+          "severity": "warning",
+          "detail": "Admit if significant pain/nausea. IV fluids, monitor I/O, daily U/S, LFTs, Cr, Hct."
+        },
+        {
+          "condition": "ohssScore >= 7",
+          "label": "Severe OHSS — admit urgently",
+          "severity": "high",
+          "detail": "IV fluids, albumin, paracentesis if tense ascites. LMWH for VTE prophylaxis. Monitor for renal failure, ARDS."
+        }
+      ]
+    },
+    {
+      "id": "canadian_cspine",
+      "name": "Canadian C-Spine Rule",
+      "category": "Emergency & Trauma",
+      "description": "Validated rule for safe clearance of cervical spine in alert, stable trauma patients.",
+      "inputs": [
+        {
+          "id": "cspineAge",
+          "label": "Age ≥65",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "<65",
+              "value": 0
+            },
+            {
+              "label": "≥65",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cspineDanger",
+          "label": "Dangerous mechanism (fall >1m or 5 stairs, axial load, high-speed, rollover, ejection, bicycle collision)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "Not dangerous",
+              "value": 0
+            },
+            {
+              "label": "Dangerous",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cspineParasth",
+          "label": "Parasthesias in extremities",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cspineMobile",
+          "label": "Able to rotate neck 45° left and right",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "Yes (can test)",
+              "value": 0
+            },
+            {
+              "label": "No / cannot test",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "cspineResult",
+          "label": "C-spine clearance",
+          "formula": "cspineAge + cspineDanger + cspineParasth + cspineMobile",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Canadian C-Spine Rule:\nAge≥65: {cspineAge} | Dangerous mechanism: {cspineDanger}\nParaesthesias: {cspineParasth} | Cannot rotate: {cspineMobile}\n\nAny positive: CT C-spine indicated\nAll negative: Clinically clear",
+      "interpretations": [
+        {
+          "condition": "cspineResult == 0",
+          "label": "Low risk — may clinically clear C-spine",
+          "severity": "normal",
+          "detail": "No risk factors. Alert, stable patient without dangerous mechanism. Can clear without imaging."
+        },
+        {
+          "condition": "cspineResult >= 1",
+          "label": "C-spine imaging indicated (CT)",
+          "severity": "warning",
+          "detail": "Positive risk factor for CSI. CT C-spine indicated."
+        }
+      ]
+    },
+    {
+      "id": "nexus",
+      "name": "NEXUS Criteria (C-Spine Clearance)",
+      "category": "Emergency & Trauma",
+      "description": "NEXUS low-risk criteria for cervical spine injury. All must be absent to clinically clear.",
+      "inputs": [
+        {
+          "id": "nexusMental",
+          "label": "Focal neurological deficit",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "Absent",
+              "value": 0
+            },
+            {
+              "label": "Present",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "nexusIntox",
+          "label": "Intoxication (drugs/alcohol)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "Not intoxicated",
+              "value": 0
+            },
+            {
+              "label": "Intoxicated",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "nexusPain",
+          "label": "Posterior midline C-spine tenderness",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No tenderness",
+              "value": 0
+            },
+            {
+              "label": "Tender",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "nexusAlert",
+          "label": "Alert mental status",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "Alert",
+              "value": 0
+            },
+            {
+              "label": "Not fully alert",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "nexusDistract",
+          "label": "Distracting painful injury",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "nexusResult",
+          "label": "NEXUS result",
+          "formula": "nexusMental + nexusIntox + nexusPain + nexusAlert + nexusDistract",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "NEXUS Criteria:\nNeuro deficit: {nexusMental} | Intox: {nexusIntox}\nMidline pain: {nexusPain} | Alert: {nexusAlert} | Distracting: {nexusDistract}\n\nAll 5 absent = low risk, can clear clinically",
+      "interpretations": [
+        {
+          "condition": "nexusResult == 0",
+          "label": "NEXUS negative — low risk, may clinically clear",
+          "severity": "normal",
+          "detail": "All 5 NEXUS criteria absent. C-spine can be cleared clinically without imaging."
+        },
+        {
+          "condition": "nexusResult >= 1",
+          "label": "NEXUS positive — C-spine imaging indicated",
+          "severity": "warning",
+          "detail": "≥1 NEXUS criteria present. CT C-spine indicated."
+        }
+      ]
+    },
+    {
+      "id": "ottawa_ankle",
+      "name": "Ottawa Ankle & Knee Rules",
+      "category": "Emergency & Trauma",
+      "description": "Validated rules to determine need for ankle/knee X-rays after acute injury.",
+      "inputs": [
+        {
+          "id": "ottawaAge",
+          "label": "Age ≥55",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "<55",
+              "value": 0
+            },
+            {
+              "label": "≥55",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ottawaMalleolus",
+          "label": "Tenderness at tip of posterior/inferior malleolus",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ottawaNavicular",
+          "label": "Tenderness at navicular/base of 5th metatarsal",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ottawaWeight",
+          "label": "Unable to bear weight immediately and in ED (4 steps)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "Can bear weight",
+              "value": 0
+            },
+            {
+              "label": "Cannot",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "ottawaResult",
+          "label": "Ankle X-ray needed",
+          "formula": "ottawaAge + ottawaMalleolus + ottawaNavicular + ottawaWeight",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Ottawa Ankle Rules:\nAge≥55: {ottawaAge} | Malleolar pain: {ottawaMalleolus}\nNavicular/5th base: {ottawaNavicular} | Cannot weight-bear: {ottawaWeight}\n\nAny positive → X-ray ankle\nAll negative → no X-ray needed",
+      "interpretations": [
+        {
+          "condition": "ottawaResult == 0",
+          "label": "Low risk — no X-ray required",
+          "severity": "normal",
+          "detail": "Ottawa rules negative. Clinically clear ankle fracture."
+        },
+        {
+          "condition": "ottawaResult >= 1",
+          "label": "X-ray ankle indicated",
+          "severity": "warning",
+          "detail": "Ottawa rules positive. Obtain ankle X-ray series."
+        }
+      ]
+    },
+    {
+      "id": "la_toxicity",
+      "name": "Local Anaesthetic Toxicity (Max Safe Dose)",
+      "category": "Emergency & Trauma",
+      "description": "Calculates maximum safe dose of common local anaesthetics (with and without epinephrine).",
+      "inputs": [
+        {
+          "id": "laWt",
+          "label": "Weight",
+          "type": "number",
+          "unit": "kg",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
+        },
+        {
+          "id": "laAgent",
+          "label": "Local anaesthetic",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "Lidocaine (plain) 5 mg/kg",
+              "value": 5
+            },
+            {
+              "label": "Lidocaine + epi 7 mg/kg",
+              "value": 7
+            },
+            {
+              "label": "Bupivacaine (plain) 2.5 mg/kg",
+              "value": 2.5
+            },
+            {
+              "label": "Bupivacaine + epi 3 mg/kg",
+              "value": 3
+            },
+            {
+              "label": "Ropivacaine 3 mg/kg",
+              "value": 3
+            },
+            {
+              "label": "Lidocaine IV regional (Bier) 3 mg/kg",
+              "value": 3
+            }
+          ],
+          "default": 5
+        }
+      ],
+      "results": [
+        {
+          "key": "laMaxDoseMg",
+          "label": "Maximum safe dose",
+          "formula": "laWt * laAgent",
+          "unit": "mg",
+          "decimals": 0,
+          "is_primary": true
+        },
+        {
+          "key": "laMaxVol1",
+          "label": "Volume (1% = 10 mg/mL)",
+          "formula": "(laWt * laAgent) / 10",
+          "unit": "mL 1%",
+          "decimals": 1,
+          "is_primary": false
+        },
+        {
+          "key": "laMaxVol2",
+          "label": "Volume (2% = 20 mg/mL)",
+          "formula": "(laWt * laAgent) / 20",
+          "unit": "mL 2%",
+          "decimals": 1,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "Max LA Dose = Weight × Dose/kg\n= {laWt} × {laAgent} = {laMaxDoseMg} mg\n\nSigns of LAST: circumoral numbness, tinnitus, metallic taste, seizures, arrhythmia\nTreatment: Intralipid 20% 1.5 mL/kg bolus, then 0.25 mL/kg/min"
+    },
+    {
+      "id": "intralipid",
+      "name": "LAST Protocol (Intralipid Dosing)",
+      "category": "Emergency & Trauma",
+      "description": "ASRA-recommended Intralipid 20% dosing for Local Anaesthetic Systemic Toxicity (LAST) resuscitation. Weight-based.",
+      "inputs": [
+        {
+          "id": "lipidWt",
+          "label": "Patient weight",
+          "type": "number",
+          "unit": "kg",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
+        }
+      ],
+      "results": [
+        {
+          "key": "lipidBolus",
+          "label": "Bolus dose",
+          "formula": "1.5 * lipidWt",
+          "unit": "mL",
+          "decimals": 0,
+          "is_primary": true
+        },
+        {
+          "key": "lipidInfusion",
+          "label": "Infusion rate (per min)",
+          "formula": "0.25 * lipidWt",
+          "unit": "mL/min",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "lipidInfusionHr",
+          "label": "Infusion rate (per hour)",
+          "formula": "15 * lipidWt",
+          "unit": "mL/h",
+          "decimals": 0,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "Intralipid 20% for LAST (ASRA protocol):\n\nBolus: 1.5 mL/kg IV over 1 min = {lipidBolus} mL\nMay repeat bolus ×2 for persistent CV collapse\n\nInfusion: 0.25 mL/kg/min = {lipidInfusion} mL/min = {lipidInfusionHr} mL/h\nContinue for at least 15 min after haemodynamic stability\n\nMax total: 12 mL/kg"
+    },
+    {
+      "id": "mascc",
+      "name": "MASCC Score (Febrile Neutropenia Risk)",
+      "category": "Haematology & Oncology",
+      "description": "Multinational Association for Supportive Care in Cancer score identifies low-risk febrile neutropenia patients for oral antibiotics."
+    },
+    {
+      "id": "hhs_criteria",
+      "name": "HHS Diagnostic Criteria (Hyperosmolar State)",
+      "category": "Endocrinology & Metabolic",
+      "description": "ADA/JBDS diagnostic criteria for hyperosmolar hyperglycaemic state (HHS).",
+      "inputs": [
+        {
+          "id": "hhsGlucose",
+          "label": "Serum glucose",
+          "type": "number",
+          "unit": "mg/dL",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "mmol/L",
+              "to_base": 18.0182
+            }
+          ]
+        },
+        {
+          "id": "hhsOsm",
+          "label": "Serum osmolality (calculated or measured)",
+          "type": "number",
+          "unit": "mOsm/kg",
+          "required": true,
+          "hint": "e.g. 340, formula: 2Na + glucose/18"
+        },
+        {
+          "id": "hhsPh",
+          "label": "Arterial pH",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "e.g. 7.38"
+        },
+        {
+          "id": "hhsBicarb",
+          "label": "Bicarbonate",
+          "type": "number",
+          "unit": "mmol/L",
+          "required": true,
+          "hint": "e.g. 28"
+        },
+        {
+          "id": "hhsKetones",
+          "label": "Ketones (urine or serum)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "None/trace",
+              "value": 0
+            },
+            {
+              "label": "Small/moderate",
+              "value": 1
+            },
+            {
+              "label": "Large",
+              "value": 2
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "hhsResult",
+          "label": "HHS diagnostic criteria",
+          "formula": "(hhsGlucose > 600 ? 1 : 0) + (hhsOsm > 320 ? 1 : 0) + (hhsPh > 7.3 ? 1 : 0) + (hhsBicarb > 15 ? 1 : 0) + (hhsKetones <= 1 ? 1 : 0)",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "HHS Diagnostic Criteria (ADA/JBDS):\nGlucose >600: {hhsGlucose > 600 ? \"Yes\" : \"No\"}\nOsmolality >320: {hhsOsm > 320 ? \"Yes\" : \"No\"}\npH >7.3: {hhsPh > 7.3 ? \"Yes\" : \"No\"}\nHCO3 >15: {hhsBicarb > 15 ? \"Yes\" : \"No\"}\nKetones none/trace: {hhsKetones <= 1 ? \"Yes\" : \"No\"}\nCriteria met: {hhsResult}/5",
+      "interpretations": [
+        {
+          "condition": "hhsResult >= 4",
+          "label": "HHS confirmed — ≥4 criteria met",
+          "severity": "high",
+          "detail": "HHS diagnosed. Glucose >600, Osm >320, pH >7.3, HCO3 >15, absent ketones. ICU admission. Aggressive IV fluids (0.9% NS), insulin 0.05 U/kg/h if glucose not falling with fluids alone."
+        },
+        {
+          "condition": "hhsResult < 4",
+          "label": "HHS not confirmed — consider DKA or mixed picture",
+          "severity": "warning"
+        }
+      ]
+    },
+    {
+      "id": "fetal_lung",
+      "name": "Fetal Lung Maturity (TSP:SB ratio)",
+      "category": "Obstetrics & Gynaecology",
+      "description": "Lamellar body count / surfactant-to-albumin ratio assessment for fetal lung maturity via amniocentesis.",
+      "inputs": [
+        {
+          "id": "tspRatio",
+          "label": "L/S ratio (lecithin/sphingomyelin)",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "e.g. 2.0"
+        }
+      ],
+      "results": [
+        {
+          "key": "tspResult",
+          "label": "Lung maturity",
+          "formula": "tspRatio >= 2 ? 1 : 0",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Fetal Lung Maturity (L/S ratio):\nRatio: {tspRatio}\n\n≥2.0: Mature — low risk of RDS\n<2.0: Immature — increased RDS risk",
+      "interpretations": [
+        {
+          "condition": "tspRatio >= 2",
+          "label": "Mature lung — low RDS risk",
+          "severity": "normal"
+        },
+        {
+          "condition": "tspRatio >= 1.5 && tspRatio < 2",
+          "label": "Transitional — moderate RDS risk",
+          "severity": "warning"
+        },
+        {
+          "condition": "tspRatio < 1.5",
+          "label": "Immature — high RDS risk",
+          "severity": "high",
+          "detail": "Consider betamethasone 24h before delivery if <34 weeks."
+        }
+      ]
+    },
+    {
+      "id": "perinatal_depression",
+      "name": "Edinburgh Postnatal Depression Scale (EPDS)",
+      "category": "Obstetrics & Gynaecology",
+      "description": "10-item screening for perinatal depression. Each item 0-3. Score ≥10 or any self-harm response triggers referral.",
+      "inputs": [
+        {
+          "id": "epds1",
+          "label": "Able to laugh/see funny side (reverse scored)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - As much as always",
+              "value": 0
+            },
+            {
+              "label": "1 - Not quite so much",
+              "value": 1
+            },
+            {
+              "label": "2 - Definitely less",
+              "value": 2
+            },
+            {
+              "label": "3 - Not at all",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "epds2",
+          "label": "Look forward with enjoyment",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - As much as ever",
+              "value": 0
+            },
+            {
+              "label": "1 - Rather less",
+              "value": 1
+            },
+            {
+              "label": "2 - Definitely less",
+              "value": 2
+            },
+            {
+              "label": "3 - Hardly at all",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "epds3",
+          "label": "Blamed myself unnecessarily when things went wrong",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - No, not at all",
+              "value": 0
+            },
+            {
+              "label": "1 - Hardly ever",
+              "value": 1
+            },
+            {
+              "label": "2 - Yes, sometimes",
+              "value": 2
+            },
+            {
+              "label": "3 - Yes, very often",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "epds4",
+          "label": "Anxious/worried for no reason",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - Not at all",
+              "value": 0
+            },
+            {
+              "label": "1 - Hardly ever",
+              "value": 1
+            },
+            {
+              "label": "2 - Yes, sometimes",
+              "value": 2
+            },
+            {
+              "label": "3 - Yes, very often",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "epds5",
+          "label": "Scared/panicky for no reason",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - Not at all",
+              "value": 0
+            },
+            {
+              "label": "1 - No, not much",
+              "value": 1
+            },
+            {
+              "label": "2 - Yes, sometimes",
+              "value": 2
+            },
+            {
+              "label": "3 - Yes, quite often",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "epds6",
+          "label": "Things getting on top of me",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - Coping as well as ever",
+              "value": 0
+            },
+            {
+              "label": "1 - Not quite so well",
+              "value": 1
+            },
+            {
+              "label": "2 - Yes, sometimes not coping",
+              "value": 2
+            },
+            {
+              "label": "3 - Yes, unable to cope",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "epds7",
+          "label": "So unhappy that I have had difficulty sleeping",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - No, not at all",
+              "value": 0
+            },
+            {
+              "label": "1 - Not very often",
+              "value": 1
+            },
+            {
+              "label": "2 - Yes, sometimes",
+              "value": 2
+            },
+            {
+              "label": "3 - Yes, most of the time",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "epds8",
+          "label": "Felt sad or miserable",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - No, not at all",
+              "value": 0
+            },
+            {
+              "label": "1 - Not very often",
+              "value": 1
+            },
+            {
+              "label": "2 - Yes, sometimes",
+              "value": 2
+            },
+            {
+              "label": "3 - Yes, most of the time",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "epds9",
+          "label": "Unhappy so I have been crying",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - No, not at all",
+              "value": 0
+            },
+            {
+              "label": "1 - Occasionally",
+              "value": 1
+            },
+            {
+              "label": "2 - Yes, sometimes",
+              "value": 2
+            },
+            {
+              "label": "3 - Yes, most of the time",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "epds10",
+          "label": "Thought of self-harm",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - Never",
+              "value": 0
+            },
+            {
+              "label": "1 - Hardly ever",
+              "value": 1
+            },
+            {
+              "label": "2 - Sometimes",
+              "value": 2
+            },
+            {
+              "label": "3 - Yes, quite often",
+              "value": 3
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "epdsTotal",
+          "label": "EPDS Score",
+          "formula": "epds1 + epds2 + epds3 + epds4 + epds5 + epds6 + epds7 + epds8 + epds9 + epds10",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "EPDS Score: {epdsTotal}/30",
+      "interpretations": [
+        {
+          "condition": "epdsTotal <= 9",
+          "label": "Normal — no significant depressive symptoms",
+          "severity": "normal"
+        },
+        {
+          "condition": "epdsTotal >= 10 && epdsTotal <= 12",
+          "label": "Borderline — possible depression",
+          "severity": "warning",
+          "detail": "EPDS 10-12. Assess further. May need follow-up in 2 weeks. Offer counselling."
+        },
+        {
+          "condition": "epdsTotal >= 13",
+          "label": "Positive screen — probable depression",
+          "severity": "high",
+          "detail": "EPDS ≥13. Likely depression. Refer to perinatal mental health. Assess risk of self-harm."
+        }
+      ]
+    },
+    {
+      "id": "pearl_index",
+      "name": "Contraceptive Pearl Index",
+      "category": "Obstetrics & Gynaecology",
+      "description": "Calculates contraceptive failure rate per 100 woman-years from clinical trial or population data.",
+      "inputs": [
+        {
+          "id": "pearlPregnancies",
+          "label": "Number of pregnancies observed",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "e.g. 8"
+        },
+        {
+          "id": "pearlMonths",
+          "label": "Total woman-months of exposure",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "e.g. 12000"
+        }
+      ],
+      "results": [
+        {
+          "key": "pearlIndex",
+          "label": "Pearl Index",
+          "formula": "pearlPregnancies / (pearlMonths / 1200)",
+          "unit": "per 100 woman-years",
+          "decimals": 1,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Pearl Index = Pregnancies / (Woman-Months / 1200)\n= {pearlPregnancies} / ({pearlMonths} / 1200)\n= {pearlIndex} per 100 woman-years\n\n<1: Very effective (implant, IUD, sterilisation)\n1-5: Moderately effective (pill, patch, ring)\n>5: Less effective (condom, diaphragm, withdrawal)"
+    },
+    {
+      "id": "cervical_cancer",
+      "name": "Cervical Cancer Risk (ASCCP Guidelines)",
+      "category": "Obstetrics & Gynaecology",
+      "description": "Simplified cervical cancer screening pathway based on Pap smear and HPV status per ASCCP risk-based guidelines.",
+      "inputs": [
+        {
+          "id": "papResult",
+          "label": "Pap smear result",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "Normal",
+              "value": 0
+            },
+            {
+              "label": "ASC-US",
+              "value": 1
+            },
+            {
+              "label": "LSIL",
+              "value": 2
+            },
+            {
+              "label": "ASC-H / HSIL",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hpvResult",
+          "label": "High-risk HPV test",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "Negative",
+              "value": 0
+            },
+            {
+              "label": "Positive (non-16/18)",
+              "value": 1
+            },
+            {
+              "label": "Positive 16/18",
+              "value": 2
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "cervicalAction",
+          "label": "Recommended action",
+          "formula": "(papResult >= 3 || hpvResult >= 2 || (papResult >= 2 && hpvResult >= 1)) ? 2 : ((papResult >= 1 && hpvResult >= 1) ? 1 : 0)",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Cervical Cancer Screening (ASCCP):\nPap: {papResult == 0 ? \"Normal\" : (papResult == 1 ? \"ASC-US\" : (papResult == 2 ? \"LSIL\" : \"ASC-H/HSIL\"))}\nHPV: {hpvResult == 0 ? \"Negative\" : (hpvResult == 1 ? \"Non-16/18\" : \"16/18\")}\n\nCo-testing results guide colposcopy referral.",
+      "interpretations": [
+        {
+          "condition": "cervicalAction == 0",
+          "label": "Routine screening — return in 3-5 years",
+          "severity": "normal"
+        },
+        {
+          "condition": "cervicalAction == 1",
+          "label": "Repeat co-testing in 1 year recommended",
+          "severity": "warning",
+          "detail": "ASC-US + HPV-positive (non-16/18). Repeat in 1 year per ASCCP."
+        },
+        {
+          "condition": "cervicalAction == 2",
+          "label": "Colposcopy referral indicated",
+          "severity": "high",
+          "detail": "HSIL/ASC-H or HPV 16/18 or co-testing high-grade. Refer for colposcopy + biopsy."
+        }
+      ]
+    },
+    {
+      "id": "dengue_severity",
+      "name": "Dengue Severity (WHO 2009 Classification)",
+      "category": "Tropical & Infectious Disease",
+      "description": "WHO 2009 dengue classification: Dengue without warning signs, Dengue with warning signs, or Severe Dengue.",
+      "inputs": [
+        {
+          "id": "dengueFever",
+          "label": "Fever + 2 of: nausea/vomiting, rash, aches, positive tourniquet",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "dengueAbdPain",
+          "label": "Abdominal pain/tenderness",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "dengueVomiting",
+          "label": "Persistent vomiting (≥3x in 24h)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "dengueLeak",
+          "label": "Clinical fluid accumulation (ascites, pleural effusion)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "dengueBleed",
+          "label": "Mucosal bleeding",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "dengueLethargy",
+          "label": "Lethargy/restlessness",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "dengueLiver",
+          "label": "Liveromegaly >2cm",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "dengueHct",
+          "label": "Rising Hct with rapid platelet drop",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "dengueShock",
+          "label": "Shock (capillary refill >2s, weak pulse, hypotension)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "dengueBleedSevere",
+          "label": "Severe bleeding (requiring transfusion)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "dengueOrgan",
+          "label": "Severe organ involvement (AST/ALT ≥1000, impaired consciousness, myocarditis)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "warningSigns",
+          "label": "Warning signs present",
+          "formula": "dengueAbdPain + dengueVomiting + dengueLeak + dengueBleed + dengueLethargy + dengueLiver + dengueHct",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "severity",
+          "label": "Dengue Severity",
+          "formula": "dengueShock + dengueBleedSevere + dengueOrgan",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Dengue Classification (WHO 2009):\nFever + symptoms: {dengueFever}\nWarning signs ({warningSigns}/7): {dengueAbdPain} {dengueVomiting} {dengueLeak} {dengueBleed} {dengueLethargy} {dengueLiver} {dengueHct}\nSevere criteria ({severity}/3): shock={dengueShock} severe_bleed={dengueBleedSevere} organ={dengueOrgan}\n\nProbable Dengue: fever + 2 symptoms (tourniquet test, nausea, rash, aches)\nDengue with warning signs: any warning sign present\nSevere Dengue: any severe criteria",
+      "interpretations": [
+        {
+          "condition": "severity >= 1",
+          "label": "Severe Dengue — ICU admission",
+          "severity": "high",
+          "detail": "Shock, severe bleeding, or severe organ involvement. ICU care, fluid resuscitation, transfusion as needed."
+        },
+        {
+          "condition": "warningSigns >= 1",
+          "label": "Dengue with warning signs — hospital admission",
+          "severity": "warning",
+          "detail": "Admit for close monitoring. IV isotonic fluids, platelet monitoring, vital signs 4-hourly."
+        },
+        {
+          "condition": "severity == 0 && warningSigns == 0",
+          "label": "Dengue without warning signs — outpatient management",
+          "severity": "normal",
+          "detail": "Paracetamol (avoid NSAIDs/aspirin). Oral fluids. Return if warning signs develop."
+        }
+      ]
+    },
+    {
+      "id": "measles_severity",
+      "name": "Measles Complication Risk Assessment",
+      "category": "Tropical & Infectious Disease",
+      "description": "WHO-based assessment of measles severity and complication risk. Identifies patients needing hospital referral.",
+      "inputs": [
+        {
+          "id": "measlesAge",
+          "label": "Age <12 months",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "measlesMalnutrition",
+          "label": "Malnutrition (MUAC <11.5cm or visible wasting)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "measlesImmuno",
+          "label": "Immunocompromised (HIV, malignancy, steroids)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "measlesPneumonia",
+          "label": "Tachypnoea, chest indrawing, or hypoxia",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "measlesDiarrhoea",
+          "label": "Persistent diarrhoea or dehydration",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "measlesOtitis",
+          "label": "Otitis media or mastoiditis",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "measlesNeuro",
+          "label": "Neurological signs (seizures, encephalopathy)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "measlesEye",
+          "label": "Corneal ulceration or keratitis",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "riskScore",
+          "label": "Complication risk",
+          "formula": "measlesAge + measlesMalnutrition + measlesImmuno + measlesPneumonia + measlesDiarrhoea + measlesOtitis + measlesNeuro + measlesEye",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Measles Complication Risk:\nAge<12mo: {measlesAge} | Malnutrition: {measlesMalnutrition} | Immuno: {measlesImmuno}\nPneumonia: {measlesPneumonia} | Diarrhoea: {measlesDiarrhoea} | Otitis: {measlesOtitis}\nNeuro: {measlesNeuro} | Eye: {measlesEye}\nRisk score: {riskScore}/8\n\nVitamin A: 200,000 IU PO ×2 doses (50,000 IU if <6mo, 100,000 if 6-11mo)",
+      "interpretations": [
+        {
+          "condition": "riskScore == 0",
+          "label": "Uncomplicated measles — home care",
+          "severity": "normal",
+          "detail": "Vitamin A, paracetamol, nutrition, eye care. Return if complications develop."
+        },
+        {
+          "condition": "riskScore >= 1 && riskScore <= 2",
+          "label": "Risk factors present — close follow-up",
+          "severity": "warning",
+          "detail": "Treat complications. Consider hospital referral if <12mo or malnourished."
+        },
+        {
+          "condition": "riskScore >= 3",
+          "label": "High risk — hospital referral indicated",
+          "severity": "high"
+        }
+      ]
+    },
+    {
+      "id": "meningitis_bacterial",
+      "name": "Bacterial Meningitis Score (BMS)",
+      "category": "Tropical & Infectious Disease",
+      "description": "Identifies patients at very low risk of bacterial meningitis who may avoid LP and empiric antibiotics. For children 2 months–18 years.",
+      "inputs": [
+        {
+          "id": "bmsGram",
+          "label": "Positive CSF Gram stain",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "bmsAnc",
+          "label": "CSF ANC ≥1000 cells/µL",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "bmsProtein",
+          "label": "CSF protein ≥80 mg/dL",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "bmsSeizure",
+          "label": "Seizure at presentation (or ≤72h before)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "bmsPeripheral",
+          "label": "Peripheral ANC ≥10,000 cells/µL",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "bmsScore",
+          "label": "BMS Score",
+          "formula": "bmsGram + bmsAnc + bmsProtein + bmsSeizure + bmsPeripheral",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Bacterial Meningitis Score:\n+Gram stain: {bmsGram} | CSF ANC≥1000: {bmsAnc} | Protein≥80: {bmsProtein}\nSeizure: {bmsSeizure} | Blood ANC≥10000: {bmsPeripheral}\nTotal: {bmsScore}/5\n\nScore 0: Very low risk of bacterial meningitis (<0.5%)\nScore ≥1: Risk present — LP + empiric antibiotics indicated",
+      "interpretations": [
+        {
+          "condition": "bmsScore == 0",
+          "label": "Very low risk — consider deferring LP/antibiotics",
+          "severity": "normal",
+          "detail": "BMS negative. <0.5% risk of bacterial meningitis. Observe closely, treat alternative if suspected viral."
+        },
+        {
+          "condition": "bmsScore >= 1",
+          "label": "Risk of bacterial meningitis — LP and empiric antibiotics indicated",
+          "severity": "high",
+          "detail": "BMS positive. Start empiric antibiotics (ceftriaxone + vancomycin) and perform LP if safe."
+        }
+      ]
+    },
+    {
+      "id": "leprosy_disability",
+      "name": "WHO Leprosy Disability Grading",
+      "category": "Tropical & Infectious Disease",
+      "description": "WHO grading system for leprosy-related impairment. Grades 0–2 for eyes, hands, and feet.",
+      "inputs": [
+        {
+          "id": "leproEyes",
+          "label": "Eye impairment",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — No eye problem due to leprosy",
+              "value": 0
+            },
+            {
+              "label": "1 — Reduced vision (<6/60, can count fingers)",
+              "value": 1
+            },
+            {
+              "label": "2 — Severe visual impairment/blindness, lagophthalmos, iridocyclitis",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "leproHands",
+          "label": "Hand impairment",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — No hand problem due to leprosy",
+              "value": 0
+            },
+            {
+              "label": "1 — Anaesthesia, but no visible damage/deformity",
+              "value": 1
+            },
+            {
+              "label": "2 — Visible damage, ulcers, contractures, bone resorption",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "leproFeet",
+          "label": "Foot impairment",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — No foot problem due to leprosy",
+              "value": 0
+            },
+            {
+              "label": "1 — Anaesthesia, but no visible damage/deformity",
+              "value": 1
+            },
+            {
+              "label": "2 — Visible damage, ulcers, contractures, bone resorption, foot drop",
+              "value": 2
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "maxGrade",
+          "label": "Max disability grade",
+          "formula": "max(leproEyes, max(leproHands, leproFeet))",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "WHO Leprosy Disability Grade:\nEyes: {leproEyes} | Hands: {leproHands} | Feet: {leproFeet}\nMax grade: {maxGrade}\n\nGrade 0: No impairment\nGrade 1: Anaesthesia only\nGrade 2: Visible deformity/ulcer\n\nRecord each site separately in patient chart.",
+      "interpretations": [
+        {
+          "condition": "maxGrade == 0",
+          "label": "Grade 0 — No disability",
+          "severity": "normal",
+          "detail": "No leprosy-related impairment. Continue routine self-care education."
+        },
+        {
+          "condition": "maxGrade == 1",
+          "label": "Grade 1 — Anaesthesia, no visible deformity",
+          "severity": "warning",
+          "detail": "Teach self-care, daily inspection, protective footwear. Treat any ulcers promptly."
+        },
+        {
+          "condition": "maxGrade == 2",
+          "label": "Grade 2 — Visible deformity or damage",
+          "severity": "high",
+          "detail": "Refer to leprosy rehabilitation service. Physiotherapy, corrective surgery if indicated."
+        }
+      ]
+    },
+    {
+      "id": "hamd",
+      "name": "Hamilton Depression Rating Scale (HAM-D 17)",
+      "category": "Psychiatry",
+      "description": "17-item clinician-rated scale for depression severity. Score 0–52. Most widely used depression rating scale.",
+      "inputs": [
+        {
+          "id": "hamdDepressed",
+          "label": "1. Depressed mood",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Absent",
+              "value": 0
+            },
+            {
+              "label": "1 — Sadness only on questioning",
+              "value": 1
+            },
+            {
+              "label": "2 — Spontaneous sadness",
+              "value": 2
+            },
+            {
+              "label": "3 — Non-verbal signs of depression",
+              "value": 3
+            },
+            {
+              "label": "4 — Very severe, virtually only affect",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdGuilt",
+          "label": "2. Guilt feelings",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Absent",
+              "value": 0
+            },
+            {
+              "label": "1 — Self-reproach, feels let people down",
+              "value": 1
+            },
+            {
+              "label": "2 — Ideas of guilt or rumination",
+              "value": 2
+            },
+            {
+              "label": "3 — Current illness is punishment (delusional)",
+              "value": 3
+            },
+            {
+              "label": "4 — Hallucinations of guilt",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdSuicide",
+          "label": "3. Suicide",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Absent",
+              "value": 0
+            },
+            {
+              "label": "1 — Feels life is not worth living",
+              "value": 1
+            },
+            {
+              "label": "2 — Wishes to be dead",
+              "value": 2
+            },
+            {
+              "label": "3 — Suicidal ideas or gestures",
+              "value": 3
+            },
+            {
+              "label": "4 — Attempted suicide",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdInsomniaEarly",
+          "label": "4. Insomnia early (initial)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — No difficulty",
+              "value": 0
+            },
+            {
+              "label": "1 — Occasional difficulty falling asleep",
+              "value": 1
+            },
+            {
+              "label": "2 — Nightly difficulty falling asleep",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdInsomniaMiddle",
+          "label": "5. Insomnia middle",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — No difficulty",
+              "value": 0
+            },
+            {
+              "label": "1 — Restless/disturbed night",
+              "value": 1
+            },
+            {
+              "label": "2 — Multiple awakenings",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdInsomniaLate",
+          "label": "6. Insomnia late (early AM waking)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — No difficulty",
+              "value": 0
+            },
+            {
+              "label": "1 — Wakes early but can fall back",
+              "value": 1
+            },
+            {
+              "label": "2 — Cannot fall back asleep",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdWork",
+          "label": "7. Work and activities",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — No difficulty",
+              "value": 0
+            },
+            {
+              "label": "1 — Thoughts of incompetence, fatigue with activities",
+              "value": 1
+            },
+            {
+              "label": "2 — Loss of interest in hobbies",
+              "value": 2
+            },
+            {
+              "label": "3 — Reduced actual time in activities or productivity",
+              "value": 3
+            },
+            {
+              "label": "4 — Stopped working due to illness",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdRetardation",
+          "label": "8. Retardation (psychomotor)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Normal speech/thought",
+              "value": 0
+            },
+            {
+              "label": "1 — Slight flattening",
+              "value": 1
+            },
+            {
+              "label": "2 — Obvious slowing, interviews interrupted",
+              "value": 2
+            },
+            {
+              "label": "3 — Difficult interview",
+              "value": 3
+            },
+            {
+              "label": "4 — Complete stupor",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdAgitation",
+          "label": "9. Agitation",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — None",
+              "value": 0
+            },
+            {
+              "label": "1 — Fidgetiness",
+              "value": 1
+            },
+            {
+              "label": "2 — Hand-wringing, hair-pulling",
+              "value": 2
+            },
+            {
+              "label": "3 — Pacing, cannot sit still",
+              "value": 3
+            },
+            {
+              "label": "4 — Hand-wringing/nail-biting/lip-biting continuously",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdAnxietyPsych",
+          "label": "10. Anxiety (psychic)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — No difficulty",
+              "value": 0
+            },
+            {
+              "label": "1 — Tension, irritability",
+              "value": 1
+            },
+            {
+              "label": "2 — Worrying about minor matters",
+              "value": 2
+            },
+            {
+              "label": "3 — Apprehensive attitude",
+              "value": 3
+            },
+            {
+              "label": "4 — Fears expressed without questioning",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdAnxietySom",
+          "label": "11. Anxiety (somatic)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Absent",
+              "value": 0
+            },
+            {
+              "label": "1 — Mild",
+              "value": 1
+            },
+            {
+              "label": "2 — Moderate",
+              "value": 2
+            },
+            {
+              "label": "3 — Severe",
+              "value": 3
+            },
+            {
+              "label": "4 — Incapacitating",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdGi",
+          "label": "12. Gastrointestinal (somatic)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — None",
+              "value": 0
+            },
+            {
+              "label": "1 — Loss of appetite, eating without encouragement",
+              "value": 1
+            },
+            {
+              "label": "2 — Difficulty eating without urging, laxatives needed",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdGeneral",
+          "label": "13. General somatic symptoms",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — None",
+              "value": 0
+            },
+            {
+              "label": "1 — Heaviness in limbs, back, or head; diffuse aches",
+              "value": 1
+            },
+            {
+              "label": "2 — Clear back/head aches, energy loss",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdLibido",
+          "label": "14. Loss of libido",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — None",
+              "value": 0
+            },
+            {
+              "label": "1 — Mild loss",
+              "value": 1
+            },
+            {
+              "label": "2 — Severe loss",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdHypochondria",
+          "label": "15. Hypochondriasis",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Not present",
+              "value": 0
+            },
+            {
+              "label": "1 — Self-absorption (bodily)",
+              "value": 1
+            },
+            {
+              "label": "2 — Preoccupation with health",
+              "value": 2
+            },
+            {
+              "label": "3 — Frequent complaints, requests for help",
+              "value": 3
+            },
+            {
+              "label": "4 — Hypochondriacal delusions",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdWeight",
+          "label": "16. Weight loss",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — No weight loss",
+              "value": 0
+            },
+            {
+              "label": "1 — Possibly from illness",
+              "value": 1
+            },
+            {
+              "label": "2 — Definite weight loss",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "hamdInsight",
+          "label": "17. Insight",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Acknowledges depression and illness",
+              "value": 0
+            },
+            {
+              "label": "1 — Acknowledges but blames externals",
+              "value": 1
+            },
+            {
+              "label": "2 — Denies being ill",
+              "value": 2
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "hamdTotal",
+          "label": "HAM-D Total",
+          "formula": "hamdDepressed + hamdGuilt + hamdSuicide + hamdInsomniaEarly + hamdInsomniaMiddle + hamdInsomniaLate + hamdWork + hamdRetardation + hamdAgitation + hamdAnxietyPsych + hamdAnxietySom + hamdGi + hamdGeneral + hamdLibido + hamdHypochondria + hamdWeight + hamdInsight",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "HAM-D 17-Item:\nDepressed: {hamdDepressed} | Guilt: {hamdGuilt} | Suicide: {hamdSuicide}\nEarly insomnia: {hamdInsomniaEarly} | Middle: {hamdInsomniaMiddle} | Late: {hamdInsomniaLate}\nWork: {hamdWork} | Retardation: {hamdRetardation} | Agitation: {hamdAgitation}\nPsychic anxiety: {hamdAnxietyPsych} | Somatic anxiety: {hamdAnxietySom}\nGI: {hamdGi} | General somatic: {hamdGeneral} | Libido: {hamdLibido}\nHypochondria: {hamdHypochondria} | Weight loss: {hamdWeight} | Insight: {hamdInsight}\nTotal: {hamdTotal}/52",
+      "interpretations": [
+        {
+          "condition": "hamdTotal <= 7",
+          "label": "Normal",
+          "severity": "normal"
+        },
+        {
+          "condition": "hamdTotal >= 8 && hamdTotal <= 13",
+          "label": "Mild depression",
+          "severity": "warning"
+        },
+        {
+          "condition": "hamdTotal >= 14 && hamdTotal <= 18",
+          "label": "Moderate depression",
+          "severity": "warning"
+        },
+        {
+          "condition": "hamdTotal >= 19 && hamdTotal <= 22",
+          "label": "Severe depression",
+          "severity": "high"
+        },
+        {
+          "condition": "hamdTotal >= 23",
+          "label": "Very severe depression",
+          "severity": "high",
+          "detail": "HAM-D ≥23. Urgent psychiatric referral. Assess suicide risk."
+        }
+      ]
+    },
+    {
+      "id": "ymrs",
+      "name": "Young Mania Rating Scale (YMRS)",
+      "category": "Psychiatry",
+      "description": "11-item clinician-rated scale for mania severity. Score 0–60. Used for diagnosis and treatment monitoring in bipolar disorder.",
+      "inputs": [
+        {
+          "id": "ymrsElevated",
+          "label": "1. Elevated mood",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Absent",
+              "value": 0
+            },
+            {
+              "label": "1 — Mildly or possibly elevated",
+              "value": 1
+            },
+            {
+              "label": "2 — Definite elevation, optimistic, confident",
+              "value": 2
+            },
+            {
+              "label": "3 — Elevated, expansive, grandiose",
+              "value": 3
+            },
+            {
+              "label": "4 — Grandiose delusions",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ymrsEnergy",
+          "label": "2. Increased motor activity/energy",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Absent",
+              "value": 0
+            },
+            {
+              "label": "1 — Subtle increase",
+              "value": 1
+            },
+            {
+              "label": "2 — Energetic, gesturing",
+              "value": 2
+            },
+            {
+              "label": "3 — Hyperactive, pacing",
+              "value": 3
+            },
+            {
+              "label": "4 — Exhaustive hyperactivity",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ymrsSexual",
+          "label": "3. Sexual interest",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Normal",
+              "value": 0
+            },
+            {
+              "label": "1 — Mildly increased",
+              "value": 1
+            },
+            {
+              "label": "2 — Definite increase (by history)",
+              "value": 2
+            },
+            {
+              "label": "3 — Inappropriate sexual remarks/behaviour",
+              "value": 3
+            },
+            {
+              "label": "4 — Overt sexual acts",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ymrsSleep",
+          "label": "4. Sleep",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Normal sleep",
+              "value": 0
+            },
+            {
+              "label": "1 — Sleeps 1h less than normal",
+              "value": 1
+            },
+            {
+              "label": "2 — Sleeps 2-3h less than normal",
+              "value": 2
+            },
+            {
+              "label": "3 — Sleeps 4h less than normal",
+              "value": 3
+            },
+            {
+              "label": "4 — No sleep needed",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ymrsIrritable",
+          "label": "5. Irritability",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Absent",
+              "value": 0
+            },
+            {
+              "label": "1 — Increased",
+              "value": 1
+            },
+            {
+              "label": "2 — Argumentative, shouting",
+              "value": 2
+            },
+            {
+              "label": "3 — Threatening, destructive",
+              "value": 3
+            },
+            {
+              "label": "4 — Assaultive",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ymrsSpeech",
+          "label": "6. Speech (rate/amount)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Normal",
+              "value": 0
+            },
+            {
+              "label": "1 — Verbose, pressured",
+              "value": 1
+            },
+            {
+              "label": "2 — Rapid, difficult to interrupt",
+              "value": 2
+            },
+            {
+              "label": "3 — Pressured, loud, difficult to follow",
+              "value": 3
+            },
+            {
+              "label": "4 — Incessant, uninterruptible",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ymrsLanguage",
+          "label": "7. Language/thought disorder",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Normal",
+              "value": 0
+            },
+            {
+              "label": "1 — Circumstantial, distractible",
+              "value": 1
+            },
+            {
+              "label": "2 — Tangential, flight of ideas",
+              "value": 2
+            },
+            {
+              "label": "3 — Clang associations, neologisms",
+              "value": 3
+            },
+            {
+              "label": "4 — Incoherent, word salad",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ymrsContent",
+          "label": "8. Thought content",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Normal",
+              "value": 0
+            },
+            {
+              "label": "1 — Grandiose ideas",
+              "value": 1
+            },
+            {
+              "label": "2 — Overvalued ideas",
+              "value": 2
+            },
+            {
+              "label": "3 — Delusions (well-formed)",
+              "value": 3
+            },
+            {
+              "label": "4 — Delusions with hallucinations",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ymrsDisruptive",
+          "label": "9. Disruptive/aggressive behaviour",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — None",
+              "value": 0
+            },
+            {
+              "label": "1 — Sarcastic, loud",
+              "value": 1
+            },
+            {
+              "label": "2 — Demanding, threatening",
+              "value": 2
+            },
+            {
+              "label": "3 — Physically threatening",
+              "value": 3
+            },
+            {
+              "label": "4 — Assaultive",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ymrsAppearance",
+          "label": "10. Appearance",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Appropriate",
+              "value": 0
+            },
+            {
+              "label": "1 — Mildly dishevelled",
+              "value": 1
+            },
+            {
+              "label": "2 — Disordered, garish",
+              "value": 2
+            },
+            {
+              "label": "3 — Bizarre, dishevelled",
+              "value": 3
+            },
+            {
+              "label": "4 — Completely dishevelled, ornate",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "ymrsInsight",
+          "label": "11. Insight",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Good insight",
+              "value": 0
+            },
+            {
+              "label": "1 — Possibly ill",
+              "value": 1
+            },
+            {
+              "label": "2 — Admits behaviour change but denies illness",
+              "value": 2
+            },
+            {
+              "label": "3 — Admits possible illness",
+              "value": 3
+            },
+            {
+              "label": "4 — Denies any illness",
+              "value": 4
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "ymrsTotal",
+          "label": "YMRS Total",
+          "formula": "ymrsElevated + ymrsEnergy + ymrsSexual + ymrsSleep + ymrsIrritable + ymrsSpeech + ymrsLanguage + ymrsContent + ymrsDisruptive + ymrsAppearance + ymrsInsight",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "YMRS 11-Item:\nElevated: {ymrsElevated} | Energy: {ymrsEnergy} | Sexual: {ymrsSexual}\nSleep: {ymrsSleep} | Irritability: {ymrsIrritable} | Speech: {ymrsSpeech}\nLanguage: {ymrsLanguage} | Content: {ymrsContent} | Disruptive: {ymrsDisruptive}\nAppearance: {ymrsAppearance} | Insight: {ymrsInsight}\nTotal: {ymrsTotal}/60",
+      "interpretations": [
+        {
+          "condition": "ymrsTotal <= 12",
+          "label": "Minimal symptoms — remission",
+          "severity": "normal"
+        },
+        {
+          "condition": "ymrsTotal >= 13 && ymrsTotal <= 19",
+          "label": "Mild mania/hypomania",
+          "severity": "warning"
+        },
+        {
+          "condition": "ymrsTotal >= 20 && ymrsTotal <= 29",
+          "label": "Moderate mania",
+          "severity": "high"
+        },
+        {
+          "condition": "ymrsTotal >= 30",
+          "label": "Severe mania — urgent psychiatric care",
+          "severity": "high",
+          "detail": "YMRS ≥30. Consider hospitalisation. Assess safety, start mood stabiliser ± antipsychotic."
+        }
+      ]
+    },
+    {
+      "id": "c_ssrs_screening",
+      "name": "C-SSRS Screening (Columbia-Suicide Severity Rating Scale)",
+      "category": "Psychiatry",
+      "description": "Suicide risk screening. Lifetime/recent ideation and behaviour. Any positive response warrants further assessment.",
+      "inputs": [
+        {
+          "id": "cssrsWish",
+          "label": "1. Wish to be dead",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cssrsThoughts",
+          "label": "2. Non-specific suicidal thoughts (\"I've thought about killing myself\")",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cssrsMethod",
+          "label": "3. Suicidal ideation with method (any thought of how to do it)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cssrsIntent",
+          "label": "4. Suicidal intent (\"I have some intent to carry it out\")",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cssrsPlan",
+          "label": "5. Suicidal intent with plan (specific plan, time, place)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 5
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "cssrsBehaviour",
+          "label": "6. Any suicidal behaviour (preparatory acts, aborted attempt, interrupted attempt, actual attempt)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 6
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "cssrsScore",
+          "label": "C-SSRS Severity Index",
+          "formula": "cssrsWish + cssrsThoughts + cssrsMethod + cssrsIntent + cssrsPlan + cssrsBehaviour",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        },
+        {
+          "key": "cssrsMaxIdeation",
+          "label": "Highest ideation level",
+          "formula": "max(cssrsWish, max(cssrsThoughts, max(cssrsMethod, max(cssrsIntent, max(cssrsPlan, cssrsBehaviour)))))",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "C-SSRS Screening:\nWish dead: {cssrsWish} | Non-specific thoughts: {cssrsThoughts}\nMethod: {cssrsMethod} | Intent: {cssrsIntent} | Plan+Intent: {cssrsPlan}\nBehaviour: {cssrsBehaviour}\n\nAny YES: Comprehensive suicide risk assessment needed\nPlan/Intent/Behaviour: Immediate safety intervention indicated",
+      "interpretations": [
+        {
+          "condition": "cssrsScore == 0",
+          "label": "No current suicidal ideation or behaviour",
+          "severity": "normal"
+        },
+        {
+          "condition": "cssrsScore >= 1 && cssrsScore <= 3",
+          "label": "Passive ideation — monitor closely",
+          "severity": "warning",
+          "detail": "Wish to be dead or non-specific thoughts without plan/intent. Provide crisis resources. Follow up within 24h."
+        },
+        {
+          "condition": "cssrsScore >= 4 && cssrsScore <= 9",
+          "label": "Active ideation — urgent mental health referral",
+          "severity": "high",
+          "detail": "Method, intent, or preparatory behaviour present. Do not leave patient alone. Urgent psychiatric evaluation."
+        },
+        {
+          "condition": "cssrsScore >= 10",
+          "label": "High risk — immediate safety intervention",
+          "severity": "high",
+          "detail": "Suicidal intent with plan or recent behaviour. One-to-one observation. Emergency psychiatric assessment. Consider compulsory admission if needed."
+        }
+      ]
+    },
+    {
+      "id": "mews",
+      "name": "Modified Early Warning Score (MEWS)",
+      "category": "Sepsis & ICU",
+      "description": "Simple physiologic score for ward patients to identify early deterioration. Score 0–14. Triggers escalation of care.",
+      "inputs": [
+        {
+          "id": "mewsHr",
+          "label": "Heart rate",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — 51-100",
+              "value": 0
+            },
+            {
+              "label": "1 — 41-50 or 101-110",
+              "value": 1
+            },
+            {
+              "label": "2 — 111-129",
+              "value": 2
+            },
+            {
+              "label": "3 — ≥130 or ≤40",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "mewsSbp",
+          "label": "Systolic BP",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — 101-199",
+              "value": 0
+            },
+            {
+              "label": "1 — 81-100 or ≥200",
+              "value": 1
+            },
+            {
+              "label": "2 — 71-80",
+              "value": 2
+            },
+            {
+              "label": "3 — ≤70",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "mewsRr",
+          "label": "Respiratory rate",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — 9-14",
+              "value": 0
+            },
+            {
+              "label": "1 — 15-20",
+              "value": 1
+            },
+            {
+              "label": "2 — 21-29 or 5-8",
+              "value": 2
+            },
+            {
+              "label": "3 — ≥30 or ≤4",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "mewsTemp",
+          "label": "Temperature",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — 36.1-38.0",
+              "value": 0
+            },
+            {
+              "label": "1 — 35.1-36.0 or 38.1-38.5",
+              "value": 1
+            },
+            {
+              "label": "2 — 38.6-39.5",
+              "value": 2
+            },
+            {
+              "label": "3 — ≥39.6 or ≤35.0",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "mewsAvpu",
+          "label": "AVPU (consciousness)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Alert",
+              "value": 0
+            },
+            {
+              "label": "1 — Confused/restless",
+              "value": 1
+            },
+            {
+              "label": "2 — Verbal response",
+              "value": 2
+            },
+            {
+              "label": "3 — Painful or unresponsive",
+              "value": 3
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "mewsTotal",
+          "label": "MEWS Score",
+          "formula": "mewsHr + mewsSbp + mewsRr + mewsTemp + mewsAvpu",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "MEWS:\nHR: {mewsHr} | SBP: {mewsSbp} | RR: {mewsRr} | Temp: {mewsTemp} | AVPU: {mewsAvpu}\nTotal: {mewsTotal}/14\n\n0-2: Continue routine monitoring\n3-4: Increase obs frequency, inform nurse-in-charge\n≥5: Urgent medical review, consider ICU outreach\n≥7: Critical — immediate team response",
+      "interpretations": [
+        {
+          "condition": "mewsTotal <= 2",
+          "label": "Low risk — continue routine monitoring",
+          "severity": "normal"
+        },
+        {
+          "condition": "mewsTotal >= 3 && mewsTotal <= 4",
+          "label": "Moderate risk — increase observation frequency",
+          "severity": "warning",
+          "detail": "Inform nurse-in-charge. Vital signs 2-hourly. Senior nurse review within 30 min."
+        },
+        {
+          "condition": "mewsTotal >= 5 && mewsTotal <= 6",
+          "label": "High risk — urgent medical review",
+          "severity": "high",
+          "detail": "MEWS ≥5. Doctor review within 15 min. Consider ICU outreach, call MET/rapid response."
+        },
+        {
+          "condition": "mewsTotal >= 7",
+          "label": "Critical — immediate team response",
+          "severity": "high",
+          "detail": "MEWS ≥7. Immediate medical emergency team activation. Resuscitation equipment at bedside."
+        }
+      ]
+    },
+    {
+      "id": "news2",
+      "name": "National Early Warning Score 2 (NEWS2)",
+      "category": "Sepsis & ICU",
+      "description": "Royal College of Physicians early warning score for acute illness severity. Score 0–20 with optional SpO₂ scale for hypercapnic patients.",
+      "inputs": [
+        {
+          "id": "news2Rr",
+          "label": "Respiratory rate",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — 12-20",
+              "value": 0
+            },
+            {
+              "label": "1 — 9-11",
+              "value": 1
+            },
+            {
+              "label": "2 — 21-24",
+              "value": 2
+            },
+            {
+              "label": "3 — ≤8 or ≥25",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "news2SpO2",
+          "label": "SpO₂ (Scale 1 — standard)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — ≥96",
+              "value": 0
+            },
+            {
+              "label": "1 — 94-95",
+              "value": 1
+            },
+            {
+              "label": "2 — 92-93",
+              "value": 2
+            },
+            {
+              "label": "3 — ≤91",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "news2Oxygen",
+          "label": "On supplemental oxygen",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No (room air)",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "news2Sbp",
+          "label": "Systolic BP",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — 111-219",
+              "value": 0
+            },
+            {
+              "label": "1 — 101-110",
+              "value": 1
+            },
+            {
+              "label": "2 — 91-100",
+              "value": 2
+            },
+            {
+              "label": "3 — ≤90 or ≥220",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "news2Hr",
+          "label": "Heart rate",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — 51-90",
+              "value": 0
+            },
+            {
+              "label": "1 — 41-50 or 91-110",
+              "value": 1
+            },
+            {
+              "label": "2 — 111-130",
+              "value": 2
+            },
+            {
+              "label": "3 — ≤40 or ≥131",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "news2Conscious",
+          "label": "Consciousness (AVPU)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Alert",
+              "value": 0
+            },
+            {
+              "label": "3 — CVPU (confused, voice, pain, unresponsive)",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "news2Temp",
+          "label": "Temperature",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — 36.1-38.0",
+              "value": 0
+            },
+            {
+              "label": "1 — 35.1-36.0 or 38.1-39.0",
+              "value": 1
+            },
+            {
+              "label": "2 — ≥39.1 or ≤35.0",
+              "value": 2
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "news2Total",
+          "label": "NEWS2 Score",
+          "formula": "news2Rr + news2SpO2 + news2Oxygen + news2Sbp + news2Hr + news2Conscious + news2Temp",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "NEWS2:\nRR: {news2Rr} | SpO₂: {news2SpO2} | O₂: {news2Oxygen} | SBP: {news2Sbp}\nHR: {news2Hr} | Conscious: {news2Conscious} | Temp: {news2Temp}\nTotal: {news2Total}/20\n\n0-4: Low — ward obs 4-12 hourly\n5-6: Low-medium — increase obs\n7+: High — urgent review (MET call if ≥7)\nSingle parameter ≥3: Escalate",
+      "interpretations": [
+        {
+          "condition": "news2Total <= 4",
+          "label": "Low clinical risk — routine monitoring",
+          "severity": "normal"
+        },
+        {
+          "condition": "news2Total >= 5 && news2Total <= 6",
+          "label": "Low-medium risk — increase monitoring frequency",
+          "severity": "warning",
+          "detail": "NEWS2 5-6. Nurse-in-charge notified. Vital signs 1-2 hourly. Senior nurse review."
+        },
+        {
+          "condition": "news2Total >= 7",
+          "label": "High risk — urgent medical review",
+          "severity": "high",
+          "detail": "NEWS2 ≥7. MET/critical care outreach team review. Consider transfer to HDU/ICU."
+        }
+      ]
+    },
+    {
+      "id": "saps3",
+      "name": "SAPS 3 (Simplified Acute Physiology Score III)",
+      "category": "Sepsis & ICU",
+      "description": "ICU mortality prediction score. 20 physiologic and admission variables. Higher score = higher predicted mortality.",
+      "inputs": [
+        {
+          "id": "sapsAge",
+          "label": "Age",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — <40",
+              "value": 0
+            },
+            {
+              "label": "2 — 40-59",
+              "value": 2
+            },
+            {
+              "label": "8 — 60-69",
+              "value": 8
+            },
+            {
+              "label": "14 — 70-79",
+              "value": 14
+            },
+            {
+              "label": "18 — ≥80",
+              "value": 18
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsHr",
+          "label": "Heart rate (max in 24h)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — <120",
+              "value": 0
+            },
+            {
+              "label": "5 — 120-159",
+              "value": 5
+            },
+            {
+              "label": "11 — ≥160",
+              "value": 11
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsSbp",
+          "label": "Lowest SBP in 24h",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — ≥70",
+              "value": 0
+            },
+            {
+              "label": "7 — <70",
+              "value": 7
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsTemp",
+          "label": "Highest temperature",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — <39",
+              "value": 0
+            },
+            {
+              "label": "7 — ≥39",
+              "value": 7
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsRr",
+          "label": "Respiratory rate (max)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — <30",
+              "value": 0
+            },
+            {
+              "label": "8 — 30-44",
+              "value": 8
+            },
+            {
+              "label": "15 — ≥45",
+              "value": 15
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsVent",
+          "label": "Mechanical ventilation",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 9
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsGcs",
+          "label": "Lowest GCS",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — 13-15",
+              "value": 0
+            },
+            {
+              "label": "6 — 9-12",
+              "value": 6
+            },
+            {
+              "label": "16 — 6-8",
+              "value": 16
+            },
+            {
+              "label": "20 — 3-5",
+              "value": 20
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsCreatinine",
+          "label": "Highest creatinine",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — <1.2",
+              "value": 0
+            },
+            {
+              "label": "7 — 1.2-1.9",
+              "value": 7
+            },
+            {
+              "label": "8 — 2.0-3.4",
+              "value": 8
+            },
+            {
+              "label": "15 — ≥3.5",
+              "value": 15
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsBilirubin",
+          "label": "Highest bilirubin",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — <2.0",
+              "value": 0
+            },
+            {
+              "label": "4 — 2.0-5.9",
+              "value": 4
+            },
+            {
+              "label": "7 — ≥6.0",
+              "value": 7
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsPlatelets",
+          "label": "Lowest platelets (×10³/µL)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — ≥50",
+              "value": 0
+            },
+            {
+              "label": "7 — 20-49",
+              "value": 7
+            },
+            {
+              "label": "11 — <20",
+              "value": 11
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsSodium",
+          "label": "Sodium (max or min)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — 130-149",
+              "value": 0
+            },
+            {
+              "label": "3 — <130 or ≥150",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsGlucose",
+          "label": "Highest glucose",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — <180",
+              "value": 0
+            },
+            {
+              "label": "5 — ≥180",
+              "value": 5
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsHco3",
+          "label": "Lowest HCO₃",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — ≥15",
+              "value": 0
+            },
+            {
+              "label": "8 — <15",
+              "value": 8
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "sapsScore",
+          "label": "SAPS 3 Score",
+          "formula": "sapsAge + sapsHr + sapsSbp + sapsTemp + sapsRr + sapsVent + sapsGcs + sapsCreatinine + sapsBilirubin + sapsPlatelets + sapsSodium + sapsGlucose + sapsHco3",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "SAPS 3:\nAge: {sapsAge} | HR: {sapsHr} | SBP: {sapsSbp} | Temp: {sapsTemp}\nRR: {sapsRr} | Vent: {sapsVent} | GCS: {sapsGcs}\nCr: {sapsCreatinine} | Bili: {sapsBilirubin} | PLT: {sapsPlatelets}\nNa: {sapsSodium} | Glu: {sapsGlucose} | HCO₃: {sapsHco3}\nTotal: {sapsScore}\n\nScore correlates with hospital mortality (0-217). Higher = worse prognosis.",
+      "interpretations": [
+        {
+          "condition": "sapsScore <= 30",
+          "label": "Low severity — good prognosis",
+          "severity": "normal"
+        },
+        {
+          "condition": "sapsScore >= 31 && sapsScore <= 50",
+          "label": "Moderate severity",
+          "severity": "warning"
+        },
+        {
+          "condition": "sapsScore >= 51 && sapsScore <= 70",
+          "label": "High severity — significant mortality risk",
+          "severity": "high"
+        },
+        {
+          "condition": "sapsScore >= 71",
+          "label": "Critical severity — very high mortality",
+          "severity": "high",
+          "detail": "SAPS 3 ≥71. High predicted ICU mortality. Discuss goals of care with family."
+        }
+      ]
+    },
+    {
+      "id": "muac",
+      "name": "MUAC (Mid-Upper Arm Circumference)",
+      "category": "Paediatrics",
+      "description": "MUAC is a rapid screening tool for acute malnutrition in children 6–59 months and adults. Uses WHO cutoffs.",
+      "inputs": [
+        {
+          "id": "muacCm",
+          "label": "MUAC measurement",
+          "type": "number",
+          "unit": "cm",
+          "required": true,
+          "hint": "6-59 months: use left arm, midpoint"
+        },
+        {
+          "id": "muacAdult",
+          "label": "Patient type",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "Child (6-59 months)",
+              "value": 0
+            },
+            {
+              "label": "Adult (non-pregnant)",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "muacStatus",
+          "label": "Nutritional status",
+          "formula": "muacCm",
+          "unit": "cm",
+          "decimals": 1,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "MUAC: {muacCm} cm ({muacAdult == 0 ? \"Child 6-59mo\" : \"Adult\"})\n\nChild cutoffs:\n  ≥12.5: Normal\n  11.5-12.4: Moderate acute malnutrition (MAM)\n  <11.5: Severe acute malnutrition (SAM)\n\nAdult cutoffs:\n  ≥23.0: Normal\n  17.0-22.9: Moderate malnutrition\n  <17.0: Severe malnutrition",
+      "interpretations": [
+        {
+          "condition": "muacCm >= 12.5 && muacAdult == 0",
+          "label": "Child: Normal nutritional status",
+          "severity": "normal"
+        },
+        {
+          "condition": "muacCm >= 11.5 && muacCm < 12.5 && muacAdult == 0",
+          "label": "Child: Moderate acute malnutrition (MAM)",
+          "severity": "warning",
+          "detail": "MUAC 11.5-12.4cm. Refer to supplementary feeding programme. RUTF supplementation. Follow up monthly."
+        },
+        {
+          "condition": "muacCm < 11.5 && muacAdult == 0",
+          "label": "Child: Severe acute malnutrition (SAM)",
+          "severity": "high",
+          "detail": "MUAC <11.5cm. Urgent referral to therapeutic feeding centre. Treat for complications (hypoglycaemia, hypothermia, infection). F-75 then F-100."
+        },
+        {
+          "condition": "muacCm >= 23.0 && muacAdult == 1",
+          "label": "Adult: Normal nutritional status",
+          "severity": "normal"
+        },
+        {
+          "condition": "muacCm >= 17.0 && muacCm < 23.0 && muacAdult == 1",
+          "label": "Adult: Moderate malnutrition",
+          "severity": "warning"
+        },
+        {
+          "condition": "muacCm < 17.0 && muacAdult == 1",
+          "label": "Adult: Severe malnutrition",
+          "severity": "high"
+        }
+      ]
+    },
+    {
+      "id": "westley_croup",
+      "name": "Westley Croup Severity Score",
+      "category": "Paediatrics",
+      "description": "Assesses croup severity to guide management. Score 0-17. Uses stridor, retractions, air entry, cyanosis, and consciousness.",
+      "inputs": [
+        {
+          "id": "croupStridor",
+          "label": "Stridor",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — None",
+              "value": 0
+            },
+            {
+              "label": "1 — When agitated",
+              "value": 1
+            },
+            {
+              "label": "2 — At rest",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "croupRetractions",
+          "label": "Retractions (chest wall indrawing)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — None",
+              "value": 0
+            },
+            {
+              "label": "1 — Mild",
+              "value": 1
+            },
+            {
+              "label": "2 — Moderate",
+              "value": 2
+            },
+            {
+              "label": "3 — Severe",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "croupAirEntry",
+          "label": "Air entry",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Normal",
+              "value": 0
+            },
+            {
+              "label": "1 — Decreased",
+              "value": 1
+            },
+            {
+              "label": "2 — Severely decreased",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "croupCyanosis",
+          "label": "Cyanosis",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — None",
+              "value": 0
+            },
+            {
+              "label": "4 — Cyanosis when agitated",
+              "value": 4
+            },
+            {
+              "label": "5 — Cyanosis at rest",
+              "value": 5
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "croupConscious",
+          "label": "Level of consciousness",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Normal",
+              "value": 0
+            },
+            {
+              "label": "5 — Altered (drowsy, confused)",
+              "value": 5
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "croupTotal",
+          "label": "Westley Score",
+          "formula": "croupStridor + croupRetractions + croupAirEntry + croupCyanosis + croupConscious",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Westley Croup Score:\nStridor: {croupStridor} | Retractions: {croupRetractions} | Air entry: {croupAirEntry}\nCyanosis: {croupCyanosis} | Consciousness: {croupConscious}\nTotal: {croupTotal}/17\n\n≤2: Mild — outpatient, single dose dexamethasone 0.15-0.6 mg/kg\n3-7: Moderate — admit, dexamethasone, racemic epinephrine if needed\n8-11: Severe — ICU, close monitoring\n≥12: Impending respiratory failure — ICU, prepare for intubation",
+      "interpretations": [
+        {
+          "condition": "croupTotal <= 2",
+          "label": "Mild croup — outpatient management",
+          "severity": "normal",
+          "detail": "Dexamethasone 0.15-0.6 mg/kg PO single dose. Discharge with croup counselling."
+        },
+        {
+          "condition": "croupTotal >= 3 && croupTotal <= 7",
+          "label": "Moderate croup — hospital admission",
+          "severity": "warning",
+          "detail": "Admit. Dexamethasone 0.15-0.6 mg/kg PO/IV/IM. Consider nebulised epinephrine if moderate-severe distress."
+        },
+        {
+          "condition": "croupTotal >= 8 && croupTotal <= 11",
+          "label": "Severe croup — ICU-level care",
+          "severity": "high",
+          "detail": "Admit to ICU. Dexamethasone ± prednisolone. Nebulised epinephrine. Monitor closely for fatigue."
+        },
+        {
+          "condition": "croupTotal >= 12",
+          "label": "Impending respiratory failure — prepare for intubation",
+          "severity": "high",
+          "detail": "Westley ≥12. ICU admission. Intubation cart at bedside. Consider Heliox. ENT referral for rigid bronchoscopy if atypical."
+        }
+      ]
+    },
+    {
+      "id": "pediatric_trauma",
+      "name": "Pediatric Trauma Score (PTS)",
+      "category": "Paediatrics",
+      "description": "Triage tool for injured children. Score -6 to +12. Predicts mortality and need for trauma centre referral.",
+      "inputs": [
+        {
+          "id": "ptsSize",
+          "label": "Size/weight",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "+2 — >20 kg",
+              "value": 2
+            },
+            {
+              "label": "+1 — 10-20 kg",
+              "value": 1
+            },
+            {
+              "label": "-1 — <10 kg",
+              "value": -1
+            }
+          ],
+          "default": 2
+        },
+        {
+          "id": "ptsAirway",
+          "label": "Airway",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "+2 — Normal",
+              "value": 2
+            },
+            {
+              "label": "+1 — Maintainable (oral airway, positioning)",
+              "value": 1
+            },
+            {
+              "label": "-1 — Unmaintainable (intubated, cric)",
+              "value": -1
+            }
+          ],
+          "default": 2
+        },
+        {
+          "id": "ptsSbp",
+          "label": "Systolic BP",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "+2 — ≥90 mmHg",
+              "value": 2
+            },
+            {
+              "label": "+1 — 50-90 mmHg",
+              "value": 1
+            },
+            {
+              "label": "-1 — <50 mmHg",
+              "value": -1
+            }
+          ],
+          "default": 2
+        },
+        {
+          "id": "ptsCns",
+          "label": "CNS (consciousness)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "+2 — Awake",
+              "value": 2
+            },
+            {
+              "label": "+1 — Obtunded/loc",
+              "value": 1
+            },
+            {
+              "label": "-1 — Coma/unresponsive",
+              "value": -1
+            }
+          ],
+          "default": 2
+        },
+        {
+          "id": "ptsWound",
+          "label": "Wound/skin",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "+2 — None",
+              "value": 2
+            },
+            {
+              "label": "+1 — Minor (contusion, abrasion, laceration <5cm)",
+              "value": 1
+            },
+            {
+              "label": "-1 — Major (open fracture, amputation, significant bleed)",
+              "value": -1
+            }
+          ],
+          "default": 2
+        },
+        {
+          "id": "ptsFracture",
+          "label": "Skeletal (fractures)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "+2 — None",
+              "value": 2
+            },
+            {
+              "label": "+1 — Closed single fracture",
+              "value": 1
+            },
+            {
+              "label": "-1 — Open/multiple fractures",
+              "value": -1
+            }
+          ],
+          "default": 2
+        }
+      ],
+      "results": [
+        {
+          "key": "ptsTotal",
+          "label": "Pediatric Trauma Score",
+          "formula": "ptsSize + ptsAirway + ptsSbp + ptsCns + ptsWound + ptsFracture",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "PTS:\nSize: {ptsSize} | Airway: {ptsAirway} | SBP: {ptsSbp}\nCNS: {ptsCns} | Wound: {ptsWound} | Fracture: {ptsFracture}\nTotal: {ptsTotal} (-6 to +12)\n\n≥8: Good prognosis, consider non-trauma centre\n≤7: Significant injury risk, transfer to trauma centre\n≤4: High mortality risk\n≤0: Critical — very high mortality",
+      "interpretations": [
+        {
+          "condition": "ptsTotal >= 8",
+          "label": "Low risk — good prognosis",
+          "severity": "normal",
+          "detail": "PTS ≥8. Survival >95%. May be managed at non-trauma centre."
+        },
+        {
+          "condition": "ptsTotal >= 5 && ptsTotal <= 7",
+          "label": "Moderate risk — consider trauma centre referral",
+          "severity": "warning",
+          "detail": "PTS 5-7. Significant injury possible. Refer to trauma centre if available."
+        },
+        {
+          "condition": "ptsTotal >= 1 && ptsTotal <= 4",
+          "label": "High risk — transfer to trauma centre",
+          "severity": "high",
+          "detail": "PTS 1-4. High mortality. Urgent transfer to paediatric trauma centre."
+        },
+        {
+          "condition": "ptsTotal <= 0",
+          "label": "Critical — very high mortality",
+          "severity": "high",
+          "detail": "PTS ≤0. Mortality >50%. Activate trauma team, prepare for massive transfusion."
+        }
+      ]
+    },
+    {
+      "id": "triss",
+      "name": "TRISS (Trauma and Injury Severity Score)",
+      "category": "Emergency & Trauma",
+      "description": "Combined physiologic (RTS) and anatomic (ISS) scoring for trauma survival probability. Uses blunt/penetrating coefficients.",
+      "inputs": [
+        {
+          "id": "trissRts",
+          "label": "Revised Trauma Score (RTS)",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "0-7.84"
+        },
+        {
+          "id": "trissIss",
+          "label": "Injury Severity Score (ISS)",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "0-75"
+        },
+        {
+          "id": "trissAge",
+          "label": "Age ≥55",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No (<55)",
+              "value": 0
+            },
+            {
+              "label": "Yes (≥55)",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "trissBlunt",
+          "label": "Mechanism",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "Blunt",
+              "value": 1
+            },
+            {
+              "label": "Penetrating",
+              "value": 0
+            }
+          ],
+          "default": 1
+        }
+      ],
+      "results": [
+        {
+          "key": "trissLogit",
+          "label": "TRISS Logit",
+          "formula": "trissBlunt == 1 ? (0.9544 * trissRts - 0.0768 * trissIss - 1.9052 * trissAge - 1.127) : (-0.0655 + 1.0533 * trissRts - 0.0756 * trissIss - 2.1476 * trissAge)",
+          "unit": "",
+          "decimals": 4,
+          "is_primary": false
+        },
+        {
+          "key": "trissPs",
+          "label": "Survival probability",
+          "formula": "trissBlunt == 1 ? (1 / (1 + exp(-(0.9544 * trissRts - 0.0768 * trissIss - 1.9052 * trissAge - 1.127)))) : (1 / (1 + exp(-(-0.0655 + 1.0533 * trissRts - 0.0756 * trissIss - 2.1476 * trissAge))))",
+          "unit": "",
+          "decimals": 1,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "TRISS Survival Probability:\nRTS: {trissRts} | ISS: {trissIss} | Age≥55: {trissAge} | {trissBlunt == 1 ? \"Blunt\" : \"Penetrating\"}\n\nLogit = {trissLogit}\nPs = 1 / (1 + e^(-Logit)) = {trissPs}%\n\nPs <50%: Predicted non-survivor\nPs ≥50%: Predicted survivor",
+      "interpretations": [
+        {
+          "condition": "trissPs >= 90",
+          "label": "High survival probability (≥90%)",
+          "severity": "normal"
+        },
+        {
+          "condition": "trissPs >= 75 && trissPs < 90",
+          "label": "Good survival probability (75-89%)",
+          "severity": "normal"
+        },
+        {
+          "condition": "trissPs >= 50 && trissPs < 75",
+          "label": "Moderate survival probability (50-74%)",
+          "severity": "warning"
+        },
+        {
+          "condition": "trissPs >= 25 && trissPs < 50",
+          "label": "Low survival probability (25-49%)",
+          "severity": "high"
+        },
+        {
+          "condition": "trissPs < 25",
+          "label": "Critical — very low survival probability (<25%)",
+          "severity": "high",
+          "detail": "TRISS Ps <25%. Consider expectant management in mass casualty setting."
+        }
+      ]
+    },
+    {
+      "id": "fast_ed",
+      "name": "FAST-ED Stroke Scale (Field Assessment Stroke Triage for Emergency Destination)",
+      "category": "Emergency & Trauma",
+      "description": "9-point stroke severity scale for field triage to identify large vessel occlusion (LVO). Score 0-9. ≥4 suggests LVO.",
+      "inputs": [
+        {
+          "id": "fastedFace",
+          "label": "Facial palsy",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Normal",
+              "value": 0
+            },
+            {
+              "label": "1 — Mild (asymmetry on smile)",
+              "value": 1
+            },
+            {
+              "label": "2 — Moderate-severe (complete droop)",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "fastedArm",
+          "label": "Arm weakness (use worst side)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — No drift (holds 10s)",
+              "value": 0
+            },
+            {
+              "label": "1 — Drift before 10s",
+              "value": 1
+            },
+            {
+              "label": "2 — Cannot lift against gravity",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "fastedSpeech",
+          "label": "Speech/language",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — Normal",
+              "value": 0
+            },
+            {
+              "label": "1 — Mild aphasia or dysarthria",
+              "value": 1
+            },
+            {
+              "label": "2 — Severe (mute, global aphasia)",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "fastedEye",
+          "label": "Eye deviation",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — None",
+              "value": 0
+            },
+            {
+              "label": "1 — Partial gaze palsy",
+              "value": 1
+            },
+            {
+              "label": "2 — Forced deviation",
+              "value": 2
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "fastedNeglect",
+          "label": "Denial/neglect",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 — None",
+              "value": 0
+            },
+            {
+              "label": "1 — Extinction to double stimulation",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "fastedTotal",
+          "label": "FAST-ED Score",
+          "formula": "fastedFace + fastedArm + fastedSpeech + fastedEye + fastedNeglect",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "FAST-ED:\nFace: {fastedFace} | Arm: {fastedArm} | Speech: {fastedSpeech}\nEye deviation: {fastedEye} | Neglect: {fastedNeglect}\nTotal: {fastedTotal}/9\n\n0-3: Low likelihood of LVO (<15%)\n4-5: Moderate likelihood (30-40%)\n6-9: High likelihood of LVO (>60%)\n≥4: Consider transport to comprehensive stroke centre",
+      "interpretations": [
+        {
+          "condition": "fastedTotal <= 3",
+          "label": "Low LVO likelihood — non-LVO stroke likely",
+          "severity": "normal",
+          "detail": "FAST-ED ≤3. LVO probability <15%. Transport to nearest stroke-ready hospital."
+        },
+        {
+          "condition": "fastedTotal >= 4 && fastedTotal <= 5",
+          "label": "Moderate LVO likelihood — consider comprehensive stroke centre",
+          "severity": "warning",
+          "detail": "FAST-ED 4-5. LVO probability 30-40%. Transport to comprehensive stroke centre if within 30 min."
+        },
+        {
+          "condition": "fastedTotal >= 6",
+          "label": "High LVO likelihood — bypass to comprehensive stroke centre",
+          "severity": "high",
+          "detail": "FAST-ED ≥6. LVO probability >60%. Alert interventional team en route. Transport to comprehensive stroke centre capable of thrombectomy."
+        }
+      ]
+    },
+    {
+      "id": "crusade",
+      "name": "CRUSADE Bleeding Score",
+      "category": "Cardiac",
+      "description": "Estimates in-hospital major bleeding risk in NSTEMI/ACS patients. Score 1-100. Guides bleeding avoidance strategy.",
+      "inputs": [
+        {
+          "id": "crusadeHct",
+          "label": "Haematocrit",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "8 — <31%",
+              "value": 8
+            },
+            {
+              "label": "6 — 31-36.9%",
+              "value": 6
+            },
+            {
+              "label": "2 — 37-39.9%",
+              "value": 2
+            },
+            {
+              "label": "0 — ≥40%",
+              "value": 0
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "crusadeCcr",
+          "label": "Creatinine clearance (Cockcroft-Gault)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "39 — <15",
+              "value": 39
+            },
+            {
+              "label": "35 — 15-30",
+              "value": 35
+            },
+            {
+              "label": "20 — 31-60",
+              "value": 20
+            },
+            {
+              "label": "4 — 61-90",
+              "value": 4
+            },
+            {
+              "label": "0 — >90",
+              "value": 0
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "crusadeHr",
+          "label": "Heart rate",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "8 — ≥100 bpm",
+              "value": 8
+            },
+            {
+              "label": "0 — <100 bpm",
+              "value": 0
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "crusadeSex",
+          "label": "Sex",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "Male",
+              "value": 0
+            },
+            {
+              "label": "Female",
+              "value": 8
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "crusadeDiab",
+          "label": "Diabetes",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 6
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "crusadePvd",
+          "label": "Peripheral vascular disease or stroke",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 6
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "crusadeChf",
+          "label": "Heart failure (signs on exam)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 7
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "crusadeSbp",
+          "label": "Systolic BP at admission",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "10 — ≤90",
+              "value": 10
+            },
+            {
+              "label": "8 — 91-100",
+              "value": 8
+            },
+            {
+              "label": "5 — 101-120",
+              "value": 5
+            },
+            {
+              "label": "1 — 121-180",
+              "value": 1
+            },
+            {
+              "label": "3 — ≥181",
+              "value": 3
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "crusadeScore",
+          "label": "CRUSADE Score",
+          "formula": "crusadeHct + crusadeCcr + crusadeHr + crusadeSex + crusadeDiab + crusadePvd + crusadeChf + crusadeSbp",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "CRUSADE Bleeding Risk:\nHct: {crusadeHct} | CrCl: {crusadeCcr} | HR≥100: {crusadeHr}\nFemale: {crusadeSex} | DM: {crusadeDiab} | PVD/stroke: {crusadePvd}\nHF: {crusadeChf} | SBP: {crusadeSbp}\nScore: {crusadeScore}\n\n≤20: Very low (3.1%) | 21-30: Low (5.5%) | 31-40: Moderate (8.6%) | 41-50: High (13.5%) | >50: Very high (21.5%)",
+      "interpretations": [
+        {
+          "condition": "crusadeScore <= 20",
+          "label": "Very low bleeding risk (~3.1%)",
+          "severity": "normal"
+        },
+        {
+          "condition": "crusadeScore >= 21 && crusadeScore <= 30",
+          "label": "Low bleeding risk (~5.5%)",
+          "severity": "normal"
+        },
+        {
+          "condition": "crusadeScore >= 31 && crusadeScore <= 40",
+          "label": "Moderate bleeding risk (~8.6%)",
+          "severity": "warning"
+        },
+        {
+          "condition": "crusadeScore >= 41 && crusadeScore <= 50",
+          "label": "High bleeding risk (~13.5%)",
+          "severity": "high"
+        },
+        {
+          "condition": "crusadeScore > 50",
+          "label": "Very high bleeding risk (~21.5%)",
+          "severity": "high",
+          "detail": "CRUSADE >50. Consider bivalirudin over heparin. Use radial access if PCI planned. Avoid GPI if possible."
+        }
+      ]
+    },
+    {
+      "id": "rifle_aki",
+      "name": "RIFLE/AKIN AKI Criteria",
+      "category": "Renal",
+      "description": "Standardised classification for acute kidney injury. Compares current Cr and UOP to baseline. Three severity stages.",
+      "inputs": [
+        {
+          "id": "akiCrCurrent",
+          "label": "Current serum creatinine",
+          "type": "number",
+          "unit": "mg/dL",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "umol/L",
+              "to_base": 0.01131
+            }
+          ]
+        },
+        {
+          "id": "akiCrBaseline",
+          "label": "Baseline serum creatinine",
+          "type": "number",
+          "unit": "mg/dL",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "umol/L",
+              "to_base": 0.01131
+            }
+          ]
+        },
+        {
+          "id": "akiUop6h",
+          "label": "Urine output (last 6h)",
+          "type": "number",
+          "unit": "mL/kg",
+          "required": true,
+          "hint": "Total mL per kg over 6h"
+        }
+      ],
+      "results": [
+        {
+          "key": "akiCrRatio",
+          "label": "Cr increase ratio",
+          "formula": "akiCrCurrent / akiCrBaseline",
+          "unit": "",
+          "decimals": 2,
+          "is_primary": false
+        },
+        {
+          "key": "akiCrIncrease",
+          "label": "Cr absolute increase",
+          "formula": "akiCrCurrent - akiCrBaseline",
+          "unit": "mg/dL",
+          "decimals": 2,
+          "is_primary": false
+        },
+        {
+          "key": "akiStage",
+          "label": "AKI Stage",
+          "formula": "(akiCrIncrease >= 0.3 || akiCrRatio >= 1.5 || akiUop6h < 0.5) ? ((akiCrRatio >= 3 || akiCrCurrent >= 4 || akiUop6h < 0.3) ? 3 : (akiCrRatio >= 2 || akiUop6h < 0.5) ? 2 : 1) : 0",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "AKI Assessment (KDIGO):\nCurrent Cr: {akiCrCurrent} | Baseline: {akiCrBaseline}\nCr ratio: {akiCrRatio} | Increase: {akiCrIncrease} mg/dL\nUOP last 6h: {akiUop6h} mL/kg\n\nStage 1: Cr ×1.5-1.9 or ≥0.3 mg/dL ↑ or UOP <0.5mL/kg ×6h\nStage 2: Cr ×2.0-2.9 or UOP <0.5mL/kg ×12h\nStage 3: Cr ×3.0 or ≥4.0 or UOP <0.3mL/kg ×24h or RRT\n\nAKI Stage: {akiStage}",
+      "interpretations": [
+        {
+          "condition": "akiStage == 0",
+          "label": "No AKI — continue monitoring",
+          "severity": "normal"
+        },
+        {
+          "condition": "akiStage == 1",
+          "label": "Stage 1 AKI — mild, review nephrotoxins",
+          "severity": "warning",
+          "detail": "Cr ×1.5-1.9 or ≥0.3 mg/dL rise, or UOP <0.5 mL/kg ×6h. Stop nephrotoxins. Correct volume. Monitor Cr and UOP 6-hourly."
+        },
+        {
+          "condition": "akiStage == 2",
+          "label": "Stage 2 AKI — escalate monitoring",
+          "severity": "high",
+          "detail": "Cr ×2.0-2.9 or UOP <0.5 mL/kg ×12h. Nephrology review. Consider renal ultrasound. Avoid contrast."
+        },
+        {
+          "condition": "akiStage == 3",
+          "label": "Stage 3 AKI — severe, consider RRT",
+          "severity": "high",
+          "detail": "Cr ×3.0 or ≥4.0 or UOP <0.3 mL/kg ×24h or RRT initiated. Urgent nephrology consult. Discuss RRT indications (refractory acidosis, K+ >6.5, uraemic complications, fluid overload)."
+        }
+      ]
+    },
+    {
+      "id": "bristol_stool",
+      "name": "Bristol Stool Scale Chart",
+      "category": "Gastroenterology",
+      "description": "Validated tool for stool form classification. Types 1-7. Types 1-2 suggest constipation, 5-7 suggest diarrhoea. Type 4 is ideal.",
+      "inputs": [
+        {
+          "id": "stoolType",
+          "label": "Stool type",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "1 — Separate hard lumps (like nuts)",
+              "value": 1
+            },
+            {
+              "label": "2 — Sausage-shaped but lumpy",
+              "value": 2
+            },
+            {
+              "label": "3 — Sausage-shaped with cracks on surface",
+              "value": 3
+            },
+            {
+              "label": "4 — Smooth, soft sausage or snake",
+              "value": 4
+            },
+            {
+              "label": "5 — Soft blobs with clear-cut edges",
+              "value": 5
+            },
+            {
+              "label": "6 — Fluffy pieces with ragged edges, mushy",
+              "value": 6
+            },
+            {
+              "label": "7 — Watery, no solid pieces, entirely liquid",
+              "value": 7
+            }
+          ],
+          "default": 4
+        }
+      ],
+      "results": [
+        {
+          "key": "bristolType",
+          "label": "Bristol Type",
+          "formula": "stoolType",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Bristol Stool Scale: Type {stoolType}\n\n1-2: Constipation (slow transit)\n3-4: Normal (ideal: Type 4)\n5-7: Diarrhoea / rapid transit",
+      "interpretations": [
+        {
+          "condition": "stoolType == 1 || stoolType == 2",
+          "label": "Constipation — increase fibre, fluids, consider laxatives",
+          "severity": "warning"
+        },
+        {
+          "condition": "stoolType == 3 || stoolType == 4",
+          "label": "Normal stool form",
+          "severity": "normal"
+        },
+        {
+          "condition": "stoolType == 5",
+          "label": "Borderline — may be normal or mild diarrhoea",
+          "severity": "normal"
+        },
+        {
+          "condition": "stoolType == 6 || stoolType == 7",
+          "label": "Diarrhoea — assess for infectious, inflammatory, or malabsorptive cause",
+          "severity": "warning"
+        }
+      ]
+    },
+    {
+      "id": "cormack_lehane",
+      "name": "Cormack-Lehane Laryngoscopy Grade",
+      "category": "Anaesthesia",
+      "description": "Standard classification of direct laryngoscopy view. Grade I-IV. Predicts difficult intubation. Higher grade = more difficult.",
+      "inputs": [
+        {
+          "id": "clGlottic",
+          "label": "Glottic view on direct laryngoscopy",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "I — Full view of glottis",
+              "value": 1
+            },
+            {
+              "label": "IIa — Partial view of glottis (arytenoids + posterior cords)",
+              "value": 2
+            },
+            {
+              "label": "IIb — Only arytenoids visible",
+              "value": 2
+            },
+            {
+              "label": "III — Only epiglottis visible",
+              "value": 3
+            },
+            {
+              "label": "IV — No glottic structures visible",
+              "value": 4
+            }
+          ],
+          "default": 1
+        },
+        {
+          "id": "clMallampati",
+          "label": "Mallampati class (for comparison)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "Not recorded",
+              "value": 0
+            },
+            {
+              "label": "Class I",
+              "value": 1
+            },
+            {
+              "label": "Class II",
+              "value": 2
+            },
+            {
+              "label": "Class III",
+              "value": 3
+            },
+            {
+              "label": "Class IV",
+              "value": 4
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "clGradeRoman",
+          "label": "Cormack-Lehane Grade",
+          "formula": "clGlottic",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Cormack-Lehane Grade: {clGlottic == 1 ? \"I\" : (clGlottic == 2 ? \"II\" : (clGlottic == 3 ? \"III\" : \"IV\"))}\nMallampati: {clMallampati == 0 ? \"Not recorded\" : (clMallampati == 1 ? \"I\" : (clMallampati == 2 ? \"II\" : (clMallampati == 3 ? \"III\" : \"IV\")))}\n\nI: Easy — full view, bougie rarely needed\nII: Slightly difficult — BURP, bougie may help\nIII: Difficult — need alternative device (videolaryngoscope, fibreoptic)\nIV: Very difficult — cannot intubate conventionally, consider surgical airway\n\nGrade III-IV: Document as difficult airway. Alert recovery team.",
+      "interpretations": [
+        {
+          "condition": "clGlottic == 1",
+          "label": "Grade I — Easy laryngoscopy",
+          "severity": "normal",
+          "detail": "Full view of glottis. Routine intubation. High first-pass success expected."
+        },
+        {
+          "condition": "clGlottic == 2",
+          "label": "Grade II — Slightly difficult",
+          "severity": "normal",
+          "detail": "Only posterior glottic structures visible. Use BURP manoeuvre, bougie, or stylet."
+        },
+        {
+          "condition": "clGlottic == 3",
+          "label": "Grade III — Difficult laryngoscopy",
+          "severity": "warning",
+          "detail": "Only epiglottis visible. Use videolaryngoscope or fibreoptic. Consider LMA as rescue. Document difficult airway."
+        },
+        {
+          "condition": "clGlottic == 4",
+          "label": "Grade IV — Very difficult, cannot intubate",
+          "severity": "high",
+          "detail": "No glottic structures visible. Call for help. Unable to intubate: follow DAS guidelines. Consider LMA, facemask ventilation, or surgical airway (cricothyroidotomy)."
         }
       ]
     }

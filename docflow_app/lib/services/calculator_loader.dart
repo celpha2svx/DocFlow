@@ -8,7 +8,7 @@ import 'formula_evaluator.dart';
 
 const String _cachedFileName = 'cached_calculators.json';
 const String _remoteUrl =
-    'https://raw.githubusercontent.com/celpha2svx/DocFlow/main/assets/calculators.json';
+    'https://raw.githubusercontent.com/celpha2svx/DocFlow/main/docflow_app/assets/calculators.json';
 
 class InputAltUnit {
   final String label;
