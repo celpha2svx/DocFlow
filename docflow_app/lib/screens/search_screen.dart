@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:docflow_app/models/category.dart';
 import 'package:docflow_app/screens/calculator_screen.dart';
 import 'package:docflow_app/screens/feature_request_screen.dart';
-import 'package:docflow_app/utils/constants.dart';
+import 'package:docflow_app/services/calculator_loader.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -26,7 +26,8 @@ class _SearchScreenState extends State<SearchScreen> {
     final query = _query.trim().toLowerCase();
     final map = <String, List<CalculatorMeta>>{};
 
-    for (final category in categories) {
+    final cats = CalculatorLoader.instance.categoryList;
+    for (final category in cats) {
       final matches = category.calculators.where((calculator) {
         if (query.isEmpty) return true;
         final nameMatch = calculator.name.toLowerCase().contains(query);

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'formula_evaluator.dart';
+import 'package:docflow_app/models/category.dart';
 
 const String _cachedFileName = 'cached_calculators.json';
 const String _remoteUrl =
@@ -184,6 +185,43 @@ class CalculatorLoader {
   }
 
   CalculatorDefinition? get(String id) => _byId?[id];
+
+  static const Map<String, String> _categoryIcons = {
+    'Anaesthesia': '🛌',
+    'Body Metrics': '🧍',
+    'Cardiac': '❤️',
+    'Emergency & Trauma': '🚑',
+    'Endocrinology & Metabolic': '⚖️',
+    'Fluids & Drips': '💧',
+    'Gastroenterology': '🫃',
+    'Haematology & Oncology': '🩸',
+    'Neurology': '🧠',
+    'Obstetrics & Gynaecology': '👶',
+    'Paediatrics': '🧸',
+    'Psychiatry': '🧘',
+    'Renal': '🫘',
+    'Respiratory': '🫁',
+    'Sepsis & ICU': '🆘',
+    'Tropical & Infectious Disease': '🌴',
+  };
+
+  List<Category> get categoryList {
+    final catNames = categories;
+    return catNames.map((name) {
+      final calcs = byCategory(name);
+      final metas = calcs.map((c) => CalculatorMeta(
+        id: c.id,
+        name: c.name,
+        category: c.category,
+        searchTags: [c.name, c.id, c.category],
+      )).toList();
+      return Category(
+        name: name,
+        icon: _categoryIcons[name] ?? '📋',
+        calculators: metas,
+      );
+    }).toList();
+  }
 
   Future<void> load() async {
     String jsonStr;

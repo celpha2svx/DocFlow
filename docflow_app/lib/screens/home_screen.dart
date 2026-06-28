@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:docflow_app/app_state.dart';
+import 'package:docflow_app/services/calculator_loader.dart';
 import 'package:docflow_app/services/notification_service.dart';
 import 'package:docflow_app/services/update_service.dart';
 import 'package:docflow_app/utils/constants.dart';
@@ -117,7 +118,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final doctor = appState?.currentDoctor;
     final doctorName = doctor == null ? 'Clinician' : doctor.fullName.trim();
     final doctorFirstName = doctorName.split(RegExp(r'\s+')).firstOrNull ?? 'Clinician';
-    final totalCalculators = categories.fold<int>(0, (sum, category) => sum + category.calculators.length);
+    final categoryList = CalculatorLoader.instance.categoryList;
+    final totalCalculators = categoryList.fold<int>(0, (sum, cat) => sum + cat.calculators.length);
 
     return Scaffold(
       appBar: AppBar(
@@ -171,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 10),
               Text(
-                'Access 50+ evidence-based medical calculators across 12 specialties.',
+                'Access $totalCalculators evidence-based medical calculators across all specialties.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppConstants.subtextColor,
                       height: 1.4,
@@ -234,10 +236,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: categories.length,
+                itemCount: categoryList.length,
                 separatorBuilder: (_, __) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
-                  final category = categories[index];
+                  final category = categoryList[index];
                   return CategoryCard(
                     category: category,
                     calculatorCount: category.calculators.length,
