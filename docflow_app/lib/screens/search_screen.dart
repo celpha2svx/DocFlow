@@ -4,6 +4,7 @@ import 'package:docflow_app/models/category.dart';
 import 'package:docflow_app/screens/calculator_screen.dart';
 import 'package:docflow_app/screens/feature_request_screen.dart';
 import 'package:docflow_app/services/calculator_loader.dart';
+import 'package:docflow_app/utils/constants.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
