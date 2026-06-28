@@ -55,10 +55,19 @@ class UpdateService {
     final file = File('${dir.path}/docflow_update.apk');
 
     try {
-      final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 60));
-      if (response.statusCode == 200) {
-        await file.writeAsBytes(response.bodyBytes);
-        return file.path;
+      final client = http.Client();
+      try {
+        final request = http.Request('GET', Uri.parse(url));
+        final response = await client.send(request).timeout(const Duration(seconds: 120));
+        if (response.statusCode == 200) {
+          final sink = file.openWrite();
+          await response.stream.pipe(sink);
+          await sink.flush();
+          await sink.close();
+          return file.path;
+        }
+      } finally {
+        client.close();
       }
     } catch (_) {}
     return null;
