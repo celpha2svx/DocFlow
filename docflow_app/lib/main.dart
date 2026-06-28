@@ -30,7 +30,11 @@ Future<void> main() async {
   );
 
   // Initialize calculator definitions
-  await CalculatorLoader.instance.load();
+  try {
+    await CalculatorLoader.instance.load();
+  } catch (_) {
+    // Calculator loading failed — app can still run with empty list.
+  }
 
   // Initialize app state (check for existing auth)
   await appState.initialize();

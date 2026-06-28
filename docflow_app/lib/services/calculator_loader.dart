@@ -201,9 +201,16 @@ class CalculatorLoader {
 
   void _parse(String jsonStr) {
     final data = json.decode(jsonStr) as Map<String, dynamic>;
-    final list = (data['calculators'] as List)
-        .map((e) => CalculatorDefinition.fromJson(e))
-        .toList();
+    final rawList = data['calculators'] as List;
+    final list = <CalculatorDefinition>[];
+    for (final e in rawList) {
+      try {
+        list.add(CalculatorDefinition.fromJson(e));
+      } catch (_) {
+        // Skip malformed calculator entries so a single bad entry
+        // does not crash the entire app.
+      }
+    }
     _calculators = list;
     _byId = {for (final c in list) c.id: c};
   }

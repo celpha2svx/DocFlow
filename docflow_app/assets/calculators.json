@@ -17716,12 +17716,6 @@
       "transparency_template": "Intralipid 20% for LAST (ASRA protocol):\n\nBolus: 1.5 mL/kg IV over 1 min = {lipidBolus} mL\nMay repeat bolus ×2 for persistent CV collapse\n\nInfusion: 0.25 mL/kg/min = {lipidInfusion} mL/min = {lipidInfusionHr} mL/h\nContinue for at least 15 min after haemodynamic stability\n\nMax total: 12 mL/kg"
     },
     {
-      "id": "mascc",
-      "name": "MASCC Score (Febrile Neutropenia Risk)",
-      "category": "Haematology & Oncology",
-      "description": "Multinational Association for Supportive Care in Cancer score identifies low-risk febrile neutropenia patients for oral antibiotics."
-    },
-    {
       "id": "hhs_criteria",
       "name": "HHS Diagnostic Criteria (Hyperosmolar State)",
       "category": "Endocrinology & Metabolic",
@@ -21553,6 +21547,171 @@
           "label": "Grade IV — Very difficult, cannot intubate",
           "severity": "high",
           "detail": "No glottic structures visible. Call for help. Unable to intubate: follow DAS guidelines. Consider LMA, facemask ventilation, or surgical airway (cricothyroidotomy)."
+        }
+      ]
+    },
+    {
+      "id": "mascc",
+      "name": "MASCC Score (Febrile Neutropenia Risk)",
+      "category": "Haematology & Oncology",
+      "description": "Multinational Association for Supportive Care in Cancer score identifies low-risk febrile neutropenia patients for oral antibiotics or outpatient management.",
+      "inputs": [
+        {
+          "id": "masccBurden",
+          "label": "Burden of illness (symptoms)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "0 - No/mild symptoms",
+              "value": 5
+            },
+            {
+              "label": "1 - Moderate symptoms",
+              "value": 3
+            },
+            {
+              "label": "2 - Severe symptoms",
+              "value": 0
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "masccHypot",
+          "label": "Hypotension (SBP <90)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes (subtract 5)",
+              "value": -5
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "masccCopd",
+          "label": "COPD",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes (subtract 4)",
+              "value": -4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "masccSolid",
+          "label": "Solid tumour including lymphoma (vs leukaemia)",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No (leukaemia/marrow)",
+              "value": 0
+            },
+            {
+              "label": "Yes (solid/lymphoma)",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "masccFungal",
+          "label": "Previous fungal infection",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes (subtract)",
+              "value": -3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "masccDehyd",
+          "label": "Dehydration requiring IV fluids",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes (subtract)",
+              "value": -3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "masccOutpatient",
+          "label": "Onset as outpatient",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "Inpatient",
+              "value": 0
+            },
+            {
+              "label": "Outpatient",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "masccAge",
+          "label": "Age <60",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "≥60",
+              "value": 0
+            },
+            {
+              "label": "<60",
+              "value": 2
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "masccScore",
+          "label": "MASCC Score",
+          "formula": "masccBurden + masccHypot + masccCopd + masccSolid + masccFungal + masccDehyd + masccOutpatient + masccAge",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "MASCC Febrile Neutropenia:\nBurden: {masccBurden} | Hypot: {masccHypot} | COPD: {masccCopd}\nSolid tumour: {masccSolid} | Fungal: {masccFungal} | Dehyd: {masccDehyd}\nOutpatient: {masccOutpatient} | Age<60: {masccAge}\nTotal: {masccScore}\n\n≥21: Low risk — consider oral antibiotics, outpatient management\n<21: High risk — IV antibiotics, hospital admission",
+      "interpretations": [
+        {
+          "condition": "masccScore >= 21",
+          "label": "Low risk (≥21) — outpatient/ oral antibiotics",
+          "severity": "normal",
+          "detail": "MASCC ≥21. Low-risk febrile neutropenia. Consider oral antibiotics (ciprofloxacin + amoxicillin/clavulanate). Outpatient management if reliable follow-up."
+        },
+        {
+          "condition": "masccScore < 21",
+          "label": "High risk (<21) — IV antibiotics, admission",
+          "severity": "high",
+          "detail": "MASCC <21. High-risk febrile neutropenia. IV broad-spectrum antibiotics (piperacillin-tazobactam or cefepime). Hospital admission. G-CSF consideration."
         }
       ]
     }
