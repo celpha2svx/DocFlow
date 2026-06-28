@@ -2866,7 +2866,7 @@
           "formula": "280 - daysSinceLMP",
           "unit": "days",
           "decimals": 0,
-          "is_primary": false
+          "is_primary": true
         },
         {
           "key": "gestationalWeeks",
@@ -2878,7 +2878,7 @@
         },
         {
           "key": "gestationalDays",
-          "label": "",
+          "label": "Gestational days",
           "formula": "daysSinceLMP - (floor(daysSinceLMP / 7) * 7)",
           "unit": "days",
           "decimals": 0,
@@ -7342,7 +7342,7 @@
           "formula": "egfr >= 90 ? 1 : (egfr >= 60 ? 2 : (egfr >= 45 ? 3 : (egfr >= 30 ? 4 : (egfr >= 15 ? 5 : 6))))",
           "unit": "",
           "decimals": 0,
-          "is_primary": false
+          "is_primary": true
         },
         {
           "key": "aCategory",
