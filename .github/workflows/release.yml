@@ -21,13 +21,15 @@ jobs:
 
       - name: Decode keystore from secrets, or generate one for first run
         working-directory: docflow_app/android
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          if [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
-            echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > docflow-release.jks
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > docflow-release.jks
             echo "Keystore loaded from GitHub secret — in-place upgrades will work."
           else
             echo "::warning::KEYSTORE_BASE64 not set — generating a new one-time keystore."
-            echo "::warning::After this build completes, copy the keystore value from the next step"
+            echo "::warning::After this build, copy the keystore value from the next step"
             echo "::warning::into GitHub Secrets as KEYSTORE_BASE64 so future builds can use it."
             keytool -genkey -v \
               -keystore docflow-release.jks \
@@ -41,7 +43,8 @@ jobs:
           fi
 
       - name: Print keystore for first-time setup
-        if: ${{ secrets.KEYSTORE_BASE64 == '' }}
+        if: env.KEYSTORE_BASE64 == ''
+        working-directory: docflow_app/android
         run: |
           echo "=========================================="
           echo "FIRST-TIME SETUP — Copy the value below"
