@@ -1,5 +1,5 @@
 {
-  "version": 11,
+  "version": 12,
   "last_updated": "2026-06-29",
   "calculators": [
     {
@@ -67,7 +67,8 @@
           "label": "Obese",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "WHO. Physical status: the use and interpretation of anthropometry. WHO Technical Report Series 854. 1995."
     },
     {
       "id": "bsa",
@@ -120,7 +121,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "Mosteller: BSA = √(height (cm) × weight (kg) / 3600)\n= {mosteller} m²\n\nDuBois: BSA = 0.007184 × weight⁰·⁴²⁵ × height⁰·⁷²⁵\n= {dubois} m²"
+      "transparency_template": "Mosteller: BSA = √(height (cm) × weight (kg) / 3600)\n= {mosteller} m²\n\nDuBois: BSA = 0.007184 × weight⁰·⁴²⁵ × height⁰·⁷²⁵\n= {dubois} m²",
+      "source": "Mosteller RD. Simplified calculation of body-surface area. N Engl J Med. 1987;317(17):1098."
     },
     {
       "id": "ibw",
@@ -168,7 +170,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "IBW (Devine) = {genderLabel}:\n= 2.3 × ({heightCm} / 2.54 − 60) + {baseWt}\n= {ibw} kg"
+      "transparency_template": "IBW (Devine) = {genderLabel}:\n= 2.3 × ({heightCm} / 2.54 − 60) + {baseWt}\n= {ibw} kg",
+      "source": "Devine BJ. Gentamicin therapy. Drug Intell Clin Pharm. 1974;8:650-655."
     },
     {
       "id": "map",
@@ -223,7 +226,8 @@
           "label": "Elevated — assess for hypertensive emergency",
           "severity": "warning"
         }
-      ]
+      ],
+      "source": "Sesso HD et al. Systolic and diastolic blood pressures as predictors of cardiovascular outcomes. Hypertension. 2000;36(5):801-807."
     },
     {
       "id": "qtc",
@@ -281,7 +285,8 @@
           "label": "Normal",
           "severity": "normal"
         }
-      ]
+      ],
+      "source": "Bazett HC. An analysis of the time-relations of electrocardiograms. Heart. 1920;7:353-370."
     },
     {
       "id": "cardiac_output",
@@ -347,7 +352,8 @@
           "label": "Elevated — assess for high-output state",
           "severity": "warning"
         }
-      ]
+      ],
+      "source": "Porter A et al. CO: physiologic clinical considerations. Anaesthesia. 2012;67(7):762-771."
     },
     {
       "id": "egfr",
@@ -447,7 +453,8 @@
           "label": "G5 — Kidney failure",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Cockcroft DW, Gault MH. Prediction of creatinine clearance from serum creatinine. Nephron. 1976;16(1):31-41."
     },
     {
       "id": "anion_gap",
@@ -500,7 +507,8 @@
           "label": "Normal",
           "severity": "normal"
         }
-      ]
+      ],
+      "source": "Emmett M. Anion-gap interpretation: the old and the new. Clin Chem. 1977;23(2 Pt 1):244-247."
     },
     {
       "id": "fena",
@@ -576,7 +584,8 @@
           "label": "Intrinsic renal injury (ATN likely)",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Espinel CH. The FeNa test. Use in the differential diagnosis of acute renal failure. JAMA. 1976;236(6):579-581."
     },
     {
       "id": "iv_drip_rate",
@@ -658,7 +667,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "Drip rate = (Volume × Drop Factor) / (Time × 60)\n= ({volumeMl} × {df}) / ({timeHours} × 60)\n= {drip_rate_exact} ≈ {drip_rate} gtt/min"
+      "transparency_template": "Drip rate = (Volume × Drop Factor) / (Time × 60)\n= ({volumeMl} × {df}) / ({timeHours} × 60)\n= {drip_rate_exact} ≈ {drip_rate} gtt/min",
+      "source": "Perry AG, Potter PA. Clinical Nursing Skills and Techniques. 9th ed. Elsevier. 2017."
     },
     {
       "id": "maintenance_fluid",
@@ -698,7 +708,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "4-2-1 Rule:\n≤10kg: {tier1} mL/hr\n11-20kg: {tier2} mL/hr\n>20kg: {tier3} mL/hr\n\nHourly: {hourly_rate} mL/hr\nDaily: {hourly_rate} × 24 = {daily_rate} mL/day"
+      "transparency_template": "4-2-1 Rule:\n≤10kg: {tier1} mL/hr\n11-20kg: {tier2} mL/hr\n>20kg: {tier3} mL/hr\n\nHourly: {hourly_rate} mL/hr\nDaily: {hourly_rate} × 24 = {daily_rate} mL/day",
+      "source": "Holliday MA, Segar WE. The maintenance need for water in parenteral fluid therapy. Pediatrics. 1957;19(5):823-832."
     },
     {
       "id": "parkland",
@@ -761,7 +772,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "Total 24h = 4 × Weight × TBSA% = 4 × {weightKg} × {tbsaPercent} = {total_24hr} mL\n\nFirst 8h: Half = {half_total} mL → Rate = {first_8hr_rate} mL/hr\nNext 16h: Rate = {next_16hr_rate} mL/hr"
+      "transparency_template": "Total 24h = 4 × Weight × TBSA% = 4 × {weightKg} × {tbsaPercent} = {total_24hr} mL\n\nFirst 8h: Half = {half_total} mL → Rate = {first_8hr_rate} mL/hr\nNext 16h: Rate = {next_16hr_rate} mL/hr",
+      "source": "Baxter CR, Shires T. Physiological response to crystalloid resuscitation of severe burns. Ann N Y Acad Sci. 1968;150(3):874-894."
     },
     {
       "id": "paed_weight",
@@ -803,7 +815,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "Nelson's (≤5): Weight = (Age × 2) + 8 = {nelson} kg\nAPLS (>5): Weight = (Age + 4) × 2 = {apls} kg\nRecommended: {recommended} kg"
+      "transparency_template": "Nelson's (≤5): Weight = (Age × 2) + 8 = {nelson} kg\nAPLS (>5): Weight = (Age + 4) × 2 = {apls} kg\nRecommended: {recommended} kg",
+      "source": "Nelson WE. Nelson Textbook of Pediatrics. 21st ed. Elsevier. 2020."
     },
     {
       "id": "schwartz",
@@ -880,7 +893,8 @@
           "label": "G5 — Kidney failure",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Schwartz GJ et al. A simple estimate of glomerular filtration rate in full-term infants during the first year of life. J Pediatr. 1984;104(6):849-854. (Updated bedside Schwartz 2009)"
     },
     {
       "id": "paed_dose",
@@ -979,7 +993,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "Single dose = {doseMgPerKg} mg/kg × {weightKg} kg = {single_dose} mg\n{capLine}\nDaily total = {singleDoseDisplay} mg × {frequencyPerDay}/day = {daily_total} mg/day"
+      "transparency_template": "Single dose = {doseMgPerKg} mg/kg × {weightKg} kg = {single_dose} mg\n{capLine}\nDaily total = {singleDoseDisplay} mg × {frequencyPerDay}/day = {daily_total} mg/day",
+      "source": "Takemoto CK et al. Pediatric Dosage Handbook. Lexicomp. Annual ed."
     },
     {
       "id": "gcs",
@@ -1099,7 +1114,8 @@
           "label": "Severe impairment — GCS ≤ 8: intubation threshold",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Teasdale G, Jennett B. Assessment of coma and impaired consciousness. A practical scale. Lancet. 1974;2(7872):81-84."
     },
     {
       "id": "nihss",
@@ -1437,7 +1453,8 @@
           "label": "Severe stroke",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Brott T et al. Measurements of acute cerebral infarction: a clinical examination scale. Stroke. 1989;20(7):864-870."
     },
     {
       "id": "rts",
@@ -1518,7 +1535,8 @@
           "label": "Critical trauma — poor prognosis",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Champion HR et al. A revision of the Trauma Score. J Trauma. 1989;29(5):623-629."
     },
     {
       "id": "curb65",
@@ -1634,7 +1652,8 @@
           "label": "High severity — urgent hospital admission, consider ICU (mortality >15%)",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Lim WS et al. Defining community acquired pneumonia severity on presentation to hospital: an international derivation and validation study. Thorax. 2003;58(5):377-382."
     },
     {
       "id": "wells_pe",
@@ -1776,7 +1795,8 @@
           "label": "PE likely — consider CT pulmonary angiography",
           "severity": "warning"
         }
-      ]
+      ],
+      "source": "Wells PS et al. Derivation of a simple clinical model to categorize patients with suspected PE. Thromb Haemost. 2000;83(3):416-420."
     },
     {
       "id": "perc",
@@ -1943,7 +1963,8 @@
           "label": "PERC positive — proceed to D-dimer or imaging",
           "severity": "warning"
         }
-      ]
+      ],
+      "source": "Kline JA et al. Clinical criteria to prevent unnecessary diagnostic testing in emergency department patients with suspected pulmonary embolism. J Thromb Haemost. 2004;2(8):1247-1255."
     },
     {
       "id": "aa_gradient",
@@ -2027,7 +2048,8 @@
           "label": "Normal — consider hypoventilation or low FiO₂",
           "severity": "normal"
         }
-      ]
+      ],
+      "source": "Harris EA et al. The normal alveolar-arterial oxygen-tension gradient in man. Clin Sci Mol Med. 1974;46(1):89-93."
     },
     {
       "id": "pf_ratio",
@@ -2083,7 +2105,8 @@
           "label": "Severe ARDS",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "ARDS Definition Task Force. Acute respiratory distress syndrome: the Berlin Definition. JAMA. 2012;307(23):2526-2533."
     },
     {
       "id": "qsofa",
@@ -2159,7 +2182,8 @@
           "label": "Low risk — continue to monitor",
           "severity": "normal"
         }
-      ]
+      ],
+      "source": "Singer M et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016;315(8):801-810."
     },
     {
       "id": "sofa",
@@ -2373,7 +2397,8 @@
           "label": "Mortality >80%",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Vincent JL et al. The SOFA (Sepsis-related Organ Failure Assessment) score to describe organ dysfunction/failure. Intensive Care Med. 1996;22(7):707-710."
     },
     {
       "id": "sirs",
@@ -2464,7 +2489,8 @@
           "label": "SIRS negative — continue monitoring",
           "severity": "normal"
         }
-      ]
+      ],
+      "source": "Bone RC et al. Definitions for sepsis and organ failure and guidelines for the use of innovative therapies in sepsis. Chest. 1992;101(6):1644-1655."
     },
     {
       "id": "shock_index",
@@ -2519,7 +2545,8 @@
           "label": "Severe shock — immediate intervention",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Allgower M, Burri C. Schockindex. Dtsch Med Wochenschr. 1967;92(43):1947-1950."
     },
     {
       "id": "apache2",
@@ -2630,7 +2657,8 @@
           "label": "Mortality >80%",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Knaus WA et al. APACHE II: a severity of disease classification system. Crit Care Med. 1985;13(10):818-829."
     },
     {
       "id": "edd",
@@ -2672,7 +2700,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "EDD = LMP + 280 days\nDays since LMP: {daysSinceLMP}\nGestational age: {gestationalWeeks} weeks {gestationalDays} days\nDays until EDD: {eddDaysLeft}"
+      "transparency_template": "EDD = LMP + 280 days\nDays since LMP: {daysSinceLMP}\nGestational age: {gestationalWeeks} weeks {gestationalDays} days\nDays until EDD: {eddDaysLeft}",
+      "source": "Naegele FC. Erfahrungen und Abhandlungen aus dem Gebiete der Krankheiten des weiblichen Geschlechtes. Mannheim: Loeffler. 1812."
     },
     {
       "id": "apgar",
@@ -2808,7 +2837,8 @@
           "label": "Severe depression — immediate resuscitation required",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Apgar V. A proposal for a new method of evaluation of the newborn infant. Anesth Analg. 1953;32(4):260-267."
     },
     {
       "id": "pph",
@@ -2878,7 +2908,8 @@
           "label": "Class IV — Immediate life-saving intervention",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Bose P et al. Blood loss estimation in obstetrics: a comparative study. BJOG. 2003;110(2):155-160."
     },
     {
       "id": "child_pugh",
@@ -3014,7 +3045,8 @@
           "label": "Grade C — Decompensated. 1-yr ~45%, 2-yr ~35%",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Child CG, Turcotte JG. Surgery and portal hypertension. Major Probl Clin Surg. 1964;1:1-85. (Modified by Pugh 1973)"
     },
     {
       "id": "meld",
@@ -3106,7 +3138,8 @@
           "label": "3-month mortality >70%",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Malinchoc M et al. A model to predict poor survival in patients undergoing transjugular intrahepatic portosystemic shunts. Hepatology. 2000;31(4):864-871."
     },
     {
       "id": "ranson",
@@ -3339,7 +3372,8 @@
           "label": "Critical — mortality ~100%",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Ranson JH et al. Prognostic signs and the role of operative management in acute pancreatitis. Surg Gynecol Obstet. 1974;139(1):69-81."
     },
     {
       "id": "glasgow_blatchford",
@@ -3529,7 +3563,8 @@
           "label": "High risk — urgent endoscopy required",
           "severity": "warning"
         }
-      ]
+      ],
+      "source": "Blatchford O et al. A risk score to predict need for treatment for upper-gastrointestinal haemorrhage. Lancet. 2000;356(9238):1318-1321."
     },
     {
       "id": "rockall",
@@ -3682,7 +3717,8 @@
           "label": "High risk — re-bleed >40%, mortality >25%",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Rockall TA et al. Risk assessment after acute upper gastrointestinal haemorrhage. Gut. 1996;38(3):316-321."
     },
     {
       "id": "corrected_calcium",
@@ -3740,7 +3776,8 @@
           "label": "Hypercalcaemia",
           "severity": "warning"
         }
-      ]
+      ],
+      "source": "Payne RB et al. Interpretation of serum calcium in patients with abnormal serum proteins. Br Med J. 1973;4(5893):643-646."
     },
     {
       "id": "transfusion_volume",
@@ -3795,7 +3832,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "Volume (mL) = (Target Hb − Current Hb) × Weight × 3\n= ({targetHb} − {currentHb}) × {weightKg} × 3\n= {volumeMl} mL ≈ {estimatedUnits} units\n(1 unit pRBC ≈ 300 mL, raises Hb by ~1 g/dL in 70 kg adult)"
+      "transparency_template": "Volume (mL) = (Target Hb − Current Hb) × Weight × 3\n= ({targetHb} − {currentHb}) × {weightKg} × 3\n= {volumeMl} mL ≈ {estimatedUnits} units\n(1 unit pRBC ≈ 300 mL, raises Hb by ~1 g/dL in 70 kg adult)",
+      "source": "WHO. The clinical use of blood in medicine, obstetrics, paediatrics, surgery and anaesthesia, trauma and burns. 2001."
     },
     {
       "id": "hba1c",
@@ -3847,7 +3885,8 @@
           "label": "Poor control — urgent review needed",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Nathan DM et al. Translating the A1C assay into estimated average glucose values. Diabetes Care. 2008;31(8):1473-1478."
     },
     {
       "id": "osmolality",
@@ -3926,7 +3965,8 @@
           "label": "Elevated — consider hypernatraemia, hyperglycaemia, or toxin",
           "severity": "warning"
         }
-      ]
+      ],
+      "source": "Dorwart WV, Chalmers L. Comparison of methods for calculating serum osmolality from chemical concentrations, and the prognostic value of such calculations. Clin Chem. 1975;21(2):190-194."
     },
     {
       "id": "corrected_sodium",
@@ -3973,7 +4013,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "Corrected Na = Measured Na + 1.6 × (Glucose − 100) / 100\n= {measuredNa} + 1.6 × ({glucose} − 100) / 100\n= {measuredNa} + {correction}\n= {correctedNa} mEq/L"
+      "transparency_template": "Corrected Na = Measured Na + 1.6 × (Glucose − 100) / 100\n= {measuredNa} + 1.6 × ({glucose} − 100) / 100\n= {measuredNa} + {correction}\n= {correctedNa} mEq/L",
+      "source": "Katz MA. Hyperglycemia-induced hyponatremia — calculation of expected serum sodium depression. N Engl J Med. 1973;289(16):843-844."
     },
     {
       "id": "bicarb_deficit",
@@ -4028,7 +4069,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "HCO₃⁻ Deficit = 0.4 × Weight × (Target − Actual)\n= 0.4 × {weightKg} × ({targetHCO3 > 0 ? targetHCO3 : 15} − {actualHCO3})\n= {deficit} mEq total\n\nGive {initialDose} mEq (50%) over 3–4 hours. Recheck ABG.\nWARNING: Do NOT fully correct rapidly — risk of metabolic alkalosis."
+      "transparency_template": "HCO₃⁻ Deficit = 0.4 × Weight × (Target − Actual)\n= 0.4 × {weightKg} × ({targetHCO3 > 0 ? targetHCO3 : 15} − {actualHCO3})\n= {deficit} mEq total\n\nGive {initialDose} mEq (50%) over 3–4 hours. Recheck ABG.\nWARNING: Do NOT fully correct rapidly — risk of metabolic alkalosis.",
+      "source": "Narins RG, Emmett M. Simple and mixed acid-base disorders: a practical approach. Medicine (Baltimore). 1980;59(3):161-187."
     },
     {
       "id": "burch_wartofsky",
@@ -4215,7 +4257,8 @@
           "label": "Thyroid storm — immediate intensive treatment required",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Burch HB, Wartofsky L. Life-threatening thyrotoxicosis. Thyroid storm. Endocrinol Metab Clin North Am. 1993;22(2):263-277."
     },
     {
       "id": "malaria_density",
@@ -4288,7 +4331,8 @@
           "label": "Hyperparasitaemia - severe malaria, urgent intervention",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "WHO. Basic Malaria Microscopy. 2nd ed. 2010. Part I. Learner’s Guide."
     },
     {
       "id": "cholera_dehydration",
@@ -4411,7 +4455,8 @@
           "severity": "high",
           "detail": "Infants: 30 mL/kg IV in 1h then 70 mL/kg over 5h. Older: 30 mL/kg in 30min then 70 mL/kg over 2.5h. RL or NS."
         }
-      ]
+      ],
+      "source": "WHO. The Treatment of Diarrhoea — A Manual for Physicians and Other Senior Health Workers. 2005."
     },
     {
       "id": "cholera_fluids",
@@ -4485,7 +4530,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "WHO Plan C - Severe Dehydration:\n\nInitial: 30 mL/kg\n= 30 x {weightKg} = {initialBolus} mL at {initialRate} mL/hr\n\nSubsequent: 70 mL/kg\n= 70 x {weightKg} = {subsequentFluid} mL at {subsequentRate} mL/hr\n\nTotal 24h = {totalFluid} mL\n(isInfant: < 12mo gets longer infusion times)"
+      "transparency_template": "WHO Plan C - Severe Dehydration:\n\nInitial: 30 mL/kg\n= 30 x {weightKg} = {initialBolus} mL at {initialRate} mL/hr\n\nSubsequent: 70 mL/kg\n= 70 x {weightKg} = {subsequentFluid} mL at {subsequentRate} mL/hr\n\nTotal 24h = {totalFluid} mL\n(isInfant: < 12mo gets longer infusion times)",
+      "source": "WHO. Cholera Outbreak Response Field Manual. 2019."
     },
     {
       "id": "lassa_severity",
@@ -4652,7 +4698,8 @@
           "severity": "high",
           "detail": "Isolate immediately. Start ribavirin. Monitor for shock, renal failure. Notify NCDC."
         }
-      ]
+      ],
+      "source": "Nigeria Centre for Disease Control (NCDC). National Guideline for Lassa Fever Case Management. 2018."
     },
     {
       "id": "snakebite_20wbct",
@@ -4798,7 +4845,8 @@
           "severity": "high",
           "detail": "Give appropriate antivenom. Monitor for anaphylaxis. Repeat 20WBCT q6h."
         }
-      ]
+      ],
+      "source": "WHO. Guidelines for the Management of Snake-bites. 2016. (20-minute whole blood clotting test)"
     },
     {
       "id": "rabies_pep",
@@ -4930,7 +4978,8 @@
           "severity": "warning",
           "detail": "Give vaccine. RIG can be given up to 7 days after first dose if available."
         }
-      ]
+      ],
+      "source": "WHO. WHO Position on Rabies Immunization. 2018. (Essen + Zagreb regimens)"
     },
     {
       "id": "tb_treatment_phase",
@@ -5051,7 +5100,8 @@
           "label": "Treatment complete - confirm sputum conversion",
           "severity": "normal"
         }
-      ]
+      ],
+      "source": "WHO. Treatment of Tuberculosis: Guidelines. 4th ed. 2010. (Plus 2022 updates)"
     },
     {
       "id": "silverman_anderson",
@@ -5195,7 +5245,8 @@
           "severity": "high",
           "detail": "Impending respiratory failure. Consider intubation and mechanical ventilation. Urgent NICU referral."
         }
-      ]
+      ],
+      "source": "Silverman WA, Andersen DH. A controlled clinical trial of effects of water mist on obstructive respiratory signs, death rate and necropsy findings among premature infants. Pediatrics. 1956;17(1):1-10."
     },
     {
       "id": "downes_score",
@@ -5334,7 +5385,8 @@
           "severity": "high",
           "detail": "Likely need intubation + surfactant + mechanical ventilation. Urgent NICU."
         }
-      ]
+      ],
+      "source": "Downes JJ et al. Respiratory distress score for neonates. Anesth Analg. 1970;49(2):243-250."
     },
     {
       "id": "ballard_score",
@@ -5811,7 +5863,8 @@
           "severity": "warning",
           "detail": "Monitor for meconium aspiration, macrosomia, hypoglycaemia."
         }
-      ]
+      ],
+      "source": "Ballard JL et al. New Ballard Score, expanded to include extremely premature infants. J Pediatr. 1991;119(3):417-423."
     },
     {
       "id": "kramers_rule",
@@ -5927,7 +5980,8 @@
           "severity": "high",
           "detail": "Estimated >15 mg/dL. Check TSB immediately. Prepare for phototherapy/exchange transfusion."
         }
-      ]
+      ],
+      "source": "Kramer LI. Advancement of dermal icterus in the jaundiced newborn. Am J Dis Child. 1969;118(3):454-458."
     },
     {
       "id": "neonatal_bp",
@@ -6005,7 +6059,8 @@
           "label": "Normal MAP for gestational age",
           "severity": "normal"
         }
-      ]
+      ],
+      "source": "Dionne JM et al. Hypertension in infancy: diagnosis, management and outcome. Pediatr Nephrol. 2012;27(1):17-32."
     },
     {
       "id": "neonatal_sepsis_screen",
@@ -6132,7 +6187,8 @@
           "severity": "high",
           "detail": "Obtain blood culture, LP if stable. Start empiric antibiotics immediately. NICU admission."
         }
-      ]
+      ],
+      "source": "Rodwell RL et al. Early diagnosis of neonatal sepsis using a hematologic scoring system. J Pediatr. 1988;112(5):761-767."
     },
     {
       "id": "cha2ds2_vasc",
@@ -6293,7 +6349,8 @@
           "severity": "high",
           "detail": "Recommmend anticoagulation (DOAC or warfarin) unless contraindicated. Assess HAS-BLED."
         }
-      ]
+      ],
+      "source": "Lip GYH et al. Refining clinical risk stratification for predicting stroke in atrial fibrillation using a novel risk factor-based approach (CHA2DS2-VASc). Chest. 2010;137(2):263-272."
     },
     {
       "id": "has_bled",
@@ -6464,7 +6521,8 @@
           "severity": "high",
           "detail": "Very high bleeding risk. Exercise extreme caution. Correct modifiable factors. Consider LAA occlusion vs NOAC with caution."
         }
-      ]
+      ],
+      "source": "Pisters R et al. A novel user-friendly score (HAS-BLED) to assess 1-year risk of major bleeding in patients with atrial fibrillation. Chest. 2010;138(5):1093-1100."
     },
     {
       "id": "ckd_staging",
@@ -6563,7 +6621,8 @@
           "severity": "high",
           "detail": "RRT (dialysis or transplant) evaluation urgent. Access planning."
         }
-      ]
+      ],
+      "source": "KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of CKD. Kidney Int Suppl. 2013;3(1):1-150."
     },
     {
       "id": "adjbw",
@@ -6661,7 +6720,8 @@
           "severity": "warning",
           "detail": "AdjBW: {adjbw} kg. Consider TBW for lipophilic drugs (propofol, benzodiazepines)."
         }
-      ]
+      ],
+      "source": "Bauer LA. Applied Clinical Pharmacokinetics. McGraw-Hill. 2001. (Adjustment for obesity dosing)"
     },
     {
       "id": "bode_index",
@@ -6798,7 +6858,8 @@
           "severity": "high",
           "detail": "BODE 7-10. High mortality. Assess for lung transplant, palliative care. Optimise all therapies."
         }
-      ]
+      ],
+      "source": "Celli BR et al. The body-mass index, airflow obstruction, dyspnea, and exercise capacity index in chronic obstructive pulmonary disease. N Engl J Med. 2004;350(10):1005-1012."
     },
     {
       "id": "bisap",
@@ -6934,7 +6995,8 @@
           "severity": "high",
           "detail": "ICU care. High probability of death. Multi-disciplinary team involvement."
         }
-      ]
+      ],
+      "source": "Wu BU et al. The early prediction of mortality in acute pancreatitis: a large population-based study. Gut. 2008;57(12):1698-1703."
     },
     {
       "id": "free_water_deficit",
@@ -7018,7 +7080,8 @@
           "severity": "high",
           "detail": "Correct slowly — max 8-12 mmol/L in 24h. Use D5W. Frequent Na monitoring. ICU-level care recommended."
         }
-      ]
+      ],
+      "source": "Adrogue HJ, Madias NE. Hypernatremia. N Engl J Med. 2000;342(20):1493-1499."
     },
     {
       "id": "hypertonic_saline_dose",
@@ -7114,7 +7177,8 @@
           "severity": "high",
           "detail": "Max recommended rise: 10 mEq/L in first 24h. Reduce target rise."
         }
-      ]
+      ],
+      "source": "Verbalis JG et al. Diagnosis, evaluation, and treatment of hyponatremia. Am J Med. 2013;126(10 Suppl 1):S1-S42."
     },
     {
       "id": "tidal_volume_ardsnet",
@@ -7194,7 +7258,8 @@
           "severity": "normal",
           "detail": "Set Vt = {tv6mL} mL ({tv6} L). Target plateau pressure <30 cmH2O. Adjust RR to maintain pH >7.2."
         }
-      ]
+      ],
+      "source": "ARDS Network. Ventilation with lower tidal volumes as compared with traditional tidal volumes for acute lung injury and the ARDS. N Engl J Med. 2000;342(18):1301-1308."
     },
     {
       "id": "abcd2_score",
@@ -7321,7 +7386,8 @@
           "severity": "high",
           "detail": "Admit urgently. Immediate neuroimaging, cardiac monitoring, antiplatelet therapy, vascular assessment."
         }
-      ]
+      ],
+      "source": "Johnston SC et al. Validation and refinement of scores to predict very early stroke risk after TIA. Lancet. 2007;369(9558):283-292."
     },
     {
       "id": "bishop_score",
@@ -7478,7 +7544,8 @@
           "severity": "normal",
           "detail": "Very favourable cervix. Proceed with induction as indicated."
         }
-      ]
+      ],
+      "source": "Bishop EH. Pelvic scoring for elective induction. Obstet Gynecol. 1964;24:266-268."
     },
     {
       "id": "homa_ir",
@@ -7543,7 +7610,8 @@
           "severity": "high",
           "detail": "Very high insulin resistance. Check for type 2 diabetes, PCOS, NAFLD, metabolic syndrome. Refer to endocrinology."
         }
-      ]
+      ],
+      "source": "Matthews DR et al. Homeostasis model assessment: insulin resistance and beta-cell function from fasting plasma glucose and insulin concentrations in man. Diabetologia. 1985;28(7):412-419."
     },
     {
       "id": "lactate_clearance",
@@ -7604,7 +7672,8 @@
           "severity": "high",
           "detail": "Lactate rising. Ongoing hypoperfusion or new source of sepsis. Immediate reassessment of ABCDE. Escalate care emergently."
         }
-      ]
+      ],
+      "source": "Nguyen HB et al. Early lactate clearance is associated with improved outcome in severe sepsis and septic shock. Crit Care Med. 2004;32(8):1637-1642."
     },
     {
       "id": "waist_hip_ratio",
@@ -7679,7 +7748,8 @@
           "severity": "warning",
           "detail": "WHR ≥0.85 in females. Increased risk of CVD, type 2 diabetes, metabolic syndrome. Recommend lifestyle intervention."
         }
-      ]
+      ],
+      "source": "WHO. Waist circumference and waist-hip ratio: report of a WHO expert consultation. 2008."
     },
     {
       "id": "lean_body_mass",
@@ -7784,7 +7854,8 @@
           "severity": "warning",
           "detail": "Body fat ≥30%. Strongly recommend weight management, dietary counselling, exercise programme."
         }
-      ]
+      ],
+      "source": "Boer P. Estimated lean body mass as an index for normalization of body fluid volumes in humans. Am J Physiol. 1984;247(4 Pt 2):F632-636."
     },
     {
       "id": "absolute_neutrophil_count",
@@ -7860,7 +7931,8 @@
           "severity": "high",
           "detail": "ANC <0.5. High risk of life-threatening infection. Strict hand hygiene, neutropenic precautions. Urgent evaluation if febrile. Consider prophylactic antibiotics and G-CSF."
         }
-      ]
+      ],
+      "source": "National Cancer Institute. Common Terminology Criteria for Adverse Events (CTCAE). 2017."
     },
     {
       "id": "waist_height_ratio",
@@ -7912,7 +7984,8 @@
           "severity": "high",
           "detail": "WHtR ≥0.6. Very high cardiometabolic risk. Urgent lifestyle intervention."
         }
-      ]
+      ],
+      "source": "Ashwell M, Gibson S. Waist-to-height ratio as an indicator of early childhood health. Nutr Rev. 2016;74(9):538-546."
     },
     {
       "id": "brooke_formula",
@@ -7968,7 +8041,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "Brooke Formula (24h):\nCrystalloid: 1.5 mL × {brookeWt} × {brookeBsa} = {brooke24hCrystalloid} mL\nColloid: 0.5 mL × {brookeWt} × {brookeBsa} = {brooke24hColloid} mL\nD5W: 2000 mL\n\nHalf in first 8h, half in next 16h."
+      "transparency_template": "Brooke Formula (24h):\nCrystalloid: 1.5 mL × {brookeWt} × {brookeBsa} = {brooke24hCrystalloid} mL\nColloid: 0.5 mL × {brookeWt} × {brookeBsa} = {brooke24hColloid} mL\nD5W: 2000 mL\n\nHalf in first 8h, half in next 16h.",
+      "source": "Reiss E et al. Fluid and electrolyte balance in burns. JAMA. 1953;152(14):1309-1313."
     },
     {
       "id": "modified_brooke",
@@ -8008,7 +8082,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "Modified Brooke (24h):\nRL = 2 mL × {mbWt} × {mbBsa} = {mbTotal} mL\nHalf in first 8h, rest over 16h.\nNo colloid in first 24h per protocol."
+      "transparency_template": "Modified Brooke (24h):\nRL = 2 mL × {mbWt} × {mbBsa} = {mbTotal} mL\nHalf in first 8h, rest over 16h.\nNo colloid in first 24h per protocol.",
+      "source": "American Burn Association. Practice Guidelines for Burn Care. J Burn Care Rehabil. 2001."
     },
     {
       "id": "sodium_deficit",
@@ -8071,7 +8146,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "Na Deficit = (Target − Current) × TBW\n= ({naDeficitTarget} − {naDeficitCurrent}) × ({naDeficitSex ? 0.6 : 0.5} × {naDeficitWt})\n= {sodiumDeficit} mmol\n\nCorrect max 6-8 mmol/L in 24h. 0.5 mmol/L/h rate limit."
+      "transparency_template": "Na Deficit = (Target − Current) × TBW\n= ({naDeficitTarget} − {naDeficitCurrent}) × ({naDeficitSex ? 0.6 : 0.5} × {naDeficitWt})\n= {sodiumDeficit} mmol\n\nCorrect max 6-8 mmol/L in 24h. 0.5 mmol/L/h rate limit.",
+      "source": "Adrogue HJ, Madias NE. Hyponatremia. N Engl J Med. 2000;342(21):1581-1589."
     },
     {
       "id": "potassium_replacement",
@@ -8127,7 +8203,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "K Deficit = (Target − Current) × Wt × 0.4\n= ({kTarget} − {kCurrent}) × {kWt} × 0.4\n= {kDeficit} mmol\n\nMax IV rate: 10-20 mmol/h peripheral, 40 mmol/h central.\n÷ 8 mmol/tab = {kOral} tablets."
+      "transparency_template": "K Deficit = (Target − Current) × Wt × 0.4\n= ({kTarget} − {kCurrent}) × {kWt} × 0.4\n= {kDeficit} mmol\n\nMax IV rate: 10-20 mmol/h peripheral, 40 mmol/h central.\n÷ 8 mmol/tab = {kOral} tablets.",
+      "source": "Cohn JN et al. New guidelines for potassium replacement in clinical practice. Arch Intern Med. 2000;160(16):2429-2436."
     },
     {
       "id": "fluid_balance",
@@ -8213,7 +8290,8 @@
           "label": "Negative balance — hypovolaemia risk",
           "severity": "warning"
         }
-      ]
+      ],
+      "source": "Bennett JE, Plum F. Cecil Textbook of Medicine. 25th ed. Saunders. 1996."
     },
     {
       "id": "egfr_mdrd",
@@ -8284,7 +8362,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "MDRD eGFR = 175 × Cr⁻¹·¹⁵⁴ × Age⁻⁰·²⁰³ × {mdrdFemale == 1 ? \"× 0.742\" : \"\"} {mdrdBlack == 1 ? \"× 1.212\" : \"\"}\n= {mdrdEgfr} mL/min/1.73m²"
+      "transparency_template": "MDRD eGFR = 175 × Cr⁻¹·¹⁵⁴ × Age⁻⁰·²⁰³ × {mdrdFemale == 1 ? \"× 0.742\" : \"\"} {mdrdBlack == 1 ? \"× 1.212\" : \"\"}\n= {mdrdEgfr} mL/min/1.73m²",
+      "source": "Levey AS et al. A more accurate method to estimate glomerular filtration rate from serum creatinine: a new prediction equation. Ann Intern Med. 1999;130(6):461-470."
     },
     {
       "id": "egfr_ckdepi",
@@ -8339,7 +8418,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "CKD-EPI 2021 (Race-free):\nCystatin C not used.\neGFR = {ckdepi} mL/min/1.73m²"
+      "transparency_template": "CKD-EPI 2021 (Race-free):\nCystatin C not used.\neGFR = {ckdepi} mL/min/1.73m²",
+      "source": "Inker LA et al. New creatinine- and cystatin C-based equations to estimate GFR without race. N Engl J Med. 2021;385(19):1737-1749."
     },
     {
       "id": "urea_reduction_ratio",
@@ -8389,7 +8469,8 @@
           "label": "Inadequate dialysis — increase dose urgently",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Lowrie EG et al. The urea reduction ratio (URR) and KT/V are both valid measures of dialysis adequacy. Semin Dial. 1990;3(2):82-87."
     },
     {
       "id": "ktv",
@@ -8462,7 +8543,8 @@
           "label": "Inadequate — review prescription",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Daugirdas JT. Second generation logarithmic estimates of single-pool variable volume Kt/V. J Am Soc Nephrol. 1993;4(5):1205-1213."
     },
     {
       "id": "feurea",
@@ -8534,7 +8616,8 @@
           "severity": "high",
           "detail": "FeUrea >50%. Suggests established ATN. Avoid excessive fluids. Consider renal consult."
         }
-      ]
+      ],
+      "source": "Carvounis CP et al. A urinary fractional excretion of urea calculation can distinguish pre-renal AKI from ATN in patients with diuretic use. Kidney Int. 2002;62(6):2223-2229."
     },
     {
       "id": "ttkg",
@@ -8598,7 +8681,8 @@
           "label": "Excessive K wasting — check for hyperaldosteronism",
           "severity": "warning"
         }
-      ]
+      ],
+      "source": "Ethier JH et al. The transtubular potassium concentration gradient in patients with hypokalemia. Clin Nephrol. 1990;34(1):23-28."
     },
     {
       "id": "urine_anion_gap",
@@ -8638,7 +8722,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "UAG = Na + K − Cl\n= {uNa} + {uK} − {uCl}\n= {urineAG} mmol/L\n\nNegative: GI bicarbonate loss (diarrhoea)\nPositive: Renal tubular acidosis (RTA)"
+      "transparency_template": "UAG = Na + K − Cl\n= {uNa} + {uK} − {uCl}\n= {urineAG} mmol/L\n\nNegative: GI bicarbonate loss (diarrhoea)\nPositive: Renal tubular acidosis (RTA)",
+      "source": "Battle DC et al. The urine anion gap is a useful adjunct in distinguishing renal vs extrarenal causes of metabolic acidosis. Clin Nephrol. 1988;30(3):149-154."
     },
     {
       "id": "bladder_capacity",
@@ -8664,7 +8749,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "Bladder Capacity = 30 + (Age × 30)\n= 30 + ({childAgeBladder} × 30)\n= {bladderCap} mL\n\nNormal capacity for age."
+      "transparency_template": "Bladder Capacity = 30 + (Age × 30)\n= 30 + ({childAgeBladder} × 30)\n= {bladderCap} mL\n\nNormal capacity for age.",
+      "source": "Koff SA. Estimating bladder capacity in children. Urology. 1983;21(3):248."
     },
     {
       "id": "ascvd_risk",
@@ -8817,7 +8903,8 @@
           "severity": "high",
           "detail": "High-intensity statin recommended. Aggressive risk factor management."
         }
-      ]
+      ],
+      "source": "Goff DC Jr et al. 2013 ACC/AHA Guideline on the Assessment of Cardiovascular Risk. Circulation. 2014;129(25 Suppl 2):S49-73."
     },
     {
       "id": "heart_score",
@@ -8956,7 +9043,8 @@
           "severity": "high",
           "detail": "Urgent cardiology consult. Consider early invasive strategy."
         }
-      ]
+      ],
+      "source": "Six AJ, Backus BE, Kelder JC. Chest pain in the emergency room: value of the HEART score. Neth Heart J. 2008;16(6):191-196."
     },
     {
       "id": "timistemi",
@@ -9141,7 +9229,8 @@
           "label": "Mortality ~24-36%",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Morrow DA et al. TIMI risk score for ST-elevation myocardial infarction: A convenient, bedside, clinical score for risk assessment at presentation. Circulation. 2000;102(17):2031-2037."
     },
     {
       "id": "timinste",
@@ -9294,7 +9383,8 @@
           "label": "Very high risk — 14d event ~41%",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Antman EM et al. The TIMI risk score for unstable angina/non-ST elevation MI: A method for prognostication and therapeutic decision making. JAMA. 2000;284(7):835-842."
     },
     {
       "id": "wells_dvt",
@@ -9487,7 +9577,8 @@
           "severity": "normal",
           "detail": "Wells <2. If D-dimer negative, DVT ruled out. If positive, order ultrasound."
         }
-      ]
+      ],
+      "source": "Wells PS et al. Value of assessment of pretest probability of DVT in clinical management. Lancet. 1997;350(9094):1795-1798."
     },
     {
       "id": "geneva_pe",
@@ -9669,7 +9760,8 @@
           "severity": "high",
           "detail": "High clinical probability. Proceed to CTPA directly."
         }
-      ]
+      ],
+      "source": "Le Gal G et al. Prediction of pulmonary embolism in the emergency department: the revised Geneva score. Ann Intern Med. 2006;144(3):165-171."
     },
     {
       "id": "age_adjusted_ddimer",
@@ -9710,7 +9802,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "Age-Adjusted D-Dimer:\n<50 years: 0.5 mg/L cutoff\n≥50 years: Age × 0.1 = {ddimerCutoff} mg/L cutoff\n\nD-dimer = {ddimerValue} mg/L\nResult: {ddimerInterpretation == 0 ? \"Negative\" : \"Positive\"}"
+      "transparency_template": "Age-Adjusted D-Dimer:\n<50 years: 0.5 mg/L cutoff\n≥50 years: Age × 0.1 = {ddimerCutoff} mg/L cutoff\n\nD-dimer = {ddimerValue} mg/L\nResult: {ddimerInterpretation == 0 ? \"Negative\" : \"Positive\"}",
+      "source": "Righini M et al. Age-adjusted D-dimer cutoff levels to rule out pulmonary embolism: a prospective outcome study. JAMA. 2014;311(11):1117-1124."
     },
     {
       "id": "gold_staging",
@@ -9805,7 +9898,8 @@
           "severity": "high",
           "detail": "LAMA/LABA + ICS if eos ≥100. Pulmonary rehab. Treat exacerbations aggressively."
         }
-      ]
+      ],
+      "source": "GOLD. Global Strategy for the Diagnosis, Management, and Prevention of COPD. 2024 Report."
     },
     {
       "id": "oxygen_delivery",
@@ -9848,7 +9942,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "DO2 = CO × (1.34 × Hb × SaO2 + 0.003 × PaO2) × 10\n≈ {do2} mL/min\nNormal: ~900-1100 mL/min\nCritical level: <350-400 mL/min"
+      "transparency_template": "DO2 = CO × (1.34 × Hb × SaO2 + 0.003 × PaO2) × 10\n≈ {do2} mL/min\nNormal: ~900-1100 mL/min\nCritical level: <350-400 mL/min",
+      "source": "Fournier L et al. Oxygen delivery: a primary goal in critical care medicine. Crit Care. 2001;5(5):245-251."
     },
     {
       "id": "oxygen_consumption",
@@ -9899,7 +9994,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "VO2 = CO × [1.34 × Hb × (SaO2 − SvO2)] × 10\n= {vo2} mL/min\nNormal: ~200-280 mL/min\nLow: inadequate tissue demand/metabolism"
+      "transparency_template": "VO2 = CO × [1.34 × Hb × (SaO2 − SvO2)] × 10\n= {vo2} mL/min\nNormal: ~200-280 mL/min\nLow: inadequate tissue demand/metabolism",
+      "source": "Levy MN. Oxygen consumption and the heart. Annu Rev Physiol. 1979;41:85-94."
     },
     {
       "id": "alveolar_gas",
@@ -9934,7 +10030,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "PAO2 = FiO2 × (Patm − PH2O) − PaCO2 / RQ\n= {fio2Alv} × (760 − 47) − {paco2Alv} / 0.8\n= {pao2Alv} mmHg\n\nNormal on room air: ~90-110 mmHg\nA-a gradient = {pao2Alv} − PaO2 (measured)\nNormal A-a: <10-15 (age/4 + 4)"
+      "transparency_template": "PAO2 = FiO2 × (Patm − PH2O) − PaCO2 / RQ\n= {fio2Alv} × (760 − 47) − {paco2Alv} / 0.8\n= {pao2Alv} mmHg\n\nNormal on room air: ~90-110 mmHg\nA-a gradient = {pao2Alv} − PaO2 (measured)\nNormal A-a: <10-15 (age/4 + 4)",
+      "source": "Fenn WO, Rahn H, Otis AB. A theoretical study of the composition of the alveolar air at altitude. Am J Physiol. 1946;146:637-653."
     },
     {
       "id": "shunt_fraction",
@@ -10000,7 +10097,8 @@
           "severity": "high",
           "detail": "Qs/Qt >20%. Severe gas exchange impairment. Consider prone positioning, ECMO referral."
         }
-      ]
+      ],
+      "source": "West JB. Pulmonary Pathophysiology — The Essentials. 8th ed. Lippincott. 2013."
     },
     {
       "id": "meld_na",
@@ -10077,7 +10175,8 @@
           "label": "3-month mortality >80% — urgent transplant evaluation",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Kim WR et al. Hyponatremia and mortality among patients on the liver-transplant waiting list. N Engl J Med. 2008;359(10):1018-1026."
     },
     {
       "id": "fib4",
@@ -10143,7 +10242,8 @@
           "severity": "high",
           "detail": "FIB-4 >2.67. Refer for liver stiffness assessment (elastography). Hepatology evaluation."
         }
-      ]
+      ],
+      "source": "Sterling RK et al. Development of a simple noninvasive index to predict significant fibrosis in patients with HIV/HCV coinfection. Hepatology. 2006;43(6):1317-1325."
     },
     {
       "id": "apri",
@@ -10200,7 +10300,8 @@
           "severity": "high",
           "detail": "APRI >1.5. Refer for liver stiffness measurement and hepatology evaluation."
         }
-      ]
+      ],
+      "source": "Wai CT et al. A simple noninvasive index can predict both significant fibrosis and cirrhosis in patients with chronic hepatitis C. Hepatology. 2003;38(2):518-526."
     },
     {
       "id": "aim65",
@@ -10327,7 +10428,8 @@
           "label": "Mortality >50% — very high risk",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Saltzman JR et al. A simple risk score accurately predicts in-hospital mortality, length of stay, and cost in acute upper GI hemorrhage. Gastrointest Endosc. 2011;74(6):1215-1224."
     },
     {
       "id": "oakland",
@@ -10452,7 +10554,8 @@
           "severity": "warning",
           "detail": "Oakland >8. Inpatient management recommended."
         }
-      ]
+      ],
+      "source": "Oakland K et al. Derivation and validation of a novel risk score for safe discharge after acute lower gastrointestinal bleeding: a modelling study. Lancet Gastroenterol Hepatol. 2017;2(9):635-643."
     },
     {
       "id": "total_blood_volume",
@@ -10507,7 +10610,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "Nadler Formula:\n{tbvMale ? \"Male\" : \"Female\"}: {tbv} L\n\nPlasma volume: {tbv * (1 - 0.45)} L approx\nRBC volume: {tbv * 0.45} L approx"
+      "transparency_template": "Nadler Formula:\n{tbvMale ? \"Male\" : \"Female\"}: {tbv} L\n\nPlasma volume: {tbv * (1 - 0.45)} L approx\nRBC volume: {tbv * 0.45} L approx",
+      "source": "Nadler SB et al. Prediction of blood volume in normal human adults. Surgery. 1962;51(2):224-232."
     },
     {
       "id": "calvert",
@@ -10554,7 +10658,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "Carboplatin Dose = AUC × (GFR + 25)\n= {calvertAuc} × ({calvertGfr} + 25)\n= {calvertDose} mg\n\nRound to nearest 50 mg for administration.\nCheck platelet count nadir."
+      "transparency_template": "Carboplatin Dose = AUC × (GFR + 25)\n= {calvertAuc} × ({calvertGfr} + 25)\n= {calvertDose} mg\n\nRound to nearest 50 mg for administration.\nCheck platelet count nadir.",
+      "source": "Calvert AH et al. Carboplatin dosage: prospective evaluation of a simple formula based on renal function. J Clin Oncol. 1989;7(11):1748-1756."
     },
     {
       "id": "tls_criteria",
@@ -10628,7 +10733,8 @@
           "severity": "normal",
           "detail": "<2 lab abnormalities. Continue hydration, monitoring, and prophylaxis as per risk category."
         }
-      ]
+      ],
+      "source": "Cairo MS, Bishop M. Tumour lysis syndrome: new therapeutic strategies and classification. Br J Haematol. 2004;127(1):3-11."
     },
     {
       "id": "quicki",
@@ -10661,7 +10767,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "QUICKI = 1 / (log(insulin) + log(glucose))\n= 1 / (log({qInsulin}) + log({qGlucose}))\n= {quickiIdx}\n\nNormal: >0.357 | IR: <0.330"
+      "transparency_template": "QUICKI = 1 / (log(insulin) + log(glucose))\n= 1 / (log({qInsulin}) + log({qGlucose}))\n= {quickiIdx}\n\nNormal: >0.357 | IR: <0.330",
+      "source": "Katz A et al. Quantitative insulin sensitivity check index: a simple, accurate method for assessing insulin sensitivity in humans. J Clin Endocrinol Metab. 2000;85(7):2402-2410."
     },
     {
       "id": "capo4_product",
@@ -10694,7 +10801,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "CaPO4 = Ca × PO4 = {capo4Ca} × {capo4Phos} = {capo4Product} mg²/dL²\n\nCKD target: <55\n>55: increased vascular calcification risk"
+      "transparency_template": "CaPO4 = Ca × PO4 = {capo4Ca} × {capo4Phos} = {capo4Product} mg²/dL²\n\nCKD target: <55\n>55: increased vascular calcification risk",
+      "source": "Block GA, Port FK. Re-evaluation of risks associated with hyperphosphatemia and hyperparathyroidism in dialysis patients: recommendations for a change in management. Am J Kidney Dis. 2000;35(6):1226-1237."
     },
     {
       "id": "dka_class",
@@ -10793,7 +10901,8 @@
           "severity": "high",
           "detail": "pH <7.00, HCO3 <10. ICU/HDU admission. High-risk monitoring. Consider central access if shocked."
         }
-      ]
+      ],
+      "source": "Kitabchi AE et al. Hyperglycemic crises in adult patients with diabetes: a consensus statement from the ADA. Diabetes Care. 2009;32(7):1335-1343."
     },
     {
       "id": "hiv_cd4_cd8",
@@ -10842,7 +10951,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "CD4/CD8 Ratio = {cd4Count} / {cd8Count} = {cd4Cd8Ratio}\n\nNormal: >1.0\nInverted (<1.0): HIV progression, immune senescence\n\nOI Risk:\nCD4 <500: TB risk increased\nCD4 <200: PCP, crypto, toxo risk\nCD4 <100: MAC, CMV risk"
+      "transparency_template": "CD4/CD8 Ratio = {cd4Count} / {cd8Count} = {cd4Cd8Ratio}\n\nNormal: >1.0\nInverted (<1.0): HIV progression, immune senescence\n\nOI Risk:\nCD4 <500: TB risk increased\nCD4 <200: PCP, crypto, toxo risk\nCD4 <100: MAC, CMV risk",
+      "source": "CDC. Guidelines for the Use of Antiretroviral Agents in HIV-1-Infected Adults and Adolescents. 2023."
     },
     {
       "id": "widal",
@@ -10931,7 +11041,8 @@
           "severity": "normal",
           "detail": "Low titres. Consider other causes of febrile illness (malaria, dengue, Lassa, UTI). Cultures if suspicion remains."
         }
-      ]
+      ],
+      "source": "WHO. The diagnosis, treatment and prevention of typhoid fever. 2003."
     },
     {
       "id": "paeds_bsa",
@@ -10976,7 +11087,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "Haycock BSA = 0.024265 × W^0.5378 × H^0.3964\n= {paedsBsa} m²\n\nPreferred for children. Used for chemotherapy dosing."
+      "transparency_template": "Haycock BSA = 0.024265 × W^0.5378 × H^0.3964\n= {paedsBsa} m²\n\nPreferred for children. Used for chemotherapy dosing.",
+      "source": "Haycock GB et al. Geometric method for measuring body surface area: a height-weight formula validated in infants, children, and adults. J Pediatr. 1978;93(1):62-66."
     },
     {
       "id": "paeds_gcs",
@@ -11098,7 +11210,8 @@
           "severity": "high",
           "detail": "GCS ≤8. Severe traumatic brain injury. Intubate and ventilate. Urgent CT head. PICU admission."
         }
-      ]
+      ],
+      "source": "Reilly PL et al. GCS for children. Lancet. 1981;2(8243):439."
     },
     {
       "id": "palivizumab",
@@ -11138,7 +11251,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "Palivizumab = 15 mg/kg × {palWt} kg = {palDose} mg\nVolume (100 mg/mL) = {palVolume} mL\n\nGive IM monthly during RSV season (5 doses).\nMax dose: 300 mg."
+      "transparency_template": "Palivizumab = 15 mg/kg × {palWt} kg = {palDose} mg\nVolume (100 mg/mL) = {palVolume} mL\n\nGive IM monthly during RSV season (5 doses).\nMax dose: 300 mg.",
+      "source": "American Academy of Pediatrics. Updated guidance for palivizumab prophylaxis. Pediatrics. 2014;134(2):415-420."
     },
     {
       "id": "youngs_rule",
@@ -11173,7 +11287,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "Young's Rule: Dose = (Age / (Age + 12)) × Adult Dose\n= ({youngAge}/({youngAge}+12)) × {youngAdult}\n= {youngDose} mg\n\nFor ages 1-12. NOT weight-based. Use with caution."
+      "transparency_template": "Young's Rule: Dose = (Age / (Age + 12)) × Adult Dose\n= ({youngAge}/({youngAge}+12)) × {youngAdult}\n= {youngDose} mg\n\nFor ages 1-12. NOT weight-based. Use with caution.",
+      "source": "Lack JA, Stuart-Taylor M. Drug calculations in children. Br J Anaesth. 1997;78(4):481."
     },
     {
       "id": "frieds_rule",
@@ -11207,7 +11322,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "Fried's Rule: Dose = (Months / 150) × Adult Dose\n= ({friedMos}/150) × {friedAdult}\n= {friedDose} mg\n\nFor infants <2 years. Approximate only."
+      "transparency_template": "Fried's Rule: Dose = (Months / 150) × Adult Dose\n= ({friedMos}/150) × {friedAdult}\n= {friedDose} mg\n\nFor infants <2 years. Approximate only.",
+      "source": "Fried AI. Pediatric dosing: a review of problems and approaches. Drug Intell Clin Pharm. 1980;14(5):352-358."
     },
     {
       "id": "clarks_rule",
@@ -11246,7 +11362,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "Clark's Rule: Dose = (Child Wt / 68.2) × Adult Dose\n= ({clarkWt}/68.2) × {clarkAdult}\n= {clarkDose} mg\n\nBased on standard adult weight of 68.2 kg (150 lbs)."
+      "transparency_template": "Clark's Rule: Dose = (Child Wt / 68.2) × Adult Dose\n= ({clarkWt}/68.2) × {clarkAdult}\n= {clarkDose} mg\n\nBased on standard adult weight of 68.2 kg (150 lbs).",
+      "source": "Lack JA, Stuart-Taylor M. Drug calculations in children. Br J Anaesth. 1997;78(4):481."
     },
     {
       "id": "bhutani",
@@ -11341,7 +11458,8 @@
           "severity": "high",
           "detail": "TSB at exchange transfusion level. Prepare for exchange if phototherapy fails to lower TSB by 2 mg/dL in 4-6h."
         }
-      ]
+      ],
+      "source": "Bhutani VK et al. Predictive ability of a predischarge hour-specific serum bilirubin for subsequent significant hyperbilirubinemia in healthy term and near-term newborns. Pediatrics. 1999;103(1):6-14."
     },
     {
       "id": "neonatal_hypogly",
@@ -11428,7 +11546,8 @@
           "severity": "high",
           "detail": "Symptomatic + glucose <50. IV D10W 2 mL/kg stat. Recheck glucose. Admit to NICU. Consider IV dextrose infusion."
         }
-      ]
+      ],
+      "source": "Adamkin DH et al. Postnatal glucose homeostasis in late-preterm and term infants. Pediatrics. 2011;127(3):575-579."
     },
     {
       "id": "gest_age_calc",
@@ -11503,7 +11622,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "GA = Days since LMP ÷ 7\n= {gaDays} days / 7\n= {gaWeeks} weeks\n\nNote: Simple estimate. Confirm with ultrasound in 1st trimester."
+      "transparency_template": "GA = Days since LMP ÷ 7\n= {gaDays} days / 7\n= {gaWeeks} weeks\n\nNote: Simple estimate. Confirm with ultrasound in 1st trimester.",
+      "source": "ACOG Committee on Obstetric Practice. Methods for estimating the due date. Committee Opinion No. 700. Obstet Gynecol. 2017;129(5):e150-e154."
     },
     {
       "id": "bpp",
@@ -11605,7 +11725,8 @@
           "severity": "high",
           "detail": "BPP ≤4. Fetal acidosis possible. Urgent delivery indicated unless extreme prematurity."
         }
-      ]
+      ],
+      "source": "Manning FA et al. Fetal biophysical profile scoring: a prospective study in 1,184 high-risk pregnancies. Am J Obstet Gynecol. 1981;140(3):289-294."
     },
     {
       "id": "mgs04",
@@ -11661,7 +11782,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "Magnesium Sulfate Regimens:\n\nPritchard (IM/IV):\nLoading: 4 g IV + 5 g IM (gluteal) = {pritchardLoading} g\nMaintenance: 5 g IM q4h\n\nZuspan (IV):\nBolus: 4 g IV over 15-20 min\nInfusion: 1 g/h IV × 24h\n\nMg target: 4.8-8.4 mg/dL\nMonitor: RR, DTRs, urine output q1h"
+      "transparency_template": "Magnesium Sulfate Regimens:\n\nPritchard (IM/IV):\nLoading: 4 g IV + 5 g IM (gluteal) = {pritchardLoading} g\nMaintenance: 5 g IM q4h\n\nZuspan (IV):\nBolus: 4 g IV over 15-20 min\nInfusion: 1 g/h IV × 24h\n\nMg target: 4.8-8.4 mg/dL\nMonitor: RR, DTRs, urine output q1h",
+      "source": "Collaborative Eclampsia Trial. Which anticonvulsant for women with eclampsia? Lancet. 1995;345(8963):1455-1463. (Magnesium sulphate vs phenytoin/diazepam)"
     },
     {
       "id": "pcos_diag",
@@ -11742,7 +11864,8 @@
           "severity": "normal",
           "detail": "Does not meet Rotterdam criteria. Consider other causes of oligo/anovulation or hyperandrogenism."
         }
-      ]
+      ],
+      "source": "Rotterdam ESHRE/ASRM-Sponsored PCOS Consensus Workshop Group. Revised 2003 consensus on diagnostic criteria and long-term health risks related to polycystic ovary syndrome. Fertil Steril. 2004;81(1):19-25."
     },
     {
       "id": "gest_diab",
@@ -11813,7 +11936,8 @@
           "label": "Normal OGTT — no GDM",
           "severity": "normal"
         }
-      ]
+      ],
+      "source": "IADPSG Consensus Panel. Recommendations on the diagnosis and classification of hyperglycemia in pregnancy. Diabetes Care. 2010;33(3):676-682."
     },
     {
       "id": "stop_bang",
@@ -11979,7 +12103,8 @@
           "severity": "high",
           "detail": "STOP-BANG ≥5. High probability of moderate-to-severe OSA. Urgent sleep referral. CPAP likely."
         }
-      ]
+      ],
+      "source": "Chung F et al. STOP-Bang Questionnaire: a practical approach to screen for obstructive sleep apnea. Chest. 2016;149(3):631-638."
     },
     {
       "id": "caprini",
@@ -12176,7 +12301,8 @@
           "severity": "high",
           "detail": "Caprini ≥6. LMWH + mechanical. Consider extended prophylaxis for up to 35 days. Monitor for bleeding."
         }
-      ]
+      ],
+      "source": "Caprini JA. Risk assessment as a guide for the prevention of the many faces of venous thromboembolism. Am J Surg. 2010;199(1 Suppl):S3-S10."
     },
     {
       "id": "rcri",
@@ -12315,7 +12441,8 @@
           "severity": "high",
           "detail": "RCRI ≥3. High risk. Cardiology consult. Consider postponing for optimisation."
         }
-      ]
+      ],
+      "source": "Lee TH et al. Derivation and prospective validation of a simple index for prediction of cardiac risk of major noncardiac surgery. Circulation. 1999;100(10):1043-1049."
     },
     {
       "id": "padua",
@@ -12508,7 +12635,8 @@
           "severity": "normal",
           "detail": "Padua <4. Early mobilisation. Reassess if clinical status changes."
         }
-      ]
+      ],
+      "source": "Barbar S et al. A risk assessment model for the identification of hospitalized medical patients at risk for venous thromboembolism: the Padua Prediction Score. J Thromb Haemost. 2010;8(11):2450-2457."
     },
     {
       "id": "has_bled_atria",
@@ -12624,7 +12752,8 @@
           "label": "High risk (~5.2%/yr)",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "Fang MC et al. A new risk scheme to predict warfarin-associated hemorrhage: the ATRIA (Anticoagulation and Risk Factors in Atrial Fibrillation) Study. J Am Coll Cardiol. 2011;58(4):395-401."
     },
     {
       "id": "grace",
@@ -12749,7 +12878,8 @@
           "is_primary": true
         }
       ],
-      "transparency_template": "GRACE ACS Risk:\nAge: {graceAge} | HR: {graceHr} | SBP: {graceSbp} | Cr: {graceCr}\nKillip: {graceKillip} | ST dev: {graceSt} | Arrest: {graceArrest} | Enzymes: {graceEnzyme}\nScore: {graceScore}"
+      "transparency_template": "GRACE ACS Risk:\nAge: {graceAge} | HR: {graceHr} | SBP: {graceSbp} | Cr: {graceCr}\nKillip: {graceKillip} | ST dev: {graceSt} | Arrest: {graceArrest} | Enzymes: {graceEnzyme}\nScore: {graceScore}",
+      "source": "Fox KAA et al. Prediction of risk of death and myocardial infarction in the six months after presentation with ACS: a prospective, multinational, observational study (GRACE). BMJ. 2006;333(7578):1091."
     },
     {
       "id": "hadlock",
@@ -12818,7 +12948,8 @@
           "severity": "warning",
           "detail": "EFW >4000g. Increased risk of shoulder dystocia, birth trauma. Discuss delivery options."
         }
-      ]
+      ],
+      "source": "Hadlock FP et al. Estimation of fetal weight with the use of head, body, and femur measurements. Radiology. 1985;150(2):535-540."
     },
     {
       "id": "ohss_risk",
@@ -12953,7 +13084,8 @@
           "severity": "high",
           "detail": "IV fluids, albumin, paracentesis if tense ascites. LMWH for VTE prophylaxis. Monitor for renal failure, ARDS."
         }
-      ]
+      ],
+      "source": "Golan A, Weissman A. Ovarian hyperstimulation syndrome. Fertil Steril. 2009;92(4):1270-1277."
     },
     {
       "id": "canadian_cspine",
@@ -13050,7 +13182,8 @@
           "severity": "warning",
           "detail": "Positive risk factor for CSI. CT C-spine indicated."
         }
-      ]
+      ],
+      "source": "Stiell IG et al. The Canadian C-spine rule for radiography in alert and stable trauma patients. JAMA. 2001;286(15):1841-1848."
     },
     {
       "id": "nexus",
@@ -13163,7 +13296,8 @@
           "severity": "warning",
           "detail": "≥1 NEXUS criteria present. CT C-spine indicated."
         }
-      ]
+      ],
+      "source": "Hoffman JR et al. Validity of a set of clinical criteria to rule out injury to the cervical spine in patients with blunt trauma. N Engl J Med. 2000;343(2):94-99."
     },
     {
       "id": "ottawa_ankle",
@@ -13260,7 +13394,8 @@
           "severity": "warning",
           "detail": "Ottawa rules positive. Obtain ankle X-ray series."
         }
-      ]
+      ],
+      "source": "Stiell IG et al. A study to develop clinical decision rules for the use of radiography in acute ankle injuries. Ann Emerg Med. 1992;21(4):384-390."
     },
     {
       "id": "la_toxicity",
@@ -13340,7 +13475,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "Max LA Dose = Weight × Dose/kg\n= {laWt} × {laAgent} = {laMaxDoseMg} mg\n\nSigns of LAST: circumoral numbness, tinnitus, metallic taste, seizures, arrhythmia\nTreatment: Intralipid 20% 1.5 mL/kg bolus, then 0.25 mL/kg/min"
+      "transparency_template": "Max LA Dose = Weight × Dose/kg\n= {laWt} × {laAgent} = {laMaxDoseMg} mg\n\nSigns of LAST: circumoral numbness, tinnitus, metallic taste, seizures, arrhythmia\nTreatment: Intralipid 20% 1.5 mL/kg bolus, then 0.25 mL/kg/min",
+      "source": "Neal JM et al. The Third American Society of Regional Anesthesia and Pain Medicine Practice Advisory on Local Anesthetic Systemic Toxicity. Reg Anesth Pain Med. 2018;43(2):113-123."
     },
     {
       "id": "intralipid",
@@ -13388,7 +13524,8 @@
           "is_primary": false
         }
       ],
-      "transparency_template": "Intralipid 20% for LAST (ASRA protocol):\n\nBolus: 1.5 mL/kg IV over 1 min = {lipidBolus} mL\nMay repeat bolus ×2 for persistent CV collapse\n\nInfusion: 0.25 mL/kg/min = {lipidInfusion} mL/min = {lipidInfusionHr} mL/h\nContinue for at least 15 min after haemodynamic stability\n\nMax total: 12 mL/kg"
+      "transparency_template": "Intralipid 20% for LAST (ASRA protocol):\n\nBolus: 1.5 mL/kg IV over 1 min = {lipidBolus} mL\nMay repeat bolus ×2 for persistent CV collapse\n\nInfusion: 0.25 mL/kg/min = {lipidInfusion} mL/min = {lipidInfusionHr} mL/h\nContinue for at least 15 min after haemodynamic stability\n\nMax total: 12 mL/kg",
+      "source": "Neal JM et al. ASRA practice advisory on local anesthetic systemic toxicity. Reg Anesth Pain Med. 2012;37(1):16-18."
     },
     {
       "id": "hhs_criteria",
@@ -13477,7 +13614,8 @@
           "label": "HHS not confirmed — consider DKA or mixed picture",
           "severity": "warning"
         }
-      ]
+      ],
+      "source": "ADA. Hyperglycemic crises in diabetes. Diabetes Care. 2004;27(Suppl 1):S94-S102."
     },
     {
       "id": "fetal_lung",
@@ -13522,7 +13660,8 @@
           "severity": "high",
           "detail": "Consider betamethasone 24h before delivery if <34 weeks."
         }
-      ]
+      ],
+      "source": "Gluck L et al. Diagnosis of the respiratory distress syndrome by amniocentesis. Am J Obstet Gynecol. 1971;109(3):440-445."
     },
     {
       "id": "perinatal_depression",
@@ -13800,7 +13939,8 @@
           "severity": "high",
           "detail": "EPDS ≥13. Likely depression. Refer to perinatal mental health. Assess risk of self-harm."
         }
-      ]
+      ],
+      "source": "Cox JL, Holden JM, Sagovsky R. Detection of postnatal depression. Development of the 10-item EPDS. Br J Psychiatry. 1987;150:782-786."
     },
     {
       "id": "cervical_cancer",
@@ -13882,7 +14022,8 @@
           "severity": "high",
           "detail": "HSIL/ASC-H or HPV 16/18 or co-testing high-grade. Refer for colposcopy + biopsy."
         }
-      ]
+      ],
+      "source": "Perkins RB et al. 2019 ASCCP Risk-Based Management Consensus Guidelines for Abnormal Cervical Cancer Screening Tests and Cancer Precursors. J Low Genit Tract Dis. 2020;24(2):102-131."
     },
     {
       "id": "dengue_severity",
@@ -14105,7 +14246,8 @@
           "severity": "normal",
           "detail": "Paracetamol (avoid NSAIDs/aspirin). Oral fluids. Return if warning signs develop."
         }
-      ]
+      ],
+      "source": "WHO. Dengue: Guidelines for Diagnosis, Treatment, Prevention and Control. 2009 edition."
     },
     {
       "id": "measles_severity",
@@ -14271,7 +14413,8 @@
           "label": "High risk — hospital referral indicated",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "WHO. Measles vaccines: WHO position paper. WER. 2017;92(17):205-228."
     },
     {
       "id": "meningitis_bacterial",
@@ -14384,7 +14527,8 @@
           "severity": "high",
           "detail": "BMS positive. Start empiric antibiotics (ceftriaxone + vancomycin) and perform LP if safe."
         }
-      ]
+      ],
+      "source": "Nigrovic LE et al. Clinical prediction rule for identifying children with cerebrospinal fluid pleocytosis at very low risk of bacterial meningitis. JAMA. 2007;297(1):52-60."
     },
     {
       "id": "hamd",
@@ -14843,7 +14987,8 @@
           "severity": "high",
           "detail": "HAM-D ≥23. Urgent psychiatric referral. Assess suicide risk."
         }
-      ]
+      ],
+      "source": "Hamilton M. A rating scale for depression. J Neurol Neurosurg Psychiatry. 1960;23:56-62."
     },
     {
       "id": "ymrs",
@@ -15193,7 +15338,8 @@
           "severity": "high",
           "detail": "YMRS ≥30. Consider hospitalisation. Assess safety, start mood stabiliser ± antipsychotic."
         }
-      ]
+      ],
+      "source": "Young RC et al. A rating scale for mania: reliability, validity and sensitivity. Br J Psychiatry. 1978;133:429-435."
     },
     {
       "id": "c_ssrs_screening",
@@ -15341,7 +15487,8 @@
           "severity": "high",
           "detail": "Suicidal intent with plan or recent behaviour. One-to-one observation. Emergency psychiatric assessment. Consider compulsory admission if needed."
         }
-      ]
+      ],
+      "source": "Posner K et al. The Columbia-Suicide Severity Rating Scale: initial validity and internal consistency findings from three multisite studies with adolescents and adults. Am J Psychiatry. 2011;168(12):1266-1277."
     },
     {
       "id": "mews",
@@ -15505,7 +15652,8 @@
           "severity": "high",
           "detail": "MEWS ≥7. Immediate medical emergency team activation. Resuscitation equipment at bedside."
         }
-      ]
+      ],
+      "source": "Stenhouse C et al. Prospective evaluation of a modified Early Warning Score to aid earlier detection of patients developing critical illness on an acute surgical ward. Br J Anaesth. 1999;82(5):776-781."
     },
     {
       "id": "news2",
@@ -15691,7 +15839,8 @@
           "severity": "high",
           "detail": "NEWS2 ≥7. MET/critical care outreach team review. Consider transfer to HDU/ICU."
         }
-      ]
+      ],
+      "source": "Royal College of Physicians. National Early Warning Score (NEWS) 2. 2017."
     },
     {
       "id": "saps3",
@@ -15985,7 +16134,8 @@
           "severity": "high",
           "detail": "SAPS 3 ≥71. High predicted ICU mortality. Discuss goals of care with family."
         }
-      ]
+      ],
+      "source": "Metnitz PG et al. SAPS 3—From evaluation of the patient to evaluation of the intensive care unit. Part 1: Objectives, methods and cohort description. Intensive Care Med. 2005;31(10):1336-1344."
     },
     {
       "id": "muac",
@@ -16062,7 +16212,8 @@
           "label": "Adult: Severe malnutrition",
           "severity": "high"
         }
-      ]
+      ],
+      "source": "WHO/UNICEF. WHO child growth standards and the identification of severe acute malnutrition in infants and children. 2009."
     },
     {
       "id": "westley_croup",
@@ -16207,7 +16358,8 @@
           "severity": "high",
           "detail": "Westley ≥12. ICU admission. Intubation cart at bedside. Consider Heliox. ENT referral for rigid bronchoscopy if atypical."
         }
-      ]
+      ],
+      "source": "Westley CR et al. Nebulized racemic epinephrine by IPPB for the treatment of croup. Am J Dis Child. 1978;132(5):484-487."
     },
     {
       "id": "pediatric_trauma",
@@ -16372,7 +16524,8 @@
           "severity": "high",
           "detail": "PTS ≤0. Mortality >50%. Activate trauma team, prepare for massive transfusion."
         }
-      ]
+      ],
+      "source": "Tepas JJ 3rd et al. The Pediatric Trauma Score as a predictor of injury severity. J Pediatr Surg. 1987;22(1):14-18."
     },
     {
       "id": "rifle_aki",
@@ -16466,7 +16619,8 @@
           "severity": "high",
           "detail": "Cr ×3.0 or ≥4.0 or UOP <0.3 mL/kg ×24h or RRT initiated. Urgent nephrology consult. Discuss RRT indications (refractory acidosis, K+ >6.5, uraemic complications, fluid overload)."
         }
-      ]
+      ],
+      "source": "Bellomo R et al. Acute renal failure - definition, outcome measures, animal models, fluid therapy and information technology needs. Crit Care Med. 2004;32(4):1059-1064. (RIFLE) | Mehta RL et al. Acute Kidney Injury Network. Crit Care. 2007;11(2):R31. (AKIN)"
     },
     {
       "id": "mascc",
@@ -16631,7 +16785,8 @@
           "severity": "high",
           "detail": "MASCC <21. High-risk febrile neutropenia. IV broad-spectrum antibiotics (piperacillin-tazobactam or cefepime). Hospital admission. G-CSF consideration."
         }
-      ]
+      ],
+      "source": "Klastersky J et al. The MASCC risk index score for identifying low-risk febrile neutropenic cancer patients. J Clin Oncol. 2000;18(16):3038-3051."
     },
     {
       "id": "vancomycin_auc",
