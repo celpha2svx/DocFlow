@@ -97,6 +97,7 @@ class CalculatorDefinition {
   final List<ResultDefinition> results;
   final String transparencyTemplate;
   final List<InterpretationRule> interpretations;
+  final String source;
 
   CalculatorDefinition.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -114,7 +115,8 @@ class CalculatorDefinition {
             ? (json['interpretations'] as List)
                 .map((e) => InterpretationRule.fromJson(e))
                 .toList()
-            : [];
+            : [],
+        source = json['source'] ?? '';
 
   ResultDefinition get primaryResult =>
       results.firstWhere((r) => r.isPrimary, orElse: () => results.first);

@@ -183,6 +183,38 @@ class ResultScreen extends StatelessWidget {
                   formula: transparencyFilled,
                   formulaName: 'Formula Transparency',
                 ),
+              if (calculator.source.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: AppConstants.backgroundColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppConstants.primaryColor.withOpacity(0.15)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Source',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppConstants.primaryColor,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        calculator.source,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppConstants.subtextColor,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               const SizedBox(height: 24),
               OutlinedButton.icon(
                 onPressed: () {
