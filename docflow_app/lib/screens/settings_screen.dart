@@ -222,7 +222,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ListTile(
                     leading: const Icon(Icons.info_outline),
                     title: const Text('DocFlow'),
-                    subtitle: const Text('Version 1.1.9'),
+                    subtitle: const Text('Version 1.2.0'),
                   ),
                   const Divider(height: 0),
                   const ListTile(

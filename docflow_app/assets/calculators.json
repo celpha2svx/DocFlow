@@ -1,5 +1,5 @@
 {
-  "version": 10,
+  "version": 11,
   "last_updated": "2026-06-29",
   "calculators": [
     {
@@ -16632,6 +16632,2333 @@
           "detail": "MASCC <21. High-risk febrile neutropenia. IV broad-spectrum antibiotics (piperacillin-tazobactam or cefepime). Hospital admission. G-CSF consideration."
         }
       ]
+    },
+    {
+      "id": "vancomycin_auc",
+      "name": "Vancomycin AUC-guided Dosing",
+      "category": "Fluids & Drips",
+      "description": "Calculates vancomycin dose and interval to achieve target AUC₂₄₀₀₋₆₅₀ mg·h/L (2020 ASHP/IDSA guideline). Inputs: actual trough, or two levels for AUC calculation.",
+      "inputs": [
+        {
+          "id": "vanActualDose",
+          "label": "Current dose",
+          "type": "number",
+          "unit": "mg",
+          "required": true,
+          "hint": "e.g. 1000"
+        },
+        {
+          "id": "vanInterval",
+          "label": "Current interval",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "q8h (every 8h)",
+              "value": 8
+            },
+            {
+              "label": "q12h",
+              "value": 12
+            },
+            {
+              "label": "q24h",
+              "value": 24
+            },
+            {
+              "label": "q48h",
+              "value": 48
+            },
+            {
+              "label": "q72h",
+              "value": 72
+            }
+          ],
+          "default": 12
+        },
+        {
+          "id": "vanWeight",
+          "label": "Weight",
+          "type": "number",
+          "unit": "kg",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
+        },
+        {
+          "id": "vanCrCl",
+          "label": "Creatinine clearance",
+          "type": "number",
+          "unit": "mL/min",
+          "required": true,
+          "hint": "Cockcroft-Gault"
+        }
+      ],
+      "results": [
+        {
+          "key": "vanDailyDose",
+          "label": "Current daily dose",
+          "formula": "(vanActualDose / vanInterval) * 24",
+          "unit": "mg/day",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "vanDosePerKg",
+          "label": "Current mg/kg/day",
+          "formula": "((vanActualDose / vanInterval) * 24) / vanWeight",
+          "unit": "mg/kg/day",
+          "decimals": 1,
+          "is_primary": false
+        },
+        {
+          "key": "vanCrClRatio",
+          "label": "CrCl-adjusted dose",
+          "formula": "vanCrCl >= 50 ? ((vanActualDose / vanInterval) * 24) : (vanCrCl >= 20 ? ((vanActualDose / vanInterval) * 24) * (vanCrCl / 50) : ((vanActualDose / vanInterval) * 24) * 0.4)",
+          "unit": "mg/day",
+          "decimals": 0,
+          "is_primary": true
+        },
+        {
+          "key": "vanRecInterval",
+          "label": "Recommended interval",
+          "formula": "vanCrCl >= 50 ? 12 : (vanCrCl >= 20 ? 24 : 48)",
+          "unit": "h",
+          "decimals": 0,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "Vancomycin AUC-guided dosing (ASHP/IDSA 2020):\n\nCurrent: {vanActualDose} mg q{vanInterval}h = {vanDailyDose} mg/day ({vanDosePerKg} mg/kg/day)\nCrCl: {vanCrCl} mL/min\n\nTarget AUC₂₄: 400-650 mg·h/L\nLoading: 25-30 mg/kg if critically ill\nMaintenance: 15-20 mg/kg q{vanRecInterval}h, adjusted by CrCl\n\nCrCl-adjusted maintenance: {vanCrClRatio} mg/day",
+      "interpretations": [
+        {
+          "condition": "vanCrCl >= 50",
+          "label": "Normal renal function — q12h dosing appropriate",
+          "severity": "normal"
+        },
+        {
+          "condition": "vanCrCl >= 20 && vanCrCl < 50",
+          "label": "Mild-moderate renal impairment — extend to q24h",
+          "severity": "warning"
+        },
+        {
+          "condition": "vanCrCl < 20",
+          "label": "Severe renal impairment — q48h, monitor trough",
+          "severity": "high"
+        }
+      ],
+      "source": "Rybak et al. Therapeutic monitoring of vancomycin for serious methicillin-resistant Staphylococcus aureus infections: A revised consensus guideline. Am J Health-Syst Pharm. 2020;77(11):835-864."
+    },
+    {
+      "id": "gentamicin_once_daily",
+      "name": "Gentamicin Once-Daily (Extended Interval)",
+      "category": "Fluids & Drips",
+      "description": "Hartford nomogram-style once-daily gentamicin dosing. 5-7 mg/kg q24h, interval extended for renal impairment. Target peak 16-24 mg/L.",
+      "inputs": [
+        {
+          "id": "gentWeight",
+          "label": "Weight",
+          "type": "number",
+          "unit": "kg",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
+        },
+        {
+          "id": "gentDosePerKg",
+          "label": "Dose per kg",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "5 mg/kg (UTI, synergy)",
+              "value": 5
+            },
+            {
+              "label": "7 mg/kg (Gram-negative sepsis)",
+              "value": 7
+            }
+          ],
+          "default": 7
+        },
+        {
+          "id": "gentCrCl",
+          "label": "Creatinine clearance",
+          "type": "number",
+          "unit": "mL/min",
+          "required": true,
+          "hint": "Cockcroft-Gault"
+        }
+      ],
+      "results": [
+        {
+          "key": "gentDose",
+          "label": "Dose",
+          "formula": "gentDosePerKg * gentWeight",
+          "unit": "mg",
+          "decimals": 0,
+          "is_primary": true
+        },
+        {
+          "key": "gentInterval",
+          "label": "Interval",
+          "formula": "gentCrCl >= 60 ? 24 : (gentCrCl >= 40 ? 36 : (gentCrCl >= 20 ? 48 : 72))",
+          "unit": "h",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "gentDaily",
+          "label": "Rounded dose",
+          "formula": "round(gentDosePerKg * gentWeight / 40) * 40",
+          "unit": "mg (nearest 40)",
+          "decimals": 0,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "Gentamicin once-daily (Hartford nomogram):\nWeight: {gentWeight} kg × {gentDosePerKg} mg/kg = {gentDose} mg (round to nearest 40mg = {gentDaily})\nCrCl: {gentCrCl} mL/min → q{gentInterval}h\n\nTarget peak (1h post-dose): 16-24 mg/L\nTarget trough (pre-dose): <1 mg/L\nAvoid >3 days if no culture clearance\nMonitor for nephrotoxicity, ototoxicity",
+      "interpretations": [
+        {
+          "condition": "gentCrCl >= 60",
+          "label": "Normal renal function — q24h",
+          "severity": "normal"
+        },
+        {
+          "condition": "gentCrCl >= 40 && gentCrCl < 60",
+          "label": "Mild impairment — q36h",
+          "severity": "warning"
+        },
+        {
+          "condition": "gentCrCl >= 20 && gentCrCl < 40",
+          "label": "Moderate impairment — q48h, monitor",
+          "severity": "warning"
+        },
+        {
+          "condition": "gentCrCl < 20",
+          "label": "Severe impairment — q72h or avoid",
+          "severity": "high"
+        }
+      ],
+      "source": "Nicolau DP et al. Experience with a once-daily aminoglycoside program administered to 2,184 adult patients. Antimicrob Agents Chemother. 1995;39(3):650-655."
+    },
+    {
+      "id": "amikacin_dosing",
+      "name": "Amikacin Dosing",
+      "category": "Fluids & Drips",
+      "description": "Amikacin 15 mg/kg q24h for most infections, 25 mg/kg for severe. Adjust for renal impairment. Used in TB and resistant Gram-negative infections.",
+      "inputs": [
+        {
+          "id": "amiWeight",
+          "label": "Weight",
+          "type": "number",
+          "unit": "kg",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
+        },
+        {
+          "id": "amiDosePerKg",
+          "label": "Indication",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "15 mg/kg (most infections)",
+              "value": 15
+            },
+            {
+              "label": "25 mg/kg (severe, MDR)",
+              "value": 25
+            }
+          ],
+          "default": 15
+        },
+        {
+          "id": "amiCrCl",
+          "label": "Creatinine clearance",
+          "type": "number",
+          "unit": "mL/min",
+          "required": true
+        }
+      ],
+      "results": [
+        {
+          "key": "amiDose",
+          "label": "Dose",
+          "formula": "amiDosePerKg * amiWeight",
+          "unit": "mg",
+          "decimals": 0,
+          "is_primary": true
+        },
+        {
+          "key": "amiInterval",
+          "label": "Interval",
+          "formula": "amiCrCl >= 50 ? 24 : (amiCrCl >= 30 ? 48 : 72)",
+          "unit": "h",
+          "decimals": 0,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "Amikacin dosing:\n{amiWeight} kg × {amiDosePerKg} mg/kg = {amiDose} mg IV q{amiInterval}h\nCrCl: {amiCrCl} mL/min\n\nTarget peak: 40-50 mg/L (severe), 20-30 mg/L (moderate)\nTrough: <5 mg/L (extended interval)\nMonitor SCr daily. Ototoxicity risk.",
+      "interpretations": [
+        {
+          "condition": "amiCrCl >= 50",
+          "label": "Normal — q24h",
+          "severity": "normal"
+        },
+        {
+          "condition": "amiCrCl >= 30 && amiCrCl < 50",
+          "label": "Mild impairment — q48h",
+          "severity": "warning"
+        },
+        {
+          "condition": "amiCrCl < 30",
+          "label": "Severe impairment — q72h or avoid",
+          "severity": "high"
+        }
+      ],
+      "source": "Bartal K et al. Pharmacokinetic dosing of aminoglycosides: A controlled trial. Am J Med. 2003;114(3):194-198."
+    },
+    {
+      "id": "enoxaparin_prophylaxis",
+      "name": "Enoxaparin Prophylaxis (VTE)",
+      "category": "Fluids & Drips",
+      "description": "VTE prophylaxis dosing by CrCl and weight. Standard 40 mg SC daily; reduced for renal impairment; OBGYN-specific for caesarean.",
+      "inputs": [
+        {
+          "id": "enoxCrCl",
+          "label": "Creatinine clearance",
+          "type": "number",
+          "unit": "mL/min",
+          "required": true
+        },
+        {
+          "id": "enoxWeight",
+          "label": "Weight",
+          "type": "number",
+          "unit": "kg",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
+        },
+        {
+          "id": "enoxIndication",
+          "label": "Indication",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "Standard surgical/medical",
+              "value": 40
+            },
+            {
+              "label": "Orthopaedic (higher risk)",
+              "value": 40
+            },
+            {
+              "label": "Caesarean section",
+              "value": 40
+            },
+            {
+              "label": "BMI ≥40 or weight >120kg",
+              "value": 60
+            }
+          ],
+          "default": 40
+        }
+      ],
+      "results": [
+        {
+          "key": "enoxDose",
+          "label": "Dose",
+          "formula": "enoxCrCl >= 30 ? enoxIndication : (enoxCrCl >= 20 ? enoxIndication / 2 : 0)",
+          "unit": "mg SC daily",
+          "decimals": 0,
+          "is_primary": true
+        },
+        {
+          "key": "enoxInterval",
+          "label": "Interval",
+          "formula": "enoxCrCl >= 30 ? 24 : (enoxCrCl >= 20 ? 24 : 0)",
+          "unit": "h",
+          "decimals": 0,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "Enoxaparin prophylaxis:\nCrCl: {enoxCrCl} mL/min\nWeight: {enoxWeight} kg\nIndication: {enoxIndication} mg\n\nDose: {enoxDose} mg SC q{enoxInterval}h\n\nCaution:\n- CrCl <20: avoid (accumulation risk)\n- BMI ≥40: consider 40 mg q12h or 60 mg q24h\n- Pregnancy: 40 mg q24h accepted",
+      "interpretations": [
+        {
+          "condition": "enoxCrCl >= 30",
+          "label": "Normal renal function — standard dose",
+          "severity": "normal"
+        },
+        {
+          "condition": "enoxCrCl >= 20 && enoxCrCl < 30",
+          "label": "Renal impairment — half dose",
+          "severity": "warning"
+        },
+        {
+          "condition": "enoxCrCl < 20",
+          "label": "Severe renal impairment — avoid or use UFH",
+          "severity": "high"
+        }
+      ],
+      "source": "NICE NG89. Venous thromboembolism in over 16s: reducing the risk. 2019 (updated 2024)."
+    },
+    {
+      "id": "enoxaparin_treatment",
+      "name": "Enoxaparin Treatment Dose",
+      "category": "Fluids & Drips",
+      "description": "Treatment-dose enoxaparin 1 mg/kg q12h or 1.5 mg/kg q24h, adjusted for CrCl. Used in DVT, PE, ACS.",
+      "inputs": [
+        {
+          "id": "enoxTxWeight",
+          "label": "Weight",
+          "type": "number",
+          "unit": "kg",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
+        },
+        {
+          "id": "enoxTxCrCl",
+          "label": "Creatinine clearance",
+          "type": "number",
+          "unit": "mL/min",
+          "required": true
+        },
+        {
+          "id": "enoxTxRegimen",
+          "label": "Regimen",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "1 mg/kg q12h (DVT/PE standard)",
+              "value": 12
+            },
+            {
+              "label": "1.5 mg/kg q24h (once daily)",
+              "value": 24
+            }
+          ],
+          "default": 12
+        }
+      ],
+      "results": [
+        {
+          "key": "enoxTxDose",
+          "label": "Dose",
+          "formula": "(enoxTxRegimen == 12 ? enoxTxWeight : enoxTxWeight * 1.5) * (enoxTxCrCl >= 30 ? 1 : (enoxTxCrCl >= 20 ? 0.5 : 0))",
+          "unit": "mg",
+          "decimals": 0,
+          "is_primary": true
+        },
+        {
+          "key": "enoxTxInterval",
+          "label": "Interval",
+          "formula": "enoxTxRegimen",
+          "unit": "h",
+          "decimals": 0,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "Enoxaparin treatment:\n{enoxTxWeight} kg × {enoxTxRegimen == 12 ? \"1\" : \"1.5\"} mg/kg = dose\nCrCl: {enoxTxCrCl} mL/min\n\nStandard: 1 mg/kg q12h OR 1.5 mg/kg q24h\nCrCl-adjusted: 50% dose if CrCl 20-30, avoid if <20",
+      "interpretations": [
+        {
+          "condition": "enoxTxCrCl >= 30",
+          "label": "Normal — full dose",
+          "severity": "normal"
+        },
+        {
+          "condition": "enoxTxCrCl >= 20 && enoxTxCrCl < 30",
+          "label": "Mild-moderate renal impairment — half dose",
+          "severity": "warning"
+        },
+        {
+          "condition": "enoxTxCrCl < 20",
+          "label": "Severe — avoid, use UFH instead",
+          "severity": "high"
+        }
+      ],
+      "source": "Garcia DA et al. Parenteral anticoagulants: Antithrombotic Therapy and Prevention of Thrombosis, 9th ed. ACCP. Chest. 2012;141(2 Suppl):e24S-e43S."
+    },
+    {
+      "id": "warfarin_loading",
+      "name": "Warfarin Loading (Fennerty Nomogram)",
+      "category": "Fluids & Drips",
+      "description": "Fennerty 10 mg loading nomogram for inpatient warfarin initiation. Outpatient 5 mg is preferred for most patients.",
+      "inputs": [
+        {
+          "id": "warfarinDay",
+          "label": "Day of therapy",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "Day 1",
+              "value": 1
+            },
+            {
+              "label": "Day 2",
+              "value": 2
+            },
+            {
+              "label": "Day 3",
+              "value": 3
+            },
+            {
+              "label": "Day 4",
+              "value": 4
+            },
+            {
+              "label": "Day 5+",
+              "value": 5
+            }
+          ],
+          "default": 1
+        },
+        {
+          "id": "warfarinINR",
+          "label": "Today's INR",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "Day 1: leave blank (will be ignored)"
+        }
+      ],
+      "results": [
+        {
+          "key": "warfarinDose",
+          "label": "Dose",
+          "formula": "warfarinDay == 1 ? 10 : (warfarinDay == 2 ? (warfarinINR < 1.5 ? 10 : (warfarinINR < 2 ? 5 : (warfarinINR < 2.5 ? 2.5 : 0))) : (warfarinDay == 3 ? (warfarinINR < 2 ? 10 : (warfarinINR < 2.5 ? 5 : (warfarinINR < 3 ? 2.5 : 0))) : (warfarinDay == 4 ? (warfarinINR < 1.5 ? 15 : (warfarinINR < 2 ? 10 : (warfarinINR < 2.5 ? 7.5 : (warfarinINR < 3 ? 5 : 0)))) : (warfarinINR < 1.5 ? 15 : (warfarinINR < 2 ? 10 : (warfarinINR < 2.5 ? 7.5 : (warfarinINR < 3 ? 5 : 2.5)))))))",
+          "unit": "mg",
+          "decimals": 1,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Warfarin Fennerty nomogram:\nDay {warfarinDay} | INR: {warfarinINR}\n\nDay 1: 10 mg\nDay 2: INR<1.5→10mg, 1.5-1.9→5mg, 2-2.4→2.5mg, ≥2.5→0\nDay 3: INR<2→10mg, 2-2.4→5mg, 2.5-2.9→2.5mg, ≥3→0\nDay 4-5: adjusted by INR\n\nTarget INR: 2-3 (most indications), 2.5-3.5 (mechanical valve)\nCaution: avoid in pregnancy",
+      "interpretations": [
+        {
+          "condition": "warfarinINR < 2",
+          "label": "Subtherapeutic — increase dose",
+          "severity": "warning"
+        },
+        {
+          "condition": "warfarinINR >= 2 && warfarinINR <= 3",
+          "label": "Therapeutic — maintain dose",
+          "severity": "normal"
+        },
+        {
+          "condition": "warfarinINR > 3 && warfarinINR <= 4",
+          "label": "Slightly supratherapeutic — hold one dose",
+          "severity": "warning"
+        },
+        {
+          "condition": "warfarinINR > 4",
+          "label": "Supratherapeutic — hold + consider vitamin K",
+          "severity": "high"
+        }
+      ],
+      "source": "Fennerty A et al. Flexible induction dose regimen for warfarin and prediction of maintenance dose. BMJ. 1984;288(6423):1268-1270."
+    },
+    {
+      "id": "nac_paracetamol",
+      "name": "Acetylcysteine (NAC) for Paracetamol Overdose",
+      "category": "Emergency & Trauma",
+      "description": "Prescott 21-hour IV NAC protocol for paracetamol overdose. Dosing by weight. Standard 3-bag regimen.",
+      "inputs": [
+        {
+          "id": "nacWeight",
+          "label": "Weight",
+          "type": "number",
+          "unit": "kg",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
+        }
+      ],
+      "results": [
+        {
+          "key": "nacLoad",
+          "label": "Bag 1 (loading)",
+          "formula": "150 * nacWeight",
+          "unit": "mg in 200 mL over 1h",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "nacBag2",
+          "label": "Bag 2",
+          "formula": "50 * nacWeight",
+          "unit": "mg in 500 mL over 4h",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "nacBag3",
+          "label": "Bag 3",
+          "formula": "100 * nacWeight",
+          "unit": "mg in 1000 mL over 16h",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "nacTotal",
+          "label": "Total dose",
+          "formula": "300 * nacWeight",
+          "unit": "mg over 21h",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Acetylcysteine (NAC) Prescott 21-hour regimen:\n\nBag 1: 150 mg/kg in 200 mL over 1 hour = {nacLoad} mg\nBag 2: 50 mg/kg in 500 mL over 4 hours = {nacBag2} mg\nBag 3: 100 mg/kg in 1000 mL over 16 hours = {nacBag3} mg\n\nTotal: 300 mg/kg over 21 hours = {nacTotal} mg\n\nIndications: paracetamol level on Rumack-Matthew nomogram above treatment line, OR >150 mg/kg ingested with delayed presentation.",
+      "interpretations": [
+        {
+          "condition": "nacWeight < 40",
+          "label": "Low weight — use smaller bags, monitor fluid overload",
+          "severity": "warning"
+        },
+        {
+          "condition": "nacWeight >= 40 && nacWeight <= 110",
+          "label": "Standard weight — standard bags",
+          "severity": "normal"
+        },
+        {
+          "condition": "nacWeight > 110",
+          "label": "High weight — cap at 110 kg for dose calculation",
+          "severity": "warning"
+        }
+      ],
+      "source": "Prescott LF et al. Intravenous N-acetylcysteine: the treatment of choice for paracetamol poisoning. BMJ. 1979;2(6198):1097-1100."
+    },
+    {
+      "id": "insulin_sliding_scale",
+      "name": "Subcutaneous Insulin Correction Dose",
+      "category": "Endocrinology & Metabolic",
+      "description": "Sliding-scale insulin correction based on current BG and insulin sensitivity factor. Add to basal or TDD.",
+      "inputs": [
+        {
+          "id": "insBG",
+          "label": "Current blood glucose",
+          "type": "number",
+          "unit": "mg/dL",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "mmol/L",
+              "to_base": 18.0182
+            }
+          ]
+        },
+        {
+          "id": "insTDDRatio",
+          "label": "Insulin sensitivity (1800/TDD)",
+          "type": "number",
+          "unit": "mg/dL per unit",
+          "required": true,
+          "hint": "1800 ÷ total daily dose (TDD)"
+        },
+        {
+          "id": "insTarget",
+          "label": "Target BG",
+          "type": "number",
+          "unit": "mg/dL",
+          "required": true,
+          "default": 100
+        }
+      ],
+      "results": [
+        {
+          "key": "insCorrection",
+          "label": "Correction dose",
+          "formula": "(insBG - insTarget) / insTDDRatio",
+          "unit": "units SC",
+          "decimals": 1,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Insulin sliding scale correction:\n\nCorrection = (Current BG − Target BG) ÷ Sensitivity\n            = ({insBG} − {insTarget}) ÷ {insTDDRatio}\n            = {insCorrection} units SC\n\nWhere 1800-rule: Sensitivity = 1800 ÷ TDD (rapid-acting insulin)\nOr 1500-rule: 1500 ÷ TDD (regular insulin)\n\nApply before meals, hold if BG <70 mg/dL.",
+      "interpretations": [
+        {
+          "condition": "insBG < 70",
+          "label": "Hypoglycaemia — give 15g carbs, hold insulin",
+          "severity": "high"
+        },
+        {
+          "condition": "insBG >= 70 && insBG < 100",
+          "label": "Below target — no correction",
+          "severity": "normal"
+        },
+        {
+          "condition": "insBG >= 100 && insBG < 180",
+          "label": "On target — minimal/no correction",
+          "severity": "normal"
+        },
+        {
+          "condition": "insBG >= 180 && insBG < 250",
+          "label": "Mild hyperglycaemia — modest correction",
+          "severity": "warning"
+        },
+        {
+          "condition": "insBG >= 250",
+          "label": "Severe hyperglycaemia — assess ketones/DKA",
+          "severity": "high"
+        }
+      ],
+      "source": "Umpierrez GE et al. Management of hyperglycemia in hospitalized patients in non-critical care setting: an Endocrine Society clinical practice guideline. J Clin Endocrinol Metab. 2012;97(1):16-38."
+    },
+    {
+      "id": "pesi",
+      "name": "PESI / sPESI (PE Severity)",
+      "category": "Cardiac",
+      "description": "Pulmonary Embolism Severity Index. Stratifies 30-day mortality risk. PESI Class I-II = low risk (outpatient); sPESI = simplified version.",
+      "inputs": [
+        {
+          "id": "pesiAge",
+          "label": "Age",
+          "type": "number",
+          "unit": "years",
+          "required": true
+        },
+        {
+          "id": "pesiMale",
+          "label": "Sex",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "Female",
+              "value": 0
+            },
+            {
+              "label": "Male",
+              "value": 1
+            }
+          ],
+          "default": 1
+        },
+        {
+          "id": "pesiCancer",
+          "label": "Active cancer",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "pesiCHF",
+          "label": "Heart failure or chronic lung disease",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "pesiHR",
+          "label": "Heart rate ≥110",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "pesiSBP",
+          "label": "SBP <100",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "pesiRR",
+          "label": "RR ≥30",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "pesiTemp",
+          "label": "Temp <36°C",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "pesiSaO2",
+          "label": "SaO₂ <90%",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "pesiAltered",
+          "label": "Altered mental status",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "pesiScore",
+          "label": "PESI score",
+          "formula": "pesiAge + (pesiMale * 10) + (pesiCancer * 30) + (pesiCHF * 10) + (pesiHR * 20) + (pesiSBP * 30) + (pesiRR * 20) + (pesiTemp * 20) + (pesiSaO2 * 20) + (pesiAltered * 60)",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "sPESI",
+          "label": "sPESI (simplified)",
+          "formula": "pesiAge + pesiMale + pesiCancer + pesiCHF + pesiHR + pesiSBP",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "pesiClass",
+          "label": "Risk class",
+          "formula": "pesiScore < 65 ? 1 : (pesiScore <= 85 ? 2 : (pesiScore <= 105 ? 3 : (pesiScore <= 125 ? 4 : 5)))",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "PESI / sPESI:\nAge: {pesiAge} | Male: {pesiMale} | Cancer: {pesiCancer} | CHF/COPD: {pesiCHF}\nHR≥110: {pesiHR} | SBP<100: {pesiSBP} | RR≥30: {pesiRR}\nTemp<36: {pesiTemp} | SaO₂<90: {pesiSaO2} | AMS: {pesiAltered}\n\nPESI score: {pesiScore}\nsPESI score: {sPESI}\n\nClass I (≤65): 30-day mortality 0.6-1.6%\nClass II (66-85): mortality 1.7-3.5%\nClass III (86-105): mortality 3.2-7.1%\nClass IV (106-125): mortality 4.0-11.4%\nClass V (>125): mortality 10-24.5%",
+      "interpretations": [
+        {
+          "condition": "pesiClass <= 2",
+          "label": "Low risk (Class I-II) — outpatient candidate",
+          "severity": "normal",
+          "detail": "PESI I-II. Mortality 0.6-3.5%. Consider outpatient management with LMWH/DOAC if haemodynamically stable, no other comorbidities, reliable follow-up."
+        },
+        {
+          "condition": "pesiClass == 3",
+          "label": "Intermediate risk (Class III) — admit, monitor",
+          "severity": "warning"
+        },
+        {
+          "condition": "pesiClass >= 4",
+          "label": "High risk (Class IV-V) — admit, consider ICU/thrombolysis",
+          "severity": "high",
+          "detail": "PESI IV-V. Mortality up to 24%. Haemodynamic monitoring, consider thrombolysis if shock."
+        }
+      ],
+      "source": "Aujesky D et al. Derivation and validation of a prognostic model for pulmonary embolism. Am J Respir Crit Care Med. 2005;172(8):1041-1046."
+    },
+    {
+      "id": "spo2_fio2_ratio",
+      "name": "SpO₂/FiO₂ Ratio (SF Ratio)",
+      "category": "Respiratory",
+      "description": "SF ratio as non-invasive surrogate for PaO₂/FiO₂ when ABG unavailable. Used in ARDS screening where ABG delayed.",
+      "inputs": [
+        {
+          "id": "sfSpO2",
+          "label": "SpO₂",
+          "type": "number",
+          "unit": "%",
+          "required": true,
+          "hint": "e.g. 92"
+        },
+        {
+          "id": "sfFiO2",
+          "label": "FiO₂",
+          "type": "number",
+          "unit": "0.21-1.0",
+          "required": true,
+          "hint": "0.21 = room air, 1.0 = 100% O₂"
+        }
+      ],
+      "results": [
+        {
+          "key": "sfRatio",
+          "label": "SF ratio",
+          "formula": "sfSpO2 / sfFiO2",
+          "unit": "",
+          "decimals": 1,
+          "is_primary": true
+        },
+        {
+          "key": "pfEstimate",
+          "label": "Estimated P/F ratio",
+          "formula": "sfRatio >= 315 ? 400 : (sfRatio >= 235 ? 300 : (sfRatio >= 148 ? 200 : 100))",
+          "unit": "mmHg",
+          "decimals": 0,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "SF ratio = SpO₂/FiO₂ = {sfSpO2}/{sfFiO2} = {sfRatio}\n\nBerlin definition ARDS (PaO₂/FiO₂):\n  Mild: 200-300\n  Moderate: 100-200\n  Severe: <100\n\nSF ratio equivalents (Rice et al 2007):\n  SF≥315 ≈ P/F>300 (no ARDS)\n  SF 235-314 ≈ P/F 200-300 (mild)\n  SF 148-234 ≈ P/F 100-200 (moderate)\n  SF <148 ≈ P/F <100 (severe)",
+      "interpretations": [
+        {
+          "condition": "sfRatio >= 315",
+          "label": "No ARDS (P/F >300)",
+          "severity": "normal"
+        },
+        {
+          "condition": "sfRatio >= 235 && sfRatio < 315",
+          "label": "Mild ARDS (P/F 200-300)",
+          "severity": "warning"
+        },
+        {
+          "condition": "sfRatio >= 148 && sfRatio < 235",
+          "label": "Moderate ARDS (P/F 100-200)",
+          "severity": "high"
+        },
+        {
+          "condition": "sfRatio < 148",
+          "label": "Severe ARDS (P/F <100) — consider proning, paralysis",
+          "severity": "high"
+        }
+      ],
+      "source": "Rice TW et al. Comparison of the SpO2/FIO2 ratio and the PaO2/FIO2 ratio in patients with acute lung injury or ARDS. Chest. 2007;132(2):410-417."
+    },
+    {
+      "id": "partogram_action",
+      "name": "Partogram Action Line",
+      "category": "Obstetrics & Gynaecology",
+      "description": "Friedman curve action line calculation. Alert line at 1 cm/hr cervical dilation from 4 cm. Action line 4 hours to the right.",
+      "inputs": [
+        {
+          "id": "partDilatation",
+          "label": "Current cervical dilation",
+          "type": "number",
+          "unit": "cm",
+          "required": true,
+          "hint": "e.g. 6"
+        },
+        {
+          "id": "partStartTime",
+          "label": "Time at 4 cm (hours since)",
+          "type": "number",
+          "unit": "h",
+          "required": true,
+          "hint": "How long ago she was at 4 cm dilation"
+        },
+        {
+          "id": "partParity",
+          "label": "Parity",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "Nullip",
+              "value": 1.2
+            },
+            {
+              "label": "Multip",
+              "value": 1.5
+            }
+          ],
+          "default": 1.2
+        }
+      ],
+      "results": [
+        {
+          "key": "partAlert",
+          "label": "Expected progress (alert)",
+          "formula": "4 + (partStartTime + partParity)",
+          "unit": "cm after start",
+          "decimals": 1,
+          "is_primary": false
+        },
+        {
+          "key": "partLag",
+          "label": "Dilation lag",
+          "formula": "partDilatation - (4 + partStartTime)",
+          "unit": "cm behind alert",
+          "decimals": 1,
+          "is_primary": true
+        },
+        {
+          "key": "partDelay",
+          "label": "Protracted/arrest?",
+          "formula": "(partDilatation - 4) < partParity * 2 ? 1 : 0",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "Partogram (Friedman):\nAt 4 cm: time 0\nExpected progress: {partParity} cm/hr ({partParity == 1.2 ? \"nullip\" : \"multip\"})\nCurrent: {partDilatation} cm after {partStartTime}h\n\nAlert line: dilation at 1 cm/hr from 4 cm\nAction line: 4h right of alert\n\nIf current cervical dilation is behind action line → protracted/arrested labour → consider oxytocin augmentation or operative delivery.",
+      "interpretations": [
+        {
+          "condition": "partLag >= 0",
+          "label": "On or ahead of alert line — continue observation",
+          "severity": "normal"
+        },
+        {
+          "condition": "partLag > 0 && partLag < 4",
+          "label": "Between alert and action lines — monitor closely",
+          "severity": "warning"
+        },
+        {
+          "condition": "partLag >= 4",
+          "label": "Past action line — protracted/arrested labour",
+          "severity": "high",
+          "detail": "Past action line. Consider oxytocin augmentation if no progress for 2h. If >4h no progress with adequate contractions → operative delivery."
+        }
+      ],
+      "source": "Friedman EA. Primigravid labor; a graphicostatistical analysis. Obstet Gynecol. 1955;6(6):567-589."
+    },
+    {
+      "id": "ors_paeds",
+      "name": "Paediatric ORS Replacement (WHO)",
+      "category": "Paediatrics",
+      "description": "WHO Plan A/B/C for oral rehydration in children with diarrhoea. Plan A: no dehydration, Plan B: some, Plan C: severe.",
+      "inputs": [
+        {
+          "id": "orsWeight",
+          "label": "Weight",
+          "type": "number",
+          "unit": "kg",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
+        },
+        {
+          "id": "orsAge",
+          "label": "Age",
+          "type": "number",
+          "unit": "months",
+          "required": true,
+          "hint": "e.g. 18"
+        },
+        {
+          "id": "orsPlan",
+          "label": "Dehydration",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "Plan A — no dehydration",
+              "value": 1
+            },
+            {
+              "label": "Plan B — some dehydration (75 mL/kg)",
+              "value": 2
+            },
+            {
+              "label": "Plan C — severe (IV)",
+              "value": 3
+            }
+          ],
+          "default": 2
+        }
+      ],
+      "results": [
+        {
+          "key": "orsDeficit",
+          "label": "Deficit volume",
+          "formula": "orsPlan == 1 ? 0 : (orsPlan == 2 ? 75 * orsWeight : 100 * orsWeight)",
+          "unit": "mL over 4h (Plan B)",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "orsHourly",
+          "label": "Hourly rate",
+          "formula": "orsPlan == 1 ? 0 : (orsPlan == 2 ? (75 * orsWeight) / 4 : 0)",
+          "unit": "mL/h (Plan B)",
+          "decimals": 0,
+          "is_primary": true
+        },
+        {
+          "key": "orsMain",
+          "label": "Maintenance + losses",
+          "formula": "orsPlan == 1 ? orsWeight * 10 : 0",
+          "unit": "mL/day (Plan A: 10 mL/kg per diarrhoeal stool)",
+          "decimals": 0,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "WHO ORS protocol:\nWeight: {orsWeight} kg, Age: {orsAge} months\nPlan: {orsPlan == 1 ? \"A — no dehydration\" : (orsPlan == 2 ? \"B — some dehydration (75 mL/kg over 4h)\" : \"C — severe dehydration (IV)\")}\n\nPlan A: 10 mL/kg per loose stool + maintenance\nPlan B: 75 mL/kg over 4 hours + 10 mL/kg/stool\nPlan C: IV — 30 mL/kg in 1h (infant) or 30 min (older child), then 70 mL/kg over 5h\n\nDeficit: {orsDeficit} mL\nHourly (Plan B): {orsHourly} mL/h\nMaintenance (Plan A): {orsMain} mL/day",
+      "interpretations": [
+        {
+          "condition": "orsPlan == 1",
+          "label": "Plan A — home ORS, return if worsens",
+          "severity": "normal"
+        },
+        {
+          "condition": "orsPlan == 2",
+          "label": "Plan B — supervised ORS over 4h, reassess",
+          "severity": "warning"
+        },
+        {
+          "condition": "orsPlan == 3",
+          "label": "Plan C — severe — IV fluids, hospitalise",
+          "severity": "high"
+        }
+      ],
+      "source": "WHO. The treatment of diarrhoea: a manual for physicians and other senior health workers. 2005."
+    },
+    {
+      "id": "paeds_fluid_bolus",
+      "name": "Paediatric Fluid Bolus (Resuscitation)",
+      "category": "Paediatrics",
+      "description": "20 mL/kg crystalloid bolus for paediatric resuscitation. PALS / WHO ETAT guidelines. Repeat up to 3 boluses then reassess.",
+      "inputs": [
+        {
+          "id": "pbWeight",
+          "label": "Weight",
+          "type": "number",
+          "unit": "kg",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
+        },
+        {
+          "id": "pbBolusVol",
+          "label": "Bolus volume",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "10 mL/kg (ETAT standard)",
+              "value": 10
+            },
+            {
+              "label": "20 mL/kg (PALS shock)",
+              "value": 20
+            }
+          ],
+          "default": 20
+        },
+        {
+          "id": "pbBolusCount",
+          "label": "Bolus number",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "1st bolus",
+              "value": 1
+            },
+            {
+              "label": "2nd bolus",
+              "value": 2
+            },
+            {
+              "label": "3rd bolus",
+              "value": 3
+            }
+          ],
+          "default": 1
+        }
+      ],
+      "results": [
+        {
+          "key": "pbBolus",
+          "label": "Bolus volume",
+          "formula": "pbWeight * pbBolusVol",
+          "unit": "mL",
+          "decimals": 0,
+          "is_primary": true
+        },
+        {
+          "key": "pbTotal",
+          "label": "Total given (cumulative)",
+          "formula": "pbWeight * pbBolusVol * pbBolusCount",
+          "unit": "mL",
+          "decimals": 0,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "Paediatric fluid bolus:\n{pbWeight} kg × {pbBolusVol} mL/kg × {pbBolusCount} bolus(es)\n= {pbBolus} mL per bolus\n= {pbTotal} mL cumulative\n\nUse NS or RL over 5-10 minutes.\nReassess after each bolus.\nIf still shocked after 3 boluses:\n  - Consider inotropes\n  - Consider blood (10-20 mL/kg if anaemic)\n  - Consider colloids (controversial)",
+      "interpretations": [
+        {
+          "condition": "pbBolusCount == 1",
+          "label": "1st bolus — give now, reassess in 5 min",
+          "severity": "normal"
+        },
+        {
+          "condition": "pbBolusCount == 2",
+          "label": "2nd bolus — reassess, look for source of shock",
+          "severity": "warning"
+        },
+        {
+          "condition": "pbBolusCount == 3",
+          "label": "3rd bolus — likely refractory shock, ICU/transfer",
+          "severity": "high",
+          "detail": "After 3 boluses (60 mL/kg) — likely refractory. Start inotropes (dopamine 10 mcg/kg/min). Consider blood if anaemic. ICU-level care."
+        }
+      ],
+      "source": "PALS 2020. Topjian AA et al. Part 4: Pediatric Basic and Advanced Life Support. Circulation. 2020;142(16_suppl_2):S469-S523."
+    },
+    {
+      "id": "saps2",
+      "name": "SAPS II (Simplified Acute Physiology Score II)",
+      "category": "Sepsis & ICU",
+      "description": "ICU mortality prediction. 12 variables, score 0-163. Used for benchmarking and severity adjustment. Older than SAPS 3 but more familiar.",
+      "inputs": [
+        {
+          "id": "sapsAge",
+          "label": "Age",
+          "type": "number",
+          "unit": "years",
+          "required": true
+        },
+        {
+          "id": "sapsHR",
+          "label": "Heart rate (worst)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "≥180",
+              "value": 11
+            },
+            {
+              "label": "140-179",
+              "value": 2
+            },
+            {
+              "label": "110-139",
+              "value": 0
+            },
+            {
+              "label": "70-109",
+              "value": 0
+            },
+            {
+              "label": "40-69",
+              "value": 2
+            },
+            {
+              "label": "<40",
+              "value": 11
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsSBP",
+          "label": "Systolic BP (worst)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "≥190",
+              "value": 2
+            },
+            {
+              "label": "150-189",
+              "value": 0
+            },
+            {
+              "label": "80-149",
+              "value": 0
+            },
+            {
+              "label": "55-79",
+              "value": 2
+            },
+            {
+              "label": "<55",
+              "value": 13
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsTemp",
+          "label": "Temperature",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "≥41",
+              "value": 3
+            },
+            {
+              "label": "39-40.9",
+              "value": 0
+            },
+            {
+              "label": "38-38.9",
+              "value": 0
+            },
+            {
+              "label": "36-37.9",
+              "value": 0
+            },
+            {
+              "label": "34-35.9",
+              "value": 1
+            },
+            {
+              "label": "32-33.9",
+              "value": 2
+            },
+            {
+              "label": "30-31.9",
+              "value": 3
+            },
+            {
+              "label": "<30",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsGCS",
+          "label": "Glasgow Coma Scale",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "<6",
+              "value": 26
+            },
+            {
+              "label": "6-8",
+              "value": 13
+            },
+            {
+              "label": "9-10",
+              "value": 7
+            },
+            {
+              "label": "11-13",
+              "value": 5
+            },
+            {
+              "label": "14-15",
+              "value": 0
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsRR",
+          "label": "Spontaneous respiration",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No (vent)",
+              "value": 11
+            },
+            {
+              "label": "Yes",
+              "value": 0
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsO2",
+          "label": "PaO₂/FiO₂ (if vent/CPAP)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "≥400",
+              "value": 0
+            },
+            {
+              "label": "300-399",
+              "value": 5
+            },
+            {
+              "label": "200-299",
+              "value": 9
+            },
+            {
+              "label": "100-199",
+              "value": 12
+            },
+            {
+              "label": "<100",
+              "value": 15
+            },
+            {
+              "label": "Not on vent",
+              "value": 0
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsUrine",
+          "label": "Urine output",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "≥1000 mL/day",
+              "value": 0
+            },
+            {
+              "label": "500-999 mL/day",
+              "value": 4
+            },
+            {
+              "label": "<500 mL/day",
+              "value": 11
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsBUN",
+          "label": "BUN (mg/dL)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "<28",
+              "value": 0
+            },
+            {
+              "label": "28-55",
+              "value": 6
+            },
+            {
+              "label": "56-83",
+              "value": 10
+            },
+            {
+              "label": ">83",
+              "value": 12
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsHct",
+          "label": "WBC",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "<1",
+              "value": 12
+            },
+            {
+              "label": "1-2.9",
+              "value": 0
+            },
+            {
+              "label": "3-14.9",
+              "value": 0
+            },
+            {
+              "label": "15-19.9",
+              "value": 1
+            },
+            {
+              "label": "≥20",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsK",
+          "label": "Potassium (mEq/L)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "<3",
+              "value": 3
+            },
+            {
+              "label": "3-4.9",
+              "value": 0
+            },
+            {
+              "label": "5-5.9",
+              "value": 1
+            },
+            {
+              "label": "≥6",
+              "value": 3
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsNa",
+          "label": "Sodium (mEq/L)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "<125",
+              "value": 5
+            },
+            {
+              "label": "125-144",
+              "value": 0
+            },
+            {
+              "label": "145-154",
+              "value": 0
+            },
+            {
+              "label": "≥155",
+              "value": 4
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "sapsHCO3",
+          "label": "Bicarbonate (mEq/L)",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "<15",
+              "value": 6
+            },
+            {
+              "label": "15-19",
+              "value": 3
+            },
+            {
+              "label": "20-29",
+              "value": 0
+            },
+            {
+              "label": "≥30",
+              "value": 0
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "sapsTotal",
+          "label": "SAPS II score",
+          "formula": "sapsAge + sapsHR + sapsSBP + sapsTemp + sapsGCS + sapsRR + sapsO2 + sapsUrine + sapsBUN + sapsHct + sapsK + sapsNa + sapsHCO3",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "SAPS II (Le Gall 1993):\nAge: {sapsAge} | HR: {sapsHR} | SBP: {sapsSBP} | Temp: {sapsTemp} | GCS: {sapsGCS}\nVent: {sapsRR} | P/F: {sapsO2} | UOP: {sapsUrine} | BUN: {sapsBUN}\nWBC: {sapsHct} | K: {sapsK} | Na: {sapsNa} | HCO3: {sapsHCO3}\n\nTotal: {sapsTotal}/163\n\nPredicted hospital mortality by score:\n10→9%, 20→19%, 30→32%, 40→50%, 50→65%, 60→80%, ≥70→>85%",
+      "interpretations": [
+        {
+          "condition": "sapsTotal < 30",
+          "label": "Low mortality risk (<20%)",
+          "severity": "normal"
+        },
+        {
+          "condition": "sapsTotal >= 30 && sapsTotal < 50",
+          "label": "Moderate mortality risk (20-50%)",
+          "severity": "warning"
+        },
+        {
+          "condition": "sapsTotal >= 50 && sapsTotal < 70",
+          "label": "High mortality risk (50-80%)",
+          "severity": "high"
+        },
+        {
+          "condition": "sapsTotal >= 70",
+          "label": "Very high mortality (>85%) — goals of care",
+          "severity": "high"
+        }
+      ],
+      "source": "Le Gall JR et al. A new Simplified Acute Physiology Score (SAPS II) based on a European/North American multicenter study. JAMA. 1993;270(24):2957-2963."
+    },
+    {
+      "id": "lace_readmission",
+      "name": "LACE Index (Readmission Risk)",
+      "category": "Sepsis & ICU",
+      "description": "LACE index predicts 30-day readmission/death. Useful for discharge planning. L=Length of stay, A=Acuity (admission type), C=Comorbidity (Charlson), E=Emergency visits.",
+      "inputs": [
+        {
+          "id": "laceLOS",
+          "label": "Length of stay",
+          "type": "number",
+          "unit": "days",
+          "required": true
+        },
+        {
+          "id": "laceAcute",
+          "label": "Admission type",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "Elective",
+              "value": 0
+            },
+            {
+              "label": "Emergency",
+              "value": 3
+            }
+          ],
+          "default": 3
+        },
+        {
+          "id": "laceCharlson",
+          "label": "Charlson Comorbidity Index (0-37)",
+          "type": "number",
+          "unit": "",
+          "required": true,
+          "hint": "Charlson weighted score"
+        },
+        {
+          "id": "laceEDVisits",
+          "label": "ED visits in last 6 months",
+          "type": "number",
+          "unit": "",
+          "required": true
+        }
+      ],
+      "results": [
+        {
+          "key": "laceL",
+          "label": "L (length)",
+          "formula": "laceLOS >= 14 ? 7 : (laceLOS >= 7 ? 5 : (laceLOS >= 4 ? 4 : (laceLOS >= 2 ? 3 : (laceLOS >= 1 ? 1 : 0))))",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "laceA",
+          "label": "A (acuity)",
+          "formula": "laceAcute",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "laceC",
+          "label": "C (Charlson)",
+          "formula": "laceCharlson >= 5 ? 5 : laceCharlson",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "laceE",
+          "label": "E (ED visits)",
+          "formula": "laceEDVisits >= 4 ? 4 : laceEDVisits",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "laceTotal",
+          "label": "LACE score",
+          "formula": "(laceLOS >= 14 ? 7 : (laceLOS >= 7 ? 5 : (laceLOS >= 4 ? 4 : (laceLOS >= 2 ? 3 : (laceLOS >= 1 ? 1 : 0))))) + laceAcute + (laceCharlson >= 5 ? 5 : laceCharlson) + (laceEDVisits >= 4 ? 4 : laceEDVisits)",
+          "unit": "",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "LACE Index (van Walraven 2010):\nL (Length): {laceL} | A (Acuity): {laceA}\nC (Charlson): {laceC} | E (ED visits): {laceE}\n\nTotal: {laceTotal}/19\n\nRisk of 30-day readmission/death:\n0-4: Low (~3%)\n5-9: Moderate (~7%)\n10-14: High (~15%)\n≥15: Very high (~30%)",
+      "interpretations": [
+        {
+          "condition": "laceTotal <= 4",
+          "label": "Low readmission risk",
+          "severity": "normal"
+        },
+        {
+          "condition": "laceTotal >= 5 && laceTotal <= 9",
+          "label": "Moderate — consider follow-up appointment within 7 days",
+          "severity": "warning"
+        },
+        {
+          "condition": "laceTotal >= 10 && laceTotal <= 14",
+          "label": "High — close follow-up + care plan",
+          "severity": "high"
+        },
+        {
+          "condition": "laceTotal >= 15",
+          "label": "Very high — case management, early clinic visit",
+          "severity": "high"
+        }
+      ],
+      "source": "van Walraven C et al. Derivation and validation of an index to predict early death or unplanned readmission after discharge from hospital to the community. CMAJ. 2010;182(6):551-557."
+    },
+    {
+      "id": "hyponatremia_correction",
+      "name": "Hyponatraemia Correction Rate",
+      "category": "Endocrinology & Metabolic",
+      "description": "Calculates safe correction rate for chronic hyponatraemia (max 8-10 mEq/L per 24h to avoid osmotic demyelination).",
+      "inputs": [
+        {
+          "id": "hypoNaCurrent",
+          "label": "Current Na⁺",
+          "type": "number",
+          "unit": "mEq/L",
+          "required": true
+        },
+        {
+          "id": "hypoNaTarget",
+          "label": "Target Na⁺ (≤125)",
+          "type": "number",
+          "unit": "mEq/L",
+          "required": true,
+          "hint": "Don't over-correct in chronic hypo"
+        },
+        {
+          "id": "hypoNaHours",
+          "label": "Correction timeframe",
+          "type": "number",
+          "unit": "hours",
+          "required": true,
+          "hint": "Typical: 24 hours"
+        },
+        {
+          "id": "hypoTBW",
+          "label": "Total body water",
+          "type": "number",
+          "unit": "L",
+          "required": true,
+          "hint": "0.6 × weight (kg) for men, 0.5 for women"
+        }
+      ],
+      "results": [
+        {
+          "key": "hypoDeltaNa",
+          "label": "ΔNa⁺ target",
+          "formula": "hypoNaTarget - hypoNaCurrent",
+          "unit": "mEq/L",
+          "decimals": 1,
+          "is_primary": false
+        },
+        {
+          "key": "hypoMaxRate",
+          "label": "Max safe rate",
+          "formula": "hypoDeltaNa / hypoNaHours",
+          "unit": "mEq/L per hour",
+          "decimals": 2,
+          "is_primary": true
+        },
+        {
+          "key": "hypoMax24",
+          "label": "Max 24h correction",
+          "formula": "min(hypoDeltaNa, 10)",
+          "unit": "mEq/L",
+          "decimals": 1,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "Hyponatraemia correction safety:\nCurrent Na⁺: {hypoNaCurrent}\nTarget: {hypoNaTarget} (Δ = {hypoDeltaNa} mEq/L)\nOver: {hypoNaHours} hours\n\nMax safe: {hypoMaxRate} mEq/L per hour\nMax 24h: {hypoMax24} mEq/L (don't exceed 10)\n\nChronic hyponatraemia (>48h): correct slowly (≤8 mEq/L per 24h) to avoid osmotic demyelination syndrome (ODS).\nAcute (<48h): may correct faster (1-2 mEq/L per hour).",
+      "interpretations": [
+        {
+          "condition": "hypoMaxRate > 0.5",
+          "label": "Rapid correction — risk of ODS",
+          "severity": "high",
+          "detail": "Risk of osmotic demyelination syndrome. Slow down. Recheck Na every 4-6 hours. Consider D5W ± DDAVP if over-correcting."
+        },
+        {
+          "condition": "hypoMaxRate > 0.25 && hypoMaxRate <= 0.5",
+          "label": "Moderate rate — acceptable for chronic",
+          "severity": "warning"
+        },
+        {
+          "condition": "hypoMaxRate <= 0.25",
+          "label": "Slow correction — safe range",
+          "severity": "normal"
+        }
+      ],
+      "source": "Verbalis JG et al. Diagnosis, evaluation, and treatment of hyponatremia: expert panel recommendations. Am J Med. 2013;126(10 Suppl 1):S1-S42."
+    },
+    {
+      "id": "framingham_chf_risk",
+      "name": "Framingham Heart Failure Risk",
+      "category": "Cardiac",
+      "description": "10-year risk of congestive heart failure in asymptomatic adults. Useful for primary prevention counselling.",
+      "inputs": [
+        {
+          "id": "frmAge",
+          "label": "Age",
+          "type": "number",
+          "unit": "years",
+          "required": true,
+          "hint": "30-74"
+        },
+        {
+          "id": "frmMale",
+          "label": "Sex",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "Female",
+              "value": 0
+            },
+            {
+              "label": "Male",
+              "value": 1
+            }
+          ],
+          "default": 1
+        },
+        {
+          "id": "frmSBP",
+          "label": "Systolic BP",
+          "type": "number",
+          "unit": "mmHg",
+          "required": true
+        },
+        {
+          "id": "frmHR",
+          "label": "Heart rate",
+          "type": "number",
+          "unit": "bpm",
+          "required": true
+        },
+        {
+          "id": "frmBMI",
+          "label": "BMI",
+          "type": "number",
+          "unit": "kg/m²",
+          "required": true
+        },
+        {
+          "id": "frmChol",
+          "label": "Total cholesterol",
+          "type": "number",
+          "unit": "mg/dL",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "mmol/L",
+              "to_base": 38.67
+            }
+          ]
+        },
+        {
+          "id": "frmDM",
+          "label": "Diabetes",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "frmSmoker",
+          "label": "Current smoker",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        },
+        {
+          "id": "frmECGLVH",
+          "label": "ECG LVH",
+          "type": "toggle",
+          "options": [
+            {
+              "label": "No",
+              "value": 0
+            },
+            {
+              "label": "Yes",
+              "value": 1
+            }
+          ],
+          "default": 0
+        }
+      ],
+      "results": [
+        {
+          "key": "frmCHFRisk",
+          "label": "10-year CHF risk",
+          "formula": "frmAge >= 60 ? 25 : (frmAge >= 50 ? 12 : (frmAge >= 40 ? 6 : 3))",
+          "unit": "%",
+          "decimals": 1,
+          "is_primary": false
+        },
+        {
+          "key": "frmRounded",
+          "label": "Approximate risk",
+          "formula": "(frmSBP >= 160 ? 5 : (frmSBP >= 140 ? 3 : (frmSBP >= 120 ? 1 : 0))) + (frmBMI >= 35 ? 4 : (frmBMI >= 30 ? 2 : 0)) + (frmChol >= 240 ? 2 : (frmChol >= 200 ? 1 : 0)) + (frmDM * 5) + (frmSmoker * 2) + (frmECGLVH * 4) + (frmHR >= 90 ? 2 : 0) + (frmMale * 1)",
+          "unit": "additive points",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Framingham CHF Risk:\nAge: {frmAge} (≥60 baseline 25%) | Male: {frmMale}\nSBP≥160: +5 | BMI≥35: +4 | DM: +5 | Smoking: +2 | LVH: +4\n\nPoints: {frmRounded}\n\n<5: Low (<10% in 10y)\n5-9: Moderate (10-20%)\n10-14: High (20-30%)\n≥15: Very high (>30%)\n\nNote: This is an approximation of the published multivariable model.",
+      "interpretations": [
+        {
+          "condition": "frmRounded < 5",
+          "label": "Low 10-year CHF risk",
+          "severity": "normal"
+        },
+        {
+          "condition": "frmRounded >= 5 && frmRounded < 10",
+          "label": "Moderate — address modifiable risk factors",
+          "severity": "warning"
+        },
+        {
+          "condition": "frmRounded >= 10",
+          "label": "High — aggressive risk factor modification",
+          "severity": "high"
+        }
+      ],
+      "source": "Kannel WB et al. Profile for estimating risk of heart failure. Arch Intern Med. 1999;159(11):1197-1204."
+    },
+    {
+      "id": "iv_drug_compat",
+      "name": "Y-Site IV Compatibility (Common)",
+      "category": "Fluids & Drips",
+      "description": "Quick reference for common Y-site IV drug compatibility in ICU. Avoids physical precipitation and drug inactivation.",
+      "inputs": [
+        {
+          "id": "compatDrug1",
+          "label": "Drug A",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "Vancomycin",
+              "value": 1
+            },
+            {
+              "label": "Piperacillin-tazobactam",
+              "value": 2
+            },
+            {
+              "label": "Meropenem",
+              "value": 3
+            },
+            {
+              "label": "Cefepime",
+              "value": 4
+            },
+            {
+              "label": "Ceftriaxone",
+              "value": 5
+            },
+            {
+              "label": "Amikacin",
+              "value": 6
+            },
+            {
+              "label": "Gentamicin",
+              "value": 7
+            },
+            {
+              "label": "Normal Saline",
+              "value": 8
+            },
+            {
+              "label": "Ringer Lactate",
+              "value": 9
+            },
+            {
+              "label": "Dextrose 5%",
+              "value": 10
+            },
+            {
+              "label": "Heparin",
+              "value": 11
+            },
+            {
+              "label": "Insulin (regular)",
+              "value": 12
+            },
+            {
+              "label": "Potassium chloride",
+              "value": 13
+            },
+            {
+              "label": "Dopamine",
+              "value": 14
+            },
+            {
+              "label": "Norepinephrine",
+              "value": 15
+            },
+            {
+              "label": "Furosemide",
+              "value": 16
+            },
+            {
+              "label": "Paracetamol IV",
+              "value": 17
+            },
+            {
+              "label": "Pantoprazole",
+              "value": 18
+            }
+          ],
+          "default": 1
+        },
+        {
+          "id": "compatDrug2",
+          "label": "Drug B",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "Vancomycin",
+              "value": 1
+            },
+            {
+              "label": "Piperacillin-tazobactam",
+              "value": 2
+            },
+            {
+              "label": "Meropenem",
+              "value": 3
+            },
+            {
+              "label": "Cefepime",
+              "value": 4
+            },
+            {
+              "label": "Ceftriaxone",
+              "value": 5
+            },
+            {
+              "label": "Amikacin",
+              "value": 6
+            },
+            {
+              "label": "Gentamicin",
+              "value": 7
+            },
+            {
+              "label": "Normal Saline",
+              "value": 8
+            },
+            {
+              "label": "Ringer Lactate",
+              "value": 9
+            },
+            {
+              "label": "Dextrose 5%",
+              "value": 10
+            },
+            {
+              "label": "Heparin",
+              "value": 11
+            },
+            {
+              "label": "Insulin (regular)",
+              "value": 12
+            },
+            {
+              "label": "Potassium chloride",
+              "value": 13
+            },
+            {
+              "label": "Dopamine",
+              "value": 14
+            },
+            {
+              "label": "Norepinephrine",
+              "value": 15
+            },
+            {
+              "label": "Furosemide",
+              "value": 16
+            },
+            {
+              "label": "Paracetamol IV",
+              "value": 17
+            },
+            {
+              "label": "Pantoprazole",
+              "value": 18
+            }
+          ],
+          "default": 2
+        }
+      ],
+      "results": [
+        {
+          "key": "compatResult",
+          "label": "Y-site compatibility",
+          "formula": "compatDrug1 == compatDrug2 ? 3 : ((compatDrug1 == 1 && (compatDrug2 == 2 || compatDrug2 == 6 || compatDrug2 == 7 || compatDrug2 == 11 || compatDrug2 == 12)) || (compatDrug2 == 1 && (compatDrug1 == 2 || compatDrug1 == 6 || compatDrug1 == 7 || compatDrug1 == 11 || compatDrug1 == 12)) || (compatDrug1 == 2 && compatDrug2 == 6) || (compatDrug2 == 2 && compatDrug1 == 6)) ? 1 : ((compatDrug1 == 14 && compatDrug2 == 18) || (compatDrug2 == 14 && compatDrug1 == 18)) ? 2 : 0)",
+          "unit": "0=compatible, 1=incompatible, 2=caution, 3=same drug",
+          "decimals": 0,
+          "is_primary": true
+        }
+      ],
+      "transparency_template": "Y-site IV compatibility:\nDrug A (id={compatDrug1}) + Drug B (id={compatDrug2})\n\nCOMPATIBLE: standard IV fluid, same line OK\nINCOMPATIBLE: separate lines required (precipitation/inactivation)\nCAUTION: can co-administer with monitoring\nSAME: no need to combine\n\nThis is a simplified reference. Always check local pharmacy guidelines for full compatibility data.",
+      "interpretations": [
+        {
+          "condition": "compatResult == 0",
+          "label": "Compatible — can give via Y-site",
+          "severity": "normal"
+        },
+        {
+          "condition": "compatResult == 1",
+          "label": "INCOMPATIBLE — separate lines or flush between",
+          "severity": "high",
+          "detail": "Risk of precipitation or drug inactivation. Use separate IV lumens or flush line with NS between drugs."
+        },
+        {
+          "condition": "compatResult == 2",
+          "label": "Caution — monitor for incompatibility signs",
+          "severity": "warning"
+        },
+        {
+          "condition": "compatResult == 3",
+          "label": "Same drug selected",
+          "severity": "normal"
+        }
+      ],
+      "source": "ASHP. Handbook on Injectable Drugs. 19th ed. 2017. Trissel."
+    },
+    {
+      "id": "phenytoin_loading",
+      "name": "Phenytoin Loading Dose (Status Epilepticus)",
+      "category": "Emergency & Trauma",
+      "description": "IV phenytoin loading 15-20 mg/kg for status epilepticus. Max infusion rate 50 mg/min in adults, 1-3 mg/kg/min in paeds. Monitor for hypotension, bradycardia.",
+      "inputs": [
+        {
+          "id": "phenytoinWeight",
+          "label": "Weight",
+          "type": "number",
+          "unit": "kg",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
+        },
+        {
+          "id": "phenytoinDosePerKg",
+          "label": "Loading dose",
+          "type": "dropdown",
+          "options": [
+            {
+              "label": "15 mg/kg (mild)",
+              "value": 15
+            },
+            {
+              "label": "18 mg/kg (standard)",
+              "value": 18
+            },
+            {
+              "label": "20 mg/kg (refractory)",
+              "value": 20
+            }
+          ],
+          "default": 18
+        }
+      ],
+      "results": [
+        {
+          "key": "phenytoinTotalDose",
+          "label": "Total loading dose",
+          "formula": "phenytoinWeight * phenytoinDosePerKg",
+          "unit": "mg",
+          "decimals": 0,
+          "is_primary": true
+        },
+        {
+          "key": "phenytoinVolNS",
+          "label": "Volume NS (1mg/mL)",
+          "formula": "phenytoinWeight * phenytoinDosePerKg",
+          "unit": "mL of NS",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "phenytoinInfusionTime",
+          "label": "Min infusion time",
+          "formula": "(phenytoinWeight * phenytoinDosePerKg) / 50",
+          "unit": "min (adult)",
+          "decimals": 0,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "Phenytoin loading (status epilepticus):\nWeight: {phenytoinWeight} kg x {phenytoinDosePerKg} mg/kg = {phenytoinTotalDose} mg\n\nDilute in NS to 1 mg/mL = {phenytoinVolNS} mL\nInfuse over at least {phenytoinInfusionTime} min (max 50 mg/min adult)\nMonitor BP, ECG, infusion site\n\nMaintenance 12h later: 5-7 mg/kg/day IV/PO divided q6-8h",
+      "interpretations": [
+        {
+          "condition": "phenytoinInfusionTime < 20",
+          "label": "Short infusion - high cardiac risk",
+          "severity": "high"
+        },
+        {
+          "condition": "phenytoinInfusionTime >= 20 && phenytoinInfusionTime <= 60",
+          "label": "Standard infusion time",
+          "severity": "normal"
+        },
+        {
+          "condition": "phenytoinInfusionTime > 60",
+          "label": "Long infusion - consider fosphenytoin if available",
+          "severity": "warning"
+        }
+      ],
+      "source": "Glauser T et al. Evidence-Based Guideline: Treatment of Convulsive Status Epilepticus in Children and Adults. Epilepsy Curr. 2016;16(1):48-61."
+    },
+    {
+      "id": "hyperkalaemia_treatment",
+      "name": "Hyperkalaemia Treatment (Emergency)",
+      "category": "Endocrinology & Metabolic",
+      "description": "Emergency treatment doses for hyperkalaemia. Calcium gluconate for membrane stabilisation, insulin+glucose shift, salbutamol nebulisation, kayexalate for elimination.",
+      "inputs": [
+        {
+          "id": "hyperkWeight",
+          "label": "Weight",
+          "type": "number",
+          "unit": "kg",
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
+        }
+      ],
+      "results": [
+        {
+          "key": "hyperkCalcium",
+          "label": "Calcium gluconate 10%",
+          "formula": "round(min(hyperkWeight, 70) * 0.1 * 10) / 10",
+          "unit": "mL IV",
+          "decimals": 1,
+          "is_primary": false
+        },
+        {
+          "key": "hyperkInsulin",
+          "label": "Insulin (actrapid)",
+          "formula": "10",
+          "unit": "units IV",
+          "decimals": 0,
+          "is_primary": true
+        },
+        {
+          "key": "hyperkD50",
+          "label": "Dextrose 50%",
+          "formula": "round(hyperkWeight * 0.5)",
+          "unit": "mL D50 IV",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "hyperkSalb",
+          "label": "Salbutamol nebs",
+          "formula": "10",
+          "unit": "mg neb",
+          "decimals": 0,
+          "is_primary": false
+        },
+        {
+          "key": "hyperkKayexalate",
+          "label": "Sodium polystyrene sulfonate",
+          "formula": "round(min(hyperkWeight, 70) * 1)",
+          "unit": "g PO/PR",
+          "decimals": 0,
+          "is_primary": false
+        }
+      ],
+      "transparency_template": "Hyperkalaemia emergency treatment:\n\n1. STABILISE (if ECG changes):\n   Ca gluconate 10% {hyperkCalcium} mL IV over 2-5 min\n\n2. SHIFT K+ into cells:\n   Insulin {hyperkInsulin}U IV in {hyperkD50} mL D50 (give D50 FIRST if BG <250)\n   + Salbutamol {hyperkSalb} mg nebulised\n   Onset 15-30 min, lasts 4-6h. Monitor BG q1h for 6h.\n\n3. ELIMINATE K+:\n   Kayexalate {hyperkKayexalate} g PO/PR (onset 1-2h)\n   Or haemodialysis if refractory / ESRD",
+      "interpretations": [
+        {
+          "condition": "hyperkWeight < 25",
+          "label": "Low weight - use paediatric insulin dose 0.1 U/kg",
+          "severity": "warning"
+        },
+        {
+          "condition": "hyperkWeight >= 25 && hyperkWeight <= 110",
+          "label": "Standard weight - adult doses",
+          "severity": "normal"
+        },
+        {
+          "condition": "hyperkWeight > 110",
+          "label": "High weight - cap at 100 kg for dose calculations",
+          "severity": "warning"
+        }
+      ],
+      "source": "European Resuscitation Council Guidelines 2021. Special circumstances: hyperkalaemia."
     }
   ]
 }
