@@ -2,19 +2,19 @@
   "notifications": [
     {
       "id": 1,
-      "title": "Welcome to DocFlow v1.1.1",
-      "body": "50+ clinical calculators across 12 specialties. Full formula transparency, offline-first, and built for Nigerian clinicians.",
+      "title": "DocFlow v1.2.2 — Citations Now Visible In-App",
+      "body": "Every calculator result now shows its primary reference — WHO, ACC, KDIGO, NICE, and other authoritative guidelines. 175 evidence-based calculators across 15 specialties.",
       "action_url": "https://github.com/celpha2svx/DocFlow/releases/latest",
-      "action_label": "View Release",
-      "created_at": "2026-06-25"
+      "action_label": "Get the Update",
+      "created_at": "2026-06-29"
     },
     {
       "id": 2,
-      "title": "New Update Available",
-      "body": "Check for the latest version to get new calculators and improvements.",
-      "action_url": "https://github.com/celpha2svx/DocFlow/releases/latest",
-      "action_label": "Download Update",
-      "created_at": "2026-07-01"
+      "title": "In-Place Updates Now Working",
+      "body": "From v1.2.2 onwards, all updates install in-place — no uninstall, no data loss. Just open the app and tap Settings → Check for Updates.",
+      "action_url": null,
+      "action_label": null,
+      "created_at": "2026-06-29"
     }
   ]
 }
