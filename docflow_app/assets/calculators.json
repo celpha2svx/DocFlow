@@ -1,5 +1,5 @@
 {
-  "version": 12,
+  "version": 13,
   "last_updated": "2026-06-29",
   "calculators": [
     {
@@ -3074,7 +3074,13 @@
           "label": "Creatinine (capped at 4.0)",
           "type": "number",
           "unit": "mg/dL",
-          "required": true
+          "required": true,
+          "alt_units": [
+            {
+              "label": "umol/L",
+              "to_base": 0.0113
+            }
+          ]
         }
       ],
       "results": [
@@ -4469,7 +4475,13 @@
           "label": "Weight",
           "type": "number",
           "unit": "kg",
-          "required": true
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
         },
         {
           "id": "isInfant",
@@ -7559,7 +7571,13 @@
           "type": "number",
           "unit": "mg/dL",
           "required": true,
-          "hint": "e.g. 100"
+          "hint": "e.g. 100",
+          "alt_units": [
+            {
+              "label": "mmol/L",
+              "to_base": 18.0182
+            }
+          ]
         },
         {
           "id": "fastingInsulin",
@@ -7687,7 +7705,13 @@
           "type": "number",
           "unit": "cm",
           "required": true,
-          "hint": "e.g. 94"
+          "hint": "e.g. 94",
+          "alt_units": [
+            {
+              "label": "inches",
+              "to_base": 2.54
+            }
+          ]
         },
         {
           "id": "hipCm",
@@ -7695,7 +7719,13 @@
           "type": "number",
           "unit": "cm",
           "required": true,
-          "hint": "e.g. 100"
+          "hint": "e.g. 100",
+          "alt_units": [
+            {
+              "label": "inches",
+              "to_base": 2.54
+            }
+          ]
         },
         {
           "id": "whrMale",
@@ -7945,14 +7975,26 @@
           "label": "Waist circumference",
           "type": "number",
           "unit": "cm",
-          "required": true
+          "required": true,
+          "alt_units": [
+            {
+              "label": "inches",
+              "to_base": 2.54
+            }
+          ]
         },
         {
           "id": "whrHeight",
           "label": "Height",
           "type": "number",
           "unit": "cm",
-          "required": true
+          "required": true,
+          "alt_units": [
+            {
+              "label": "inches",
+              "to_base": 2.54
+            }
+          ]
         }
       ],
       "results": [
@@ -8513,7 +8555,13 @@
           "label": "Post-dialysis weight",
           "type": "number",
           "unit": "kg",
-          "required": true
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
         }
       ],
       "results": [
@@ -8571,7 +8619,13 @@
           "label": "Urine creatinine",
           "type": "number",
           "unit": "mg/dL",
-          "required": true
+          "required": true,
+          "alt_units": [
+            {
+              "label": "umol/L",
+              "to_base": 0.0113
+            }
+          ]
         },
         {
           "id": "sCrFe",
@@ -10568,7 +10622,13 @@
           "label": "Weight",
           "type": "number",
           "unit": "kg",
-          "required": true
+          "required": true,
+          "alt_units": [
+            {
+              "label": "lbs",
+              "to_base": 0.453592
+            }
+          ]
         },
         {
           "id": "tbvHeight",
@@ -10747,7 +10807,13 @@
           "label": "Fasting glucose",
           "type": "number",
           "unit": "mg/dL",
-          "required": true
+          "required": true,
+          "alt_units": [
+            {
+              "label": "mmol/L",
+              "to_base": 18.0182
+            }
+          ]
         },
         {
           "id": "qInsulin",
