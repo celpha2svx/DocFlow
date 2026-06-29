@@ -60,7 +60,7 @@ if (toggleBtn && collapsed) {
   toggleBtn.addEventListener('click', () => {
     const isHidden = !collapsed.classList.contains('visible');
     collapsed.classList.toggle('visible');
-    toggleBtn.innerHTML = isHidden ? 'Show fewer calculators ↑' : 'View all 50 calculators ↓';
+    toggleBtn.innerHTML = isHidden ? 'Show fewer calculators ↑' : 'View all 155 calculators ↓';
   });
 }
 
